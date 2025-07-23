@@ -8,7 +8,7 @@ const authSlice = createSlice({
   reducers: {
     //sets state for errors involving failure to submit data
     setLoadError: (state, action) => {
-      state.loading.loadingError = action.payload;
+      state.loading.loadingError.message = action.payload;
     },
     // changes on page loading state when submitting a form
     setFormLoading: (state, action) => {
@@ -27,12 +27,12 @@ const authSlice = createSlice({
       .addCase(LogInUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
         state.loading.loadingInfo.formLoading = false;
+        state.loading.loadingError.message = "";
       })
       .addCase(LogInUser.rejected, (state, action: any) => {
-        console.log(action.payload);
         state.user = AUTH_INITIAL_STATE.user;
         state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError = action.payload;
+        state.loading.loadingError.message = action.payload;
       })
       .addCase(getCurrentUser.pending, (state) => {
         state.loading.loadingInfo.formLoading = true;
@@ -40,11 +40,12 @@ const authSlice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
         state.loading.loadingInfo.formLoading = false;
+        state.loading.loadingError.message = "";
       })
       .addCase(getCurrentUser.rejected, (state, action: any) => {
         state.user = AUTH_INITIAL_STATE.user;
         state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError = action.payload;
+        state.loading.loadingError.message = action.payload;
       })
       .addCase(LogOutUser.pending, (state) => {
         state.loading.loadingInfo.formLoading = true;
@@ -52,10 +53,11 @@ const authSlice = createSlice({
       .addCase(LogOutUser.fulfilled, (state) => {
         state.user = AUTH_INITIAL_STATE.user;
         state.loading.loadingInfo.formLoading = false;
+        state.loading.loadingError.message = "";
       })
       .addCase(LogOutUser.rejected, (state, action: any) => {
         state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError = action.payload;
+        state.loading.loadingError.message = action.payload;
       });
   },
 });

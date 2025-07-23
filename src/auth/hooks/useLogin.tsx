@@ -23,8 +23,7 @@ const useLogIn = () => {
     async (e: React.FormEvent): Promise<void> => {
       e.preventDefault();
       try {
-        console.log(formData);
-        await dispatch(LogInUser(formData));
+        await dispatch(LogInUser(formData)).unwrap();
         navigate("/");
       } catch (err) {
         console.log(err);
