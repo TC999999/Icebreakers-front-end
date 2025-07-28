@@ -9,6 +9,7 @@ const LogIn = (): JSX.Element => {
         <form onSubmit={handleSubmit}>
           <div id="username-div" className="form-div">
             <label htmlFor="username">
+              Username:
               <input
                 className="input"
                 type="text"
@@ -23,6 +24,7 @@ const LogIn = (): JSX.Element => {
           </div>
           <div id="password-div" className="form-div">
             <label htmlFor="password">
+              Password:
               <input
                 className="input"
                 type="password"

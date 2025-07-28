@@ -22,7 +22,10 @@ const NavBar = (): JSX.Element => {
         {user ? (
           <button onClick={() => logOutAndNavigate()}>Log Out</button>
         ) : (
-          <button onClick={() => navigate("/login")}>Log In</button>
+          <div>
+            <button onClick={() => navigate("/login")}>Log In</button>
+            <button onClick={() => navigate("/register")}>Register</button>
+          </div>
         )}
       </div>
     </div>

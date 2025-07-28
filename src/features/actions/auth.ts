@@ -1,7 +1,37 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { API_URL } from "../../config";
-import { type LogIn, type UserState } from "../../types/authTypes";
+import {
+  type Register,
+  type LogIn,
+  type UserState,
+} from "../../types/authTypes";
 import axios from "axios";
+
+export const RegisterUser = createAsyncThunk<UserState, Register>(
+  "auth/login",
+  async (
+    userInfo: Register = {
+      username: "",
+      password: "",
+      favoriteColor: "",
+      emailAddress: "",
+    },
+    thunkAPI
+  ) => {
+    try {
+      let res = await axios({
+        method: "post",
+        url: `${API_URL}/auth/register`,
+        data: userInfo,
+        withCredentials: true,
+      });
+
+      return res.data;
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.response.data.error.message);
+    }
+  }
+);
 
 export const LogInUser = createAsyncThunk<UserState, LogIn>(
   "auth/login",
