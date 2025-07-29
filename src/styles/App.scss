@@ -1,0 +1,45 @@
+@use "colors" as c;
+@use "settings" as s;
+
+.form-div {
+  text-align: center;
+
+  label {
+    color: c.$primary;
+    display: block;
+    font-size: large;
+    font-weight: bold;
+  }
+
+  .form-input {
+    width: 100%;
+    height: 2rem;
+    font-size: large;
+    text-align: center;
+    border-radius: s.$borderRadius;
+    background-color: #f2eaed;
+    border: s.$borderSettings rgb(79, 0, 37);
+    outline: none;
+    color: rgb(223, 88, 135);
+
+    &:hover {
+      border: s.$borderSettings c.$primary;
+      background-color: c.$inputHover;
+    }
+
+    &:focus {
+      border: s.$borderSettings c.$secondary;
+      background-color: c.$inputFocus;
+    }
+  }
+}
+
+form {
+  .submit-button {
+    background-color: c.$secondary;
+    color: white;
+    padding: 10px;
+    border: s.$borderSettings c.$primary;
+    border-radius: s.$borderRadius;
+  }
+}

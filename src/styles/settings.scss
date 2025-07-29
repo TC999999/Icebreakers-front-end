@@ -1,0 +1,10 @@
+// borders
+$borderRadius: 20px;
+$borderSettings: 2px solid;
+
+// mixins
+@mixin tablet {
+  @media (min-width: 768px) {
+    @content;
+  }
+}

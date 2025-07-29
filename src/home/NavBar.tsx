@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from "../features/hooks";
 import { shallowEqual } from "react-redux";
 import { type AppDispatch } from "../features/store";
 import { LogOutUser } from "../features/actions/auth";
+import "../styles/Navbar.scss";
 
 const NavBar = (): JSX.Element => {
   const navigate: NavigateFunction = useNavigate();
@@ -17,18 +18,42 @@ const NavBar = (): JSX.Element => {
     navigate("/");
   };
   return (
-    <div id="nav-bar">
-      <div id="user-info">
-        {user ? (
-          <button onClick={() => logOutAndNavigate()}>Log Out</button>
-        ) : (
-          <div>
-            <button onClick={() => navigate("/login")}>Log In</button>
-            <button onClick={() => navigate("/register")}>Register</button>
+    <nav id="nav-bar">
+      <div id="logo">
+        <h1>Join The Conversation!</h1>
+      </div>
+
+      <div id="buttons">
+        {user && (
+          <div id="tabs">
+            <button>Conversations</button>
+            <button>Search For Friends</button>
           </div>
         )}
+        <div id="user-info">
+          {user ? (
+            <button onClick={() => logOutAndNavigate()}>Log Out</button>
+          ) : (
+            <div>
+              <button
+                className="auth-button"
+                id="login-button"
+                onClick={() => navigate("/login")}
+              >
+                Log In
+              </button>
+              <button
+                className="auth-button"
+                id="register-button"
+                onClick={() => navigate("/register")}
+              >
+                Register
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

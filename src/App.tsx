@@ -3,6 +3,7 @@ import NavBar from "./home/NavBar";
 import LoadingLarge from "./LoadingLarge";
 import LoadingSmall from "./LoadingSmall";
 import useApp from "./appHooks/useApp";
+import "./styles/App.scss";
 
 function App() {
   useApp();

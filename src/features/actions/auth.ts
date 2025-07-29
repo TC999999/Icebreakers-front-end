@@ -13,8 +13,9 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
     userInfo: Register = {
       username: "",
       password: "",
-      favoriteColor: "",
       emailAddress: "",
+      favoriteColor: "",
+      biography: "",
     },
     thunkAPI
   ) => {

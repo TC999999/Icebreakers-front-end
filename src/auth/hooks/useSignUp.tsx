@@ -11,14 +11,19 @@ const useSignUp = () => {
   const initialState: Register = {
     username: "",
     password: "",
-    favoriteColor: "#000000",
     emailAddress: "",
+    favoriteColor: "#000000",
+    biography: "",
   };
 
   const [formData, setFormData] = useState<Register>(initialState);
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
+    (
+      e:
+        | React.ChangeEvent<HTMLInputElement>
+        | React.ChangeEvent<HTMLTextAreaElement>
+    ): void => {
       const { name, value } = e.target;
       setFormData((data) => ({ ...data, [name]: value }));
     },

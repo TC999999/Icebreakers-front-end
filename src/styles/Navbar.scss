@@ -1,0 +1,44 @@
+@use "colors" as c;
+@use "settings" as s;
+
+#nav-bar {
+  background-color: c.$primary;
+  padding: 20px 10px;
+  margin: 0px 0px 10px;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+
+  #logo {
+    text-align: center;
+  }
+
+  #buttons {
+    text-align: center;
+    position: relative;
+
+    #tabs {
+      display: flex;
+      justify-content: space-evenly;
+
+      button {
+        @include s.tablet {
+          margin: 0 40px;
+        }
+      }
+
+      @include s.tablet {
+        display: inline-block;
+      }
+    }
+
+    #user-info {
+      @include s.tablet {
+        display: inline-block;
+        position: absolute;
+        left: 85%;
+        bottom: 5px;
+        width: 130px;
+      }
+    }
+  }
+}

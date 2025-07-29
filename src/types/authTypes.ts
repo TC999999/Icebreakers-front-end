@@ -3,6 +3,7 @@ export type Register = {
   password: string;
   favoriteColor: string;
   emailAddress: string;
+  biography: string;
 };
 
 export type LogIn = {
