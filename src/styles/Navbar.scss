@@ -10,6 +10,22 @@
 
   #logo {
     text-align: center;
+
+    h1 {
+      a {
+        text-decoration: none;
+        color: c.$linkPrimary;
+        &:hover {
+          color: c.$linkHover;
+          text-decoration: underline;
+        }
+
+        &:active {
+          color: c.$linkActive;
+          text-decoration: underline;
+        }
+      }
+    }
   }
 
   #buttons {
@@ -21,6 +37,7 @@
       justify-content: space-evenly;
 
       button {
+        cursor: pointer;
         @include s.tablet {
           margin: 0 40px;
         }

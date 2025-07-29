@@ -1,0 +1,24 @@
+@use "colors" as c;
+@use "settings" as s;
+
+#login-page {
+  display: flex;
+  justify-content: center;
+
+  #login-form {
+    background-color: c.$thirdly;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+    box-shadow: 3px 3px 3px;
+    padding: 20px;
+    margin: 0 10rem;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    h1 {
+      color: c.$secondary;
+    }
+  }
+}

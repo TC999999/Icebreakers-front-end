@@ -1,0 +1,39 @@
+@use "colors" as c;
+@use "settings" as s;
+
+#welcome-page {
+  h1 {
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    color: c.$primary;
+    font-weight: bold;
+  }
+
+  #starting-point {
+    background-color: c.$secondary;
+    padding: 20px;
+    margin: 10px;
+    border-radius: s.$borderRadius;
+    border: solid 2px rgb(232, 60, 232);
+
+    #welcome-message {
+      background-color: c.$primary;
+      padding: 30px;
+      margin: 30px;
+      text-align: center;
+      color: c.$secondary;
+      border-radius: s.$borderRadius;
+      border: solid 2px purple;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    }
+
+    #description {
+      background-color: rgb(235, 164, 210);
+      padding: 20px;
+      border-radius: 10px;
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+      text-align: center;
+    }
+  }
+}

@@ -41,5 +41,14 @@ form {
     padding: 10px;
     border: s.$borderSettings c.$primary;
     border-radius: s.$borderRadius;
+
+    &:hover {
+      background-color: c.$thirdly;
+      color: black;
+    }
+
+    &:active {
+      background-color: antiquewhite;
+    }
   }
 }

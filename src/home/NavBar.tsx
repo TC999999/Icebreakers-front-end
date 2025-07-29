@@ -1,5 +1,5 @@
 import { type JSX } from "react";
-import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { useNavigate, type NavigateFunction, Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../features/hooks";
 import { shallowEqual } from "react-redux";
 import { type AppDispatch } from "../features/store";
@@ -20,7 +20,9 @@ const NavBar = (): JSX.Element => {
   return (
     <nav id="nav-bar">
       <div id="logo">
-        <h1>Join The Conversation!</h1>
+        <h1>
+          <Link to="/">Join The Conversation!</Link>
+        </h1>
       </div>
 
       <div id="buttons">

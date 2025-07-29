@@ -1,19 +1,21 @@
 import { type JSX } from "react";
 import useLogIn from "./hooks/useLogin";
+import "../styles/LogIn.scss";
 
 const LogIn = (): JSX.Element => {
   const { formData, handleChange, handleSubmit } = useLogIn();
   return (
     <div id="login-page">
-      <div id="login-form-div">
+      <div id="login-form">
         <form onSubmit={handleSubmit}>
+          <h1>Log In Here!</h1>
           <div id="username-div" className="form-div">
             <label htmlFor="username">
               Username:
               <input
-                className="input"
+                className="form-input"
                 type="text"
-                placeholder="username goes here"
+                placeholder="Enter Your Username Here"
                 name="username"
                 id="username"
                 value={formData.username}
@@ -26,9 +28,9 @@ const LogIn = (): JSX.Element => {
             <label htmlFor="password">
               Password:
               <input
-                className="input"
+                className="form-input"
                 type="password"
-                placeholder="password goes here"
+                placeholder="Enter Your Password Here"
                 name="password"
                 id="password"
                 value={formData.password}
