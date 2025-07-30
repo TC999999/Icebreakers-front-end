@@ -1,10 +1,12 @@
 import { type JSX } from "react";
 import { useAppSelector } from "./features/hooks";
 import "./styles/LoadingLarge.scss";
+import { shallowEqual } from "react-redux";
 
 const LoadingLarge = (): JSX.Element | null => {
   const loading: boolean = useAppSelector(
-    (store) => store.user.loading.loadingInfo.pageLoading
+    (store) => store.user.loading.loadingInfo.pageLoading,
+    shallowEqual
   );
 
   return loading ? (

@@ -3,7 +3,7 @@ import useLogIn from "./hooks/useLogin";
 import "../styles/LogIn.scss";
 
 const LogIn = (): JSX.Element => {
-  const { formData, handleChange, handleSubmit } = useLogIn();
+  const { formData, error, handleChange, handleSubmit } = useLogIn();
   return (
     <div id="login-page">
       <div id="login-form">
@@ -38,6 +38,9 @@ const LogIn = (): JSX.Element => {
                 maxLength={30}
               />
             </label>
+          </div>
+          <div id="error-message">
+            <h3>{error}</h3>
           </div>
           <div id="button-div">
             <button className="submit-button">Log In!</button>

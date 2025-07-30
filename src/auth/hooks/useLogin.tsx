@@ -10,6 +10,7 @@ const useLogIn = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
   const [formData, setFormData] = useState<LogIn>(initialState);
+  const [error, setError] = useState<string>("");
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -27,12 +28,15 @@ const useLogIn = () => {
         navigate("/");
       } catch (err) {
         console.log(err);
+        if (typeof err === "string") {
+          setError(err);
+        }
       }
     },
     [formData]
   );
 
-  return { formData, handleChange, handleSubmit };
+  return { formData, error, handleChange, handleSubmit };
 };
 
 export default useLogIn;

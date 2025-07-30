@@ -51,4 +51,8 @@ form {
       background-color: antiquewhite;
     }
   }
+
+  #error-message {
+    color: c.$error;
+  }
 }
