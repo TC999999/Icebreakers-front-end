@@ -3,7 +3,13 @@ import useSignUp from "./hooks/useSignUp";
 import "../styles/SignUp.scss";
 
 const SignUp = (): JSX.Element => {
-  const { formData, handleChange, handleSubmit } = useSignUp();
+  const {
+    formData,
+    initialInterests,
+    handleChange,
+    handleCheckbox,
+    handleSubmit,
+  } = useSignUp();
   return (
     <div id="signup-page">
       <div id="signup-form">
@@ -69,6 +75,24 @@ const SignUp = (): JSX.Element => {
               rows={10}
               cols={40}
             />{" "}
+          </div>
+          <div id="interests-div">
+            {initialInterests.map((i) => {
+              return (
+                <div className="checkbox-div" key={`option${i.id}`}>
+                  <label htmlFor={`option${i.id}`}>
+                    {i.topic}
+                    <input
+                      type="checkbox"
+                      name={`option${i.id}`}
+                      id={`option${i.id}`}
+                      value={i.id}
+                      onChange={handleCheckbox}
+                    />
+                  </label>
+                </div>
+              );
+            })}
           </div>
           <div id="submit-button">
             <button className="submit-button">Register!</button>

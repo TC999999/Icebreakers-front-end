@@ -1,8 +1,9 @@
 import axios, { type AxiosResponse } from "axios";
 import { API_URL } from "../config";
 
-type method = "get" | "post" | "patch" | "delete";
+export type method = "get" | "post" | "patch" | "delete";
 
+// used for requests that don't require changes to redux state
 async function request(
   route: string,
   endpoint: string,

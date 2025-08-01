@@ -1,9 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { type Register } from "../../types/authTypes";
+import { type interests } from "../../types/interestTypes";
 import { RegisterUser } from "../../features/actions/auth";
 import { type AppDispatch } from "../../features/store";
 import { useAppDispatch } from "../../features/hooks";
+import interestsAPI from "../../apis/interestsAPI";
 
 const useSignUp = () => {
   const dispatch: AppDispatch = useAppDispatch();
@@ -14,7 +16,22 @@ const useSignUp = () => {
     emailAddress: "",
     favoriteColor: "#000000",
     biography: "",
+    interests: [],
   };
+  const [initialInterests, setInitialInterests] = useState<interests>([]);
+
+  useEffect(() => {
+    const getInitialInterests = async () => {
+      try {
+        let initialInterests = await interestsAPI.getInterests();
+        setInitialInterests(initialInterests);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getInitialInterests();
+  }, []);
 
   const [formData, setFormData] = useState<Register>(initialState);
 
@@ -26,6 +43,23 @@ const useSignUp = () => {
     ): void => {
       const { name, value } = e.target;
       setFormData((data) => ({ ...data, [name]: value }));
+    },
+    [formData]
+  );
+
+  const handleCheckbox = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const { value, checked } = e.target;
+      let newInterests = formData.interests;
+
+      if (checked) {
+        newInterests.push(+value);
+      } else {
+        newInterests = newInterests.filter((i) => {
+          return i !== +value;
+        });
+      }
+      setFormData((d) => ({ ...d, interests: newInterests }));
     },
     [formData]
   );
@@ -43,6 +77,12 @@ const useSignUp = () => {
     [formData]
   );
 
-  return { formData, handleChange, handleSubmit };
+  return {
+    formData,
+    initialInterests,
+    handleChange,
+    handleCheckbox,
+    handleSubmit,
+  };
 };
 export default useSignUp;

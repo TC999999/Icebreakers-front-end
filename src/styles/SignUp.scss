@@ -20,5 +20,28 @@
     h1 {
       color: c.$secondary;
     }
+
+    #interests-div {
+      background-color: c.$fourthly;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+      height: 200px;
+      overflow-y: auto;
+
+      label {
+        display: block;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        margin-bottom: 5px;
+
+        &:hover {
+          color: c.$secondary;
+        }
+
+        &:active {
+          color: c.$primary;
+        }
+      }
+    }
   }
 }

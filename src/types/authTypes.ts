@@ -4,6 +4,7 @@ export type Register = {
   favoriteColor: string;
   emailAddress: string;
   biography: string;
+  interests: number[];
 };
 
 export type LogIn = {
