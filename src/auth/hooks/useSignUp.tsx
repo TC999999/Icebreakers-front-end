@@ -14,8 +14,8 @@ const useSignUp = () => {
     username: "",
     password: "",
     emailAddress: "",
-    favoriteColor: "#000000",
     biography: "",
+    favoriteColor: "#000000",
     interests: [],
   };
   const [initialInterests, setInitialInterests] = useState<interests>([]);

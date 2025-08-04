@@ -5,6 +5,7 @@ import { shallowEqual } from "react-redux";
 import { type AppDispatch } from "../features/store";
 import { LogOutUser } from "../features/actions/auth";
 import "../styles/Navbar.scss";
+import { MdPerson } from "react-icons/md";
 
 const NavBar = (): JSX.Element => {
   const navigate: NavigateFunction = useNavigate();
@@ -14,9 +15,13 @@ const NavBar = (): JSX.Element => {
 
   const logOutAndNavigate = async () => {
     await dispatch(LogOutUser({}));
-
     navigate("/");
   };
+
+  const goToProfile = () => {
+    navigate(`/user/${user?.username}`);
+  };
+
   return (
     <nav id="nav-bar">
       <div id="logo">
@@ -34,9 +39,20 @@ const NavBar = (): JSX.Element => {
         )}
         <div id="user-info">
           {user ? (
-            <button onClick={() => logOutAndNavigate()}>Log Out</button>
+            <div id="logged-in-links">
+              <button
+                id="user-button"
+                style={{ backgroundColor: user.favoriteColor }}
+                title={user.username}
+                onClick={goToProfile}
+              >
+                <MdPerson />
+              </button>
+
+              <button onClick={() => logOutAndNavigate()}>Log Out</button>
+            </div>
           ) : (
-            <div>
+            <div id="logged-out-links">
               <button
                 className="auth-button"
                 id="login-button"

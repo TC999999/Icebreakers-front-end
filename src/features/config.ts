@@ -4,7 +4,7 @@ export const AUTH_INITIAL_STATE: ReduxAuthState = {
   user: null,
   loading: {
     loadingInfo: {
-      pageLoading: false,
+      pageLoading: true,
       formLoading: false,
     },
     loadingError: { message: "", status: null },

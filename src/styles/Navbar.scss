@@ -54,7 +54,38 @@
         position: absolute;
         left: 85%;
         bottom: 5px;
-        width: 130px;
+        width: 140px;
+        margin-right: 20px;
+      }
+
+      [role="tooltip"] {
+        visibility: hidden;
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        background: black;
+        color: white;
+
+        &:hover {
+          visibility: visible;
+        }
+      }
+
+      button {
+        margin: 0 2px;
+      }
+
+      #logged-in-links {
+        #user-button {
+          text-align: center;
+          border-radius: s.$borderRadius;
+          padding: 5px;
+
+          &:hover {
+            border-color: rgb(70, 182, 246);
+            color: rgb(70, 182, 246);
+          }
+        }
       }
     }
   }
