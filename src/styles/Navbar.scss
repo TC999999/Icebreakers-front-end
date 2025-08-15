@@ -58,19 +58,6 @@
         margin-right: 20px;
       }
 
-      [role="tooltip"] {
-        visibility: hidden;
-        position: absolute;
-        top: 2rem;
-        left: 2rem;
-        background: black;
-        color: white;
-
-        &:hover {
-          visibility: visible;
-        }
-      }
-
       button {
         margin: 0 2px;
       }
@@ -80,6 +67,8 @@
           text-align: center;
           border-radius: s.$borderRadius;
           padding: 5px;
+          width: 30px;
+          height: 30px;
 
           &:hover {
             border-color: rgb(70, 182, 246);
