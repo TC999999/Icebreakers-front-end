@@ -9,7 +9,6 @@ const useUserSearch = () => {
   useEffect(() => {
     const getUsernames = async () => {
       const users = await userAPI.getUserNames();
-
       setSearchedUsers(users);
       initialUsers.current = users;
     };

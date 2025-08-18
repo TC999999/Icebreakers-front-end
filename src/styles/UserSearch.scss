@@ -1,0 +1,9 @@
+@use "colors" as c;
+
+#users-search-page {
+  h1 {
+    color: c.$secondary;
+    text-align: center;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+}

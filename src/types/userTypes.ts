@@ -8,5 +8,6 @@ export type UserProfile = {
 
 export type UserCard = {
   username: string;
+  favoritecolor: string;
   interests: string[];
 };

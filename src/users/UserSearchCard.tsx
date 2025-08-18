@@ -1,5 +1,7 @@
 import { type JSX } from "react";
 import { type UserCard } from "../types/userTypes";
+import { MdPerson } from "react-icons/md";
+import "../styles/UserSearchCard.scss";
 
 type Props = {
   user: UserCard;
@@ -7,9 +9,19 @@ type Props = {
 
 const UserSearchCard: React.FC<Props> = ({ user }): JSX.Element => {
   return (
-    <div>
-      <h3>{user.username}</h3>
+    <div className="user-search-card">
+      <div className="header">
+        <div
+          className="user-logo"
+          style={{ backgroundColor: user.favoritecolor }}
+        >
+          <MdPerson />
+        </div>
+        <h3>{user.username}</h3>
+      </div>
+
       <ul>
+        <h3>Interests</h3>
         {user.interests.map((i, index) => {
           return <li key={`${user.username}-interest-${index}`}>{i}</li>;
         })}
