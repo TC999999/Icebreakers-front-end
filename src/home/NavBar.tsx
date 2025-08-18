@@ -22,6 +22,10 @@ const NavBar = (): JSX.Element => {
     navigate(`/user/${user?.username}`);
   };
 
+  const goToSearch = () => {
+    navigate("/user/search");
+  };
+
   return (
     <nav id="nav-bar">
       <div id="logo">
@@ -34,7 +38,7 @@ const NavBar = (): JSX.Element => {
         {user && (
           <div id="tabs">
             <button>Conversations</button>
-            <button>Search For Friends</button>
+            <button onClick={goToSearch}>Search For Friends</button>
           </div>
         )}
         <div id="user-info">

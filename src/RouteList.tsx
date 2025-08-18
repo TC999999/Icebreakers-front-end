@@ -5,6 +5,7 @@ import SignUp from "./auth/SignUp";
 import HomePage from "./home/HomePage";
 import NotFound from "./NotFound";
 import UserProfile from "./users/UserProfile";
+import UserSearch from "./users/UserSearch";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -25,6 +26,7 @@ const RouteList = (): JSX.Element | null => {
       <Route element={<UserRoutes />}>
         <Route path="/user">
           <Route path=":username" element={<UserProfile />} />
+          <Route path="search" element={<UserSearch />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />
