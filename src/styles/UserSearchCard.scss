@@ -6,8 +6,18 @@
   border: s.$borderSettings;
   border-radius: s.$borderRadius;
   border-color: c.$secondary;
+  text-decoration: none;
   padding: 3px;
   margin: 10px;
+  width: 200px;
+  box-shadow: s.$boxShadowSettings;
+
+  &:hover {
+    background-color: c.$cardHover;
+    transform: scale(1.09);
+    box-shadow: s.$boxShadowHover;
+    transition: 0.1s ease-in-out;
+  }
 
   .header {
     display: flex;

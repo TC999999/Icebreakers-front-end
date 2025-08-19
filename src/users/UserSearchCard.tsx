@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { type UserCard } from "../types/userTypes";
 import { MdPerson } from "react-icons/md";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 import "../styles/UserSearchCard.scss";
 
 type Props = {
@@ -8,8 +9,12 @@ type Props = {
 };
 
 const UserSearchCard: React.FC<Props> = ({ user }): JSX.Element => {
+  const navigate: NavigateFunction = useNavigate();
   return (
-    <div className="user-search-card">
+    <div
+      onClick={() => navigate(`/user/${user.username}`)}
+      className="user-search-card"
+    >
       <div className="header">
         <div
           className="user-logo"
