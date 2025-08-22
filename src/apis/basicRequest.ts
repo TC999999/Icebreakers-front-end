@@ -11,11 +11,15 @@ async function request(
   data = {}
 ): Promise<any> {
   const url = `${API_URL}/${route}/${endpoint}`;
+
+  const params = method === "get" ? data : {};
+
   try {
     let res: AxiosResponse = await axios({
       method: method,
       url,
       data,
+      params,
       withCredentials: true,
     });
     return res.data;

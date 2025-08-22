@@ -1,10 +1,72 @@
 @use "colors" as c;
+@use "settings" as s;
 
 #users-search-page {
   h1 {
     color: c.$secondary;
     text-align: center;
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  #not-found-message {
+    font-style: italic;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input#username {
+      width: 500px;
+      height: 50px;
+      font-size: 20px;
+      border: s.$borderSettings;
+      background-color: c.$fourthly;
+      border-color: c.$secondary;
+
+      &:hover {
+        background-color: c.$inputHover;
+      }
+
+      &:focus {
+        background-color: c.$inputFocus;
+      }
+    }
+
+    .input-bottom-with-results {
+      border-radius: s.$borderRadius s.$borderRadius 0px 0px;
+    }
+
+    .input-bottom-without-results {
+      border-radius: s.$borderRadius;
+    }
+
+    .show-results {
+      height: 150px;
+      overflow-y: auto;
+    }
+
+    #user-search-bar-results {
+      position: absolute;
+      width: 500px;
+    }
+
+    .user-search-result {
+      background-color: rgb(240, 173, 240);
+      padding: 10px;
+      font-family: Arial, Helvetica, sans-serif;
+      border: solid 1px;
+
+      &:hover {
+        background-color: rgb(240, 135, 240);
+        color: c.$secondary;
+      }
+    }
+
+    .list-bottom {
+      border-radius: 0px 0px s.$borderRadius s.$borderRadius;
+    }
   }
 
   #user-search-results {

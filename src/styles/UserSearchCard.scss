@@ -14,7 +14,6 @@
 
   &:hover {
     background-color: c.$cardHover;
-    transform: scale(1.09);
     box-shadow: s.$boxShadowHover;
     transition: 0.1s ease-in-out;
   }

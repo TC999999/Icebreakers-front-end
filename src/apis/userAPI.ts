@@ -9,8 +9,13 @@ class userAPI extends API {
     return res.user;
   }
 
-  public static async getUserNames(): Promise<UserCard[]> {
+  public static async getUserNames(): Promise<string[]> {
     let res = await this.getRequest("search/get");
+    return res.users;
+  }
+
+  public static async searchForUsers(params: any): Promise<UserCard[]> {
+    let res = await this.getRequest("search/all", params);
     return res.users;
   }
 }

@@ -1,9 +1,14 @@
 import useUserProfile from "./hooks/useUserProfile";
 import { MdPerson } from "react-icons/md";
 import "../styles/UserProfile.scss";
+import { useAppSelector } from "../features/hooks";
 
 const UserProfile = () => {
   const { userState } = useUserProfile();
+
+  const { user } = useAppSelector((store) => {
+    return store.user;
+  });
   return (
     <main id="user-profile-page">
       <section id="user-profile-introduction">
@@ -33,6 +38,18 @@ const UserProfile = () => {
             <b>Joined On: </b>
             {userState.createdAt}
           </small>
+        </div>
+
+        <div id="button-row">
+          {user?.username === userState.username ? (
+            <div>
+              <button>Edit Profile</button>
+            </div>
+          ) : (
+            <div>
+              <button>Request Conversation</button>
+            </div>
+          )}
         </div>
       </section>
     </main>

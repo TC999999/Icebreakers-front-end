@@ -11,3 +11,8 @@ export type UserCard = {
   favoritecolor: string;
   interests: string[];
 };
+
+export type UserSearch = {
+  username: string;
+  findSimilarInterests: boolean;
+};
