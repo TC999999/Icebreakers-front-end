@@ -1,9 +1,15 @@
 import { type JSX } from "react";
+import { useAppSelector } from "../features/hooks";
 import useUserSearch from "./hooks/useUserSearch";
+import UserSearchSkeleton from "./skeletons/UserSearchSkeleton";
 import UserSearchCard from "./UserSearchCard";
 import "../styles/UserSearch.scss";
 
 const UserSearch = (): JSX.Element => {
+  const { formLoading } = useAppSelector((store) => {
+    return store.user.loading.loadingInfo;
+  });
+
   const {
     searchResults,
     searchedUsers,
@@ -71,14 +77,17 @@ const UserSearch = (): JSX.Element => {
       </div>
 
       <div id="user-search-results">
-        {!searchedUsers.length && (
+        {formLoading && <UserSearchSkeleton cards={10} />}
+        {!formLoading && !searchedUsers.length && (
           <div>
             <h1 id="not-found-message">No users could be found</h1>
           </div>
         )}
-        {searchedUsers.map((u) => {
-          return <UserSearchCard key={`${u.username}-card`} user={u} />;
-        })}
+        {!formLoading &&
+          searchedUsers.length &&
+          searchedUsers.map((u) => {
+            return <UserSearchCard key={`${u.username}-card`} user={u} />;
+          })}
       </div>
     </main>
   );

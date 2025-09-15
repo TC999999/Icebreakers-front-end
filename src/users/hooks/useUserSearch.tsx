@@ -15,13 +15,17 @@ const useUserSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showResults, setShowResults] = useState<boolean>(false);
 
-  const [searchQuery, setSearchQuery] = useState<UserSearch>({
+  const initialQuery: UserSearch = {
     username: "",
     findSimilarInterests: false,
-  });
+  };
+
+  const [searchQuery, setSearchQuery] = useState<UserSearch>(initialQuery);
 
   useEffect(() => {
     const getUsernames = async () => {
+      dispatch(setFormLoading(true));
+      setSearchQuery(initialQuery);
       let params = {};
       let username = searchParams.get("username");
       let findSimilarInterests = searchParams.get("findSimilarInterests");
@@ -38,10 +42,11 @@ const useUserSearch = () => {
 
       const users = await userAPI.searchForUsers(params);
       setSearchedUsers(users);
+      dispatch(setFormLoading(false));
     };
 
     getUsernames();
-  }, []);
+  }, [searchParams]);
 
   const handleSearch = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -2,9 +2,11 @@ import useUserProfile from "./hooks/useUserProfile";
 import { MdPerson } from "react-icons/md";
 import "../styles/UserProfile.scss";
 import { useAppSelector } from "../features/hooks";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 
 const UserProfile = () => {
   const { userState } = useUserProfile();
+  const navigate: NavigateFunction = useNavigate();
 
   const { user } = useAppSelector((store) => {
     return store.user;
@@ -47,7 +49,11 @@ const UserProfile = () => {
             </div>
           ) : (
             <div>
-              <button>Request Conversation</button>
+              <button
+                onClick={() => navigate(`/request/${userState.username}`)}
+              >
+                Request Conversation
+              </button>
             </div>
           )}
         </div>

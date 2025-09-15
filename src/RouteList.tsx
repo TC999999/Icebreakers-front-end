@@ -4,8 +4,11 @@ import LogIn from "./auth/LogIn";
 import SignUp from "./auth/SignUp";
 import HomePage from "./home/HomePage";
 import NotFound from "./NotFound";
+import Error from "./Error";
 import UserProfile from "./users/UserProfile";
 import UserSearch from "./users/UserSearch";
+import RequestPage from "./requests/RequestPage";
+import RequestError from "./requests/RequestError";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -28,7 +31,12 @@ const RouteList = (): JSX.Element | null => {
           <Route path=":username" element={<UserProfile />} />
           <Route path="search" element={<UserSearch />} />
         </Route>
+        <Route path="/request">
+          <Route path=":requestedUser" element={<RequestPage />} />
+        </Route>
+        <Route path="/requestError" element={<RequestError />} />
       </Route>
+      <Route path="/error" element={<Error />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   ) : null;
