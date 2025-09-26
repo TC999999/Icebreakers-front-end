@@ -30,7 +30,7 @@
   #navigation-buttons {
     margin-bottom: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.5);
-    #tabs {
+    .tabs {
       background-color: c.$primary;
       border: s.$borderSettings c.$secondary;
 
@@ -39,6 +39,19 @@
       button {
         cursor: pointer;
         font-weight: bold;
+      }
+
+      &#logged-out-tabs {
+        button {
+          padding: 20px;
+          background: none;
+          border: none;
+          &:hover {
+            background-color: c.$thirdly;
+            color: c.$secondary;
+            text-decoration: underline;
+          }
+        }
       }
 
       #scrollable-tabs {

@@ -1,14 +1,20 @@
 import { type JSX } from "react";
-import { type sentRequest, type receivedRequest } from "../types/requestTypes";
+import {
+  type sentRequest,
+  type receivedRequest,
+  type requestType,
+} from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/RequestList.scss";
 
 type Props = {
+  requestType: requestType;
   requestList: receivedRequest[] | sentRequest[];
   show: boolean;
 };
 
 const RequestList: React.FC<Props> = ({
+  requestType,
   requestList,
   show,
 }): JSX.Element | null => {
@@ -17,7 +23,7 @@ const RequestList: React.FC<Props> = ({
       {requestList && requestList.length > 0 ? (
         <div className="request-card-list">
           {requestList.map((request) => (
-            <RequestCard request={request} />
+            <RequestCard requestType={requestType} request={request} />
           ))}
         </div>
       ) : (

@@ -1,12 +1,17 @@
-import { type receivedRequest, type sentRequest } from "../types/requestTypes";
+import {
+  type receivedRequest,
+  type sentRequest,
+  type requestType,
+} from "../types/requestTypes";
 import { DateTime } from "luxon";
 import "../styles/RequestCard.scss";
 
 type Props = {
+  requestType: requestType;
   request: receivedRequest | sentRequest;
 };
 
-const RequestCard: React.FC<Props> = ({ request }) => {
+const RequestCard: React.FC<Props> = ({ requestType, request }) => {
   let newDate = DateTime.fromISO(request.createdAt).toFormat(
     "LLLL d, yyyy 'at' h:mm a"
   );
@@ -33,12 +38,20 @@ const RequestCard: React.FC<Props> = ({ request }) => {
           </small>
         </span>
       </div>
-      {"requesterUser" in request && (
-        <div className="response-buttons">
-          <button className="accept-button">Accept</button>
-          <button className="decline-button">Decline</button>
-        </div>
-      )}
+
+      <div id="response-list">
+        {requestType === "received" && (
+          <div className="response-buttons" id="received-response">
+            <button className="accept-button">Accept</button>
+            <button className="decline-button">Decline</button>
+          </div>
+        )}
+        {requestType === "sent" && (
+          <div className="response-buttons" id="sent-response">
+            <button className="remove-button">Remove</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

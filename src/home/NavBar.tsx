@@ -36,7 +36,7 @@ const NavBar = (): JSX.Element => {
 
       <div id="navigation-buttons">
         {user ? (
-          <div id="tabs">
+          <div className="tabs">
             <div id="scrollable-tabs">
               <button>Conversations</button>
               <button>Groups</button>
@@ -65,7 +65,7 @@ const NavBar = (): JSX.Element => {
             </div>
           </div>
         ) : (
-          <div id="logged-out-tabs">
+          <div className="tabs" id="logged-out-tabs">
             <button
               className="auth-button"
               id="login-button"

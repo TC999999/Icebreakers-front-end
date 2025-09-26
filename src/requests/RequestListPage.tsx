@@ -76,10 +76,12 @@ const RequestListPage = () => {
           </header>
           <div id="requests">
             <RequestList
+              requestType="received"
               requestList={receivedRequests}
               show={viewedRequests === "received"}
             />
             <RequestList
+              requestType="sent"
               requestList={sentRequests}
               show={viewedRequests === "sent"}
             />
