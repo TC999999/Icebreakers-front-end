@@ -3,6 +3,8 @@
 
 .form-div {
   text-align: center;
+  // display: flex;
+  // justify-content: center;
 
   label {
     color: c.$primary;
@@ -17,6 +19,28 @@
     font-size: large;
     text-align: center;
     border-radius: s.$borderRadius;
+    background-color: #f2eaed;
+    border: s.$borderSettings rgb(79, 0, 37);
+    outline: none;
+    color: rgb(223, 88, 135);
+
+    &:hover {
+      border: s.$borderSettings c.$primary;
+      background-color: c.$inputHover;
+    }
+
+    &:focus {
+      border: s.$borderSettings c.$secondary;
+      background-color: c.$inputFocus;
+    }
+  }
+
+  .form-textarea {
+    width: auto;
+    font-size: large;
+    text-align: center;
+    border-radius: s.$borderRadius;
+    margin: auto;
     background-color: #f2eaed;
     border: s.$borderSettings rgb(79, 0, 37);
     outline: none;

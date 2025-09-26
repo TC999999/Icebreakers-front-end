@@ -4,11 +4,12 @@ import useUserSearch from "./hooks/useUserSearch";
 import UserSearchSkeleton from "./skeletons/UserSearchSkeleton";
 import UserSearchCard from "./UserSearchCard";
 import "../styles/UserSearch.scss";
+import { shallowEqual } from "react-redux";
 
 const UserSearch = (): JSX.Element => {
   const { formLoading } = useAppSelector((store) => {
     return store.user.loading.loadingInfo;
-  });
+  }, shallowEqual);
 
   const {
     searchResults,

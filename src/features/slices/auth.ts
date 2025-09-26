@@ -8,8 +8,7 @@ const authSlice = createSlice({
   reducers: {
     //sets state for errors involving failure to submit data
     setLoadError: (state, action) => {
-      state.loading.loadingError.message = action.payload.message;
-      state.loading.loadingError.status = action.payload.status;
+      state.loading.loadingError = action.payload;
     },
     // changes on page loading state when submitting a form
     setFormLoading: (state, action) => {
@@ -41,7 +40,6 @@ const authSlice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
         state.loading.loadingInfo.pageLoading = false;
-        state.loading.loadingError.message = "";
       })
       .addCase(getCurrentUser.rejected, (state, action: any) => {
         state.user = AUTH_INITIAL_STATE.user;

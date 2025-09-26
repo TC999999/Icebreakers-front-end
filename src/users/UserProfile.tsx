@@ -3,6 +3,7 @@ import { MdPerson } from "react-icons/md";
 import "../styles/UserProfile.scss";
 import { useAppSelector } from "../features/hooks";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { shallowEqual } from "react-redux";
 
 const UserProfile = () => {
   const { userState } = useUserProfile();
@@ -10,7 +11,7 @@ const UserProfile = () => {
 
   const { user } = useAppSelector((store) => {
     return store.user;
-  });
+  }, shallowEqual);
   return (
     <main id="user-profile-page">
       <section id="user-profile-introduction">
@@ -46,14 +47,20 @@ const UserProfile = () => {
           {user?.username === userState.username ? (
             <div>
               <button>Edit Profile</button>
+              <button>View Blocked List</button>
             </div>
           ) : (
             <div>
-              <button
-                onClick={() => navigate(`/request/${userState.username}`)}
-              >
-                Request Conversation
-              </button>
+              {userState.requestSent ? (
+                <p id="request-message">Request Has Already Been Sent!</p>
+              ) : (
+                <button
+                  onClick={() => navigate(`/request/${userState.username}`)}
+                >
+                  Request Conversation
+                </button>
+              )}
+              <button>Invite to a Group</button>
             </div>
           )}
         </div>

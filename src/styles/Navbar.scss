@@ -2,14 +2,13 @@
 @use "settings" as s;
 
 #nav-bar {
-  background-color: c.$primary;
-  padding: 20px 10px;
-  margin: 0px 0px 10px;
-  border: s.$borderSettings c.$secondary;
-  border-radius: s.$borderRadius;
-
   #logo {
     text-align: center;
+    background-color: c.$primary;
+    padding: 20px 10px;
+    margin: 0px 0px 10px;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
 
     h1 {
       a {
@@ -28,41 +27,42 @@
     }
   }
 
-  #buttons {
-    text-align: center;
-    position: relative;
-
+  #navigation-buttons {
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.5);
     #tabs {
+      background-color: c.$primary;
+      border: s.$borderSettings c.$secondary;
+
       display: flex;
       justify-content: space-evenly;
-
       button {
         cursor: pointer;
-        @include s.tablet {
-          margin: 0 40px;
+        font-weight: bold;
+      }
+
+      #scrollable-tabs {
+        display: flex;
+        justify-content: flex-start;
+        width: 600px;
+        overflow: scroll;
+
+        button {
+          padding: 20px;
+          background: none;
+          border: none;
+          &:hover {
+            background-color: c.$thirdly;
+            color: c.$secondary;
+            text-decoration: underline;
+          }
         }
       }
 
-      @include s.tablet {
-        display: inline-block;
-      }
-    }
+      #user-tabs {
+        display: flex;
+        align-items: center;
 
-    #user-info {
-      @include s.tablet {
-        display: inline-block;
-        position: absolute;
-        left: 85%;
-        bottom: 5px;
-        width: 140px;
-        margin-right: 20px;
-      }
-
-      button {
-        margin: 0 2px;
-      }
-
-      #logged-in-links {
         #user-button {
           text-align: center;
           border-radius: s.$borderRadius;
@@ -73,6 +73,18 @@
           &:hover {
             border-color: rgb(70, 182, 246);
             color: rgb(70, 182, 246);
+          }
+        }
+
+        #logout-button {
+          background: none;
+          border: none;
+          font-weight: bold;
+          text-decoration: underline;
+          color: c.$thirdly;
+
+          &:hover {
+            color: c.$secondary;
           }
         }
       }

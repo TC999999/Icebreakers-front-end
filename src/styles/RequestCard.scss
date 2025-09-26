@@ -1,0 +1,49 @@
+@use "colors" as c;
+@use "settings" as s;
+
+.request-card {
+  background-color: c.$primary;
+  color: c.$secondary;
+  padding: 10px;
+  margin: auto;
+  border: s.$borderSettings;
+  border-radius: s.$borderRadius;
+
+  .request-message {
+    font-weight: bold;
+  }
+
+  .response-buttons {
+    display: flex;
+    justify-content: space-evenly;
+
+    button {
+      padding: 10px;
+      border: s.$borderSettings black;
+      border-radius: s.$borderRadius;
+      color: white;
+      transition: 0.2s;
+
+      &:hover {
+        cursor: pointer;
+        color: black;
+      }
+    }
+
+    button.accept-button {
+      background-color: c.$success;
+
+      &:hover {
+        background-color: rgb(100, 251, 100);
+      }
+    }
+
+    button.decline-button {
+      background-color: c.$error;
+
+      &:hover {
+        background-color: rgb(239, 124, 124);
+      }
+    }
+  }
+}

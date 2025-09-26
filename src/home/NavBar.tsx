@@ -22,8 +22,8 @@ const NavBar = (): JSX.Element => {
     navigate(`/user/${user?.username}`);
   };
 
-  const goToSearch = () => {
-    navigate("/user/search");
+  const goTo = (endpoint: string) => {
+    navigate(endpoint);
   };
 
   return (
@@ -34,16 +34,19 @@ const NavBar = (): JSX.Element => {
         </h1>
       </div>
 
-      <div id="buttons">
-        {user && (
+      <div id="navigation-buttons">
+        {user ? (
           <div id="tabs">
-            <button>Conversations</button>
-            <button onClick={goToSearch}>Search For Friends</button>
-          </div>
-        )}
-        <div id="user-info">
-          {user ? (
-            <div id="logged-in-links">
+            <div id="scrollable-tabs">
+              <button>Conversations</button>
+              <button>Groups</button>
+              <button onClick={() => goTo("/user/search")}>
+                Search For Friends
+              </button>
+              <button>Search For Groups</button>
+              <button onClick={() => goTo("/request")}>Requests</button>
+            </div>
+            <div id="user-tabs">
               <button
                 id="user-button"
                 style={{ backgroundColor: user.favoriteColor }}
@@ -52,28 +55,33 @@ const NavBar = (): JSX.Element => {
               >
                 <MdPerson />
               </button>
-
-              <button onClick={() => logOutAndNavigate()}>Log Out</button>
-            </div>
-          ) : (
-            <div id="logged-out-links">
               <button
                 className="auth-button"
-                id="login-button"
-                onClick={() => navigate("/login")}
+                id="logout-button"
+                onClick={() => logOutAndNavigate()}
               >
-                Log In
-              </button>
-              <button
-                className="auth-button"
-                id="register-button"
-                onClick={() => navigate("/register")}
-              >
-                Register
+                Log Out
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div id="logged-out-tabs">
+            <button
+              className="auth-button"
+              id="login-button"
+              onClick={() => navigate("/login")}
+            >
+              Log In
+            </button>
+            <button
+              className="auth-button"
+              id="register-button"
+              onClick={() => navigate("/register")}
+            >
+              Register
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

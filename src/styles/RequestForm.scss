@@ -1,0 +1,30 @@
+@use "colors" as c;
+@use "settings" as s;
+
+#direct-conversation-request-form {
+  background-color: c.$thirdly;
+  padding: 10px;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+  text-align: center;
+
+  h1 {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    color: c.$secondary;
+  }
+
+  #direct-conversation-request-message-div {
+    #required {
+      color: rgb(182, 33, 33);
+    }
+    label {
+      font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    }
+
+    textarea {
+      padding: 5px;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+    }
+  }
+}

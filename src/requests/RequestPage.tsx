@@ -1,15 +1,14 @@
 import { type JSX } from "react";
-
 import useRequestPage from "./hooks/useRequestPage";
 import RequestForm from "./RequestForm";
 
 const RequestPage = (): JSX.Element => {
-  const { userPair } = useRequestPage();
+  const { requestedUser, requesterUser } = useRequestPage();
   return (
     <div>
       <RequestForm
-        requestedUser={userPair.requestedUser}
-        requesterUser={userPair.requesterUser}
+        requestedUser={requestedUser!}
+        requesterUser={requesterUser!}
       />
     </div>
   );

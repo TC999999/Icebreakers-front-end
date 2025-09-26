@@ -4,6 +4,8 @@ export type UserProfile = {
   interests: string[];
   favoriteColor: string;
   createdAt: string;
+  requestSent?: boolean;
+  conversationExists?: boolean;
 };
 
 export type UserCard = {

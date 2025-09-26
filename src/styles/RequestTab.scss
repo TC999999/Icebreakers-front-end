@@ -1,0 +1,20 @@
+@use "settings" as s;
+@use "colors" as c;
+
+.request-tab {
+  background-color: white;
+  padding: 20px;
+  border-bottom: solid c.$secondary;
+
+  &:hover {
+    background-color: bisque;
+    color: blue;
+    text-decoration: underline;
+  }
+}
+
+.selected-tab {
+  background-color: antiquewhite;
+  color: rgb(6, 147, 228);
+  text-decoration: underline;
+}

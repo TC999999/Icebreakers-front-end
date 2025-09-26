@@ -8,7 +8,7 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 
 // mixins
 @mixin tablet {
-  @media (min-width: 768px) {
+  @media (min-width: 710px) {
     @content;
   }
 }

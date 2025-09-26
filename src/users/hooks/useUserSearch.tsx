@@ -46,7 +46,7 @@ const useUserSearch = () => {
     };
 
     getUsernames();
-  }, [searchParams]);
+  }, [dispatch, searchParams]);
 
   const handleSearch = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,9 +99,7 @@ const useUserSearch = () => {
           };
         }
         setSearchParams(params);
-
         let users = await userAPI.searchForUsers(params);
-
         setSearchedUsers(users);
       } catch (err) {
         console.log(err);

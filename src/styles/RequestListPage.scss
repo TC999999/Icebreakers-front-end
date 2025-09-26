@@ -1,0 +1,34 @@
+@use "settings" as s;
+@use "colors" as c;
+
+h1#request-list-page-header {
+  text-align: center;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  color: c.$secondary;
+}
+
+#request-list-page {
+  display: flex;
+  justify-content: flex-start;
+  background-color: c.$thirdly;
+  border: s.$borderSettings c.$secondary;
+  //   border-radius: s.$borderRadius;
+
+  div#request-tabs {
+    border-right: s.$borderSettings c.$secondary;
+    background-color: c.$primary;
+    border-top-left-radius: s.$borderRadius;
+    border-bottom-left-radius: s.$borderRadius;
+    width: 300px;
+  }
+
+  #request-list {
+    padding: 10px;
+    margin: auto;
+
+    header#request-list-header {
+      text-align: center;
+    }
+  }
+}

@@ -24,9 +24,9 @@ type loadingInfo = {
   formLoading: boolean;
 };
 
-type loadingError = {
+export type loadingError = {
   message: string;
-  status: string | null;
+  status: number | null;
 };
 
 export type LoadingContext = {
