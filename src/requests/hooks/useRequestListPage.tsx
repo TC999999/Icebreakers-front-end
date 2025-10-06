@@ -11,6 +11,9 @@ import {
 } from "../../types/requestTypes";
 import requestDesc from "../../helpers/maps/requestList";
 import { type titleAndDesc } from "../../types/miscTypes";
+import removeRequestFromRequested from "../../helpers/removeRequest";
+import addRequest from "../../helpers/addRequest";
+import socket from "../../helpers/socket";
 
 const useRequestListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
@@ -29,6 +32,7 @@ const useRequestListPage = () => {
   const [receivedRequests, setReceivedRequests] = useState<receivedRequest[]>(
     []
   );
+  const [removedRequests, setRemovedRequests] = useState<sentRequest[]>([]);
 
   useEffect(() => {
     const getAllRequests = async () => {
@@ -39,6 +43,7 @@ const useRequestListPage = () => {
         );
         setSendRequests(requests.sentRequestList);
         setReceivedRequests(requests.receivedRequestList);
+        setRemovedRequests(requests.removedRequestList);
       } catch (err) {
         console.log(err);
       } finally {
@@ -47,6 +52,20 @@ const useRequestListPage = () => {
     };
 
     getAllRequests();
+
+    socket.on("addToDirectRequestList", ({ request }) => {
+      console.log("HELLO");
+      addRequest(request, setReceivedRequests);
+    });
+
+    socket.on("remove direct request", ({ from }) => {
+      removeRequestFromRequested(from, setReceivedRequests);
+    });
+
+    return () => {
+      socket.off("addToDirectRequestList");
+      socket.off("remove direct request");
+    };
   }, []);
 
   const changeViewedRequests = useCallback(
@@ -63,6 +82,7 @@ const useRequestListPage = () => {
     currentTitleAndDesc,
     sentRequests,
     receivedRequests,
+    removedRequests,
     changeViewedRequests,
   };
 };

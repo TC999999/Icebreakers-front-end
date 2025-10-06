@@ -38,7 +38,13 @@ export type receivedRequest = {
   createdAt: string;
 };
 
+export type directConversationResponse = {
+  requesterUser: string;
+  acccpted: boolean;
+};
+
 export type requestsList = {
   sentRequestList: sentRequest[];
   receivedRequestList: receivedRequest[];
+  removedRequestList: sentRequest[];
 };

@@ -5,6 +5,7 @@ import {
 } from "../types/requestTypes";
 import { DateTime } from "luxon";
 import "../styles/RequestCard.scss";
+import useRequestCard from "./hooks/useRequestCard";
 
 type Props = {
   requestType: requestType;
@@ -15,6 +16,10 @@ const RequestCard: React.FC<Props> = ({ requestType, request }) => {
   let newDate = DateTime.fromISO(request.createdAt).toFormat(
     "LLLL d, yyyy 'at' h:mm a"
   );
+
+  const { acceptRequest, declineRequest, removeRequest } = useRequestCard({
+    request,
+  });
   return (
     <div className="request-card">
       <h2>
@@ -42,13 +47,19 @@ const RequestCard: React.FC<Props> = ({ requestType, request }) => {
       <div id="response-list">
         {requestType === "received" && (
           <div className="response-buttons" id="received-response">
-            <button className="accept-button">Accept</button>
-            <button className="decline-button">Decline</button>
+            <button className="accept-button" onClick={() => acceptRequest()}>
+              Accept
+            </button>
+            <button className="decline-button" onClick={() => declineRequest()}>
+              Decline
+            </button>
           </div>
         )}
         {requestType === "sent" && (
           <div className="response-buttons" id="sent-response">
-            <button className="remove-button">Remove</button>
+            <button className="remove-button" onClick={() => removeRequest()}>
+              Remove
+            </button>
           </div>
         )}
       </div>

@@ -22,8 +22,12 @@ const RequestList: React.FC<Props> = ({
     <div className="request-list">
       {requestList && requestList.length > 0 ? (
         <div className="request-card-list">
-          {requestList.map((request) => (
-            <RequestCard requestType={requestType} request={request} />
+          {requestList.map((request, i) => (
+            <RequestCard
+              key={`request-${requestType}-${i}`}
+              requestType={requestType}
+              request={request}
+            />
           ))}
         </div>
       ) : (

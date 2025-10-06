@@ -17,6 +17,8 @@ export type UserState = {
   favoriteColor: string;
   isAdmin: boolean;
   isFlagged: boolean;
+  unansweredRequests: number;
+  unreadMessages: number;
 };
 
 type loadingInfo = {

@@ -47,6 +47,7 @@ const NavBar = (): JSX.Element => {
               <button onClick={() => goTo("/request")}>Requests</button>
             </div>
             <div id="user-tabs">
+              <span>{user.unansweredRequests}</span>
               <button
                 id="user-button"
                 style={{ backgroundColor: user.favoriteColor }}

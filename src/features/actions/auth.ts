@@ -6,6 +6,7 @@ import {
   type UserState,
 } from "../../types/authTypes";
 import axios from "axios";
+import socket, { setUpSocket } from "../../helpers/socket";
 
 export const RegisterUser = createAsyncThunk<UserState, Register>(
   "auth/login",
@@ -46,6 +47,8 @@ export const LogInUser = createAsyncThunk<UserState, LogIn>(
         withCredentials: true,
       });
 
+      setUpSocket(socket);
+
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
@@ -64,6 +67,10 @@ export const getCurrentUser = createAsyncThunk<UserState, any>(
         withCredentials: true,
       });
 
+      if (res.data.user) {
+        setUpSocket(socket);
+      }
+
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
@@ -81,6 +88,8 @@ export const LogOutUser = createAsyncThunk<UserState, any>(
         data: data,
         withCredentials: true,
       });
+
+      socket.disconnect();
 
       return res.data;
     } catch (err: any) {

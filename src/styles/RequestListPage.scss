@@ -18,8 +18,8 @@ h1#request-list-page-header {
   div#request-tabs {
     border-right: s.$borderSettings c.$secondary;
     background-color: c.$primary;
-    border-top-left-radius: s.$borderRadius;
-    border-bottom-left-radius: s.$borderRadius;
+    // border-top-left-radius: s.$borderRadius;
+    // border-bottom-left-radius: s.$borderRadius;
     width: 300px;
   }
 
@@ -29,6 +29,11 @@ h1#request-list-page-header {
 
     header#request-list-header {
       text-align: center;
+    }
+
+    #requests {
+      height: 500px;
+      overflow: scroll;
     }
   }
 }

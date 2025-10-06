@@ -8,6 +8,7 @@ const RequestListPage = () => {
     sentRequests,
     receivedRequests,
     viewedRequests,
+    removedRequests,
     currentTitleAndDesc,
     changeViewedRequests,
   } = useRequestListPage();
@@ -84,6 +85,11 @@ const RequestListPage = () => {
               requestType="sent"
               requestList={sentRequests}
               show={viewedRequests === "sent"}
+            />
+            <RequestList
+              requestType="removed"
+              requestList={removedRequests}
+              show={viewedRequests === "removed"}
             />
           </div>
         </div>

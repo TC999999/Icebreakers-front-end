@@ -5,6 +5,7 @@ import { useAppDispatch } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
 import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import requestsAPI from "../../apis/requestsAPI";
+import socket from "../../helpers/socket";
 
 const useRequestForm = (
   requestedUserInput: string,
@@ -44,10 +45,15 @@ const useRequestForm = (
   const handleSubmit = useCallback(
     async (e: React.FormEvent): Promise<void> => {
       e.preventDefault();
-      console.log(requestData);
       try {
         dispatch(setFormLoading(true));
-        await requestsAPI.makeDirectConversationRequest(requestData);
+        const { request, unansweredRequests } =
+          await requestsAPI.makeDirectConversationRequest(requestData);
+        socket.emit("addToDirectRequestList", {
+          request,
+          unansweredRequests,
+          to: requestData.requestedUser,
+        });
         navigate(`/user/${requestData.requestedUser}`);
       } catch (err: any) {
         dispatch(setLoadError(JSON.parse(err)));

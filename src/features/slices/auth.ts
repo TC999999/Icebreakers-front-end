@@ -18,6 +18,10 @@ const authSlice = createSlice({
     setPageLoading: (state, action) => {
       state.loading.loadingInfo.pageLoading = action.payload;
     },
+    // updates number of unanswered requests on client side
+    setUnansweredRequests: (state, action) => {
+      state.user!.unansweredRequests = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,7 +65,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { setFormLoading, setPageLoading, setLoadError } =
-  authSlice.actions;
+export const {
+  setFormLoading,
+  setPageLoading,
+  setLoadError,
+  setUnansweredRequests,
+} = authSlice.actions;
 
 export default authSlice.reducer;

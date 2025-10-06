@@ -11,7 +11,7 @@ class requestsAPI extends API {
     request: directConversationRequest
   ): Promise<any> {
     let res = await this.postRequest("request", request);
-    return res.request;
+    return res;
   }
 
   public static async getDirectConversationRequests(
