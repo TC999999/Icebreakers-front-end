@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 import type {
-  sentRequest,
-  receivedRequest,
+  sentRequestCard,
+  receivedRequestCard,
   directConversationResponse,
 } from "../../types/requestTypes";
 import socket from "../../helpers/socket";
 
 type input = {
-  request: receivedRequest | sentRequest;
+  request: receivedRequestCard | sentRequestCard;
 };
 
 const useRequestCard = ({ request }: input) => {
@@ -31,15 +31,17 @@ const useRequestCard = ({ request }: input) => {
     }
   }, []);
 
-  const removeRequest = useCallback(() => {
-    if ("requestedUser" in request) {
-      socket.emit("remove direct request", {
-        to: request.requestedUser,
-      });
-    }
-  }, []);
+  // const removeRequest = useCallback(() => {
+  //   changeRequestSet(request)
 
-  return { acceptRequest, declineRequest, removeRequest };
+  //   if ("requestedUser" in request) {
+  //     socket.emit("removeDirectRequest", {
+  //       to: request.requestedUser,
+  //     });
+  //   }
+  // }, []);
+
+  return { acceptRequest, declineRequest };
 };
 
 export default useRequestCard;

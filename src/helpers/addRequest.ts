@@ -1,10 +1,10 @@
 import React from "react";
-import type { receivedRequest } from "../types/requestTypes";
+import type { receivedRequestCard } from "../types/requestTypes";
 
 const addRequest = (
-  request: receivedRequest,
+  request: receivedRequestCard,
   receivedRequestsSetter: React.Dispatch<
-    React.SetStateAction<receivedRequest[]>
+    React.SetStateAction<receivedRequestCard[]>
   >
 ): void => {
   receivedRequestsSetter((prev) => {

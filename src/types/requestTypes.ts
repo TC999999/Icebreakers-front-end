@@ -19,14 +19,14 @@ export type directConversationRequestPair = {
   requesterUser: string;
 };
 
-export type directConversationRequestCard = {
+export type sentRequest = {
   requestedUser: string;
-  requesterUser: string;
   content: string;
   createdAt: string;
 };
 
-export type sentRequest = {
+export type sentRequestCard = {
+  id: number;
   requestedUser: string;
   content: string;
   createdAt: string;
@@ -38,13 +38,20 @@ export type receivedRequest = {
   createdAt: string;
 };
 
+export type receivedRequestCard = {
+  id: number;
+  requesterUser: string;
+  content: string;
+  createdAt: string;
+};
+
 export type directConversationResponse = {
   requesterUser: string;
   acccpted: boolean;
 };
 
 export type requestsList = {
-  sentRequestList: sentRequest[];
-  receivedRequestList: receivedRequest[];
-  removedRequestList: sentRequest[];
+  sentRequestList: sentRequestCard[];
+  receivedRequestList: receivedRequestCard[];
+  removedRequestList: sentRequestCard[];
 };

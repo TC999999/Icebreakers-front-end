@@ -20,6 +20,20 @@ class requestsAPI extends API {
     let res = await this.getRequest(`request/${username}`);
     return res.requests;
   }
+
+  public static async removeDirectConversationRequest(
+    id: number
+  ): Promise<any> {
+    let res = await this.patchRequest(`request/remove/${id}`);
+    return res;
+  }
+
+  public static async resendDirectConversationRequest(
+    id: number
+  ): Promise<any> {
+    let res = await this.patchRequest(`request/resend/${id}`);
+    return res;
+  }
 }
 
 export default requestsAPI;

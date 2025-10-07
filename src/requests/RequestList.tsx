@@ -1,32 +1,38 @@
 import { type JSX } from "react";
-import {
-  type sentRequest,
-  type receivedRequest,
-  type requestType,
+import type {
+  sentRequestCard,
+  receivedRequestCard,
+  requestType,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/RequestList.scss";
 
 type Props = {
   requestType: requestType;
-  requestList: receivedRequest[] | sentRequest[];
+  requestList: receivedRequestCard[] | sentRequestCard[];
   show: boolean;
+  removeRequest?: (request: sentRequestCard) => void;
+  resendRequest?: (request: sentRequestCard) => void;
 };
 
 const RequestList: React.FC<Props> = ({
   requestType,
   requestList,
   show,
+  removeRequest,
+  resendRequest,
 }): JSX.Element | null => {
   return show ? (
     <div className="request-list">
       {requestList && requestList.length > 0 ? (
         <div className="request-card-list">
-          {requestList.map((request, i) => (
+          {requestList.map((request) => (
             <RequestCard
-              key={`request-${requestType}-${i}`}
+              key={`request-${requestType}-${request.id}`}
               requestType={requestType}
               request={request}
+              removeRequest={removeRequest}
+              resendRequest={resendRequest}
             />
           ))}
         </div>

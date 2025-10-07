@@ -4,10 +4,10 @@ import { useAppDispatch } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
 import requestsAPI from "../../apis/requestsAPI";
-import {
-  type sentRequest,
-  type receivedRequest,
-  type requestType,
+import type {
+  sentRequestCard,
+  receivedRequestCard,
+  requestType,
 } from "../../types/requestTypes";
 import requestDesc from "../../helpers/maps/requestList";
 import { type titleAndDesc } from "../../types/miscTypes";
@@ -28,11 +28,11 @@ const useRequestListPage = () => {
     requestDesc.get("received") || defaultTitleAndDesc
   );
 
-  const [sentRequests, setSendRequests] = useState<sentRequest[]>([]);
-  const [receivedRequests, setReceivedRequests] = useState<receivedRequest[]>(
-    []
-  );
-  const [removedRequests, setRemovedRequests] = useState<sentRequest[]>([]);
+  const [sentRequests, setSendRequests] = useState<sentRequestCard[]>([]);
+  const [receivedRequests, setReceivedRequests] = useState<
+    receivedRequestCard[]
+  >([]);
+  const [removedRequests, setRemovedRequests] = useState<sentRequestCard[]>([]);
 
   useEffect(() => {
     const getAllRequests = async () => {
@@ -54,17 +54,16 @@ const useRequestListPage = () => {
     getAllRequests();
 
     socket.on("addToDirectRequestList", ({ request }) => {
-      console.log("HELLO");
       addRequest(request, setReceivedRequests);
     });
 
-    socket.on("remove direct request", ({ from }) => {
+    socket.on("removeDirectRequest", ({ from }) => {
       removeRequestFromRequested(from, setReceivedRequests);
     });
 
     return () => {
       socket.off("addToDirectRequestList");
-      socket.off("remove direct request");
+      socket.off("removeDirectRequest");
     };
   }, []);
 
@@ -77,6 +76,42 @@ const useRequestListPage = () => {
     },
     [viewedRequests]
   );
+
+  const removeRequest = useCallback(async (request: sentRequestCard) => {
+    let { unansweredRequests } =
+      await requestsAPI.removeDirectConversationRequest(request.id);
+    socket.emit("removeDirectRequest", {
+      unansweredRequests,
+      to: request.requestedUser,
+    });
+
+    let filteredSentRequests = sentRequests.filter((r) => {
+      return r.id !== request.id;
+    });
+    setSendRequests(filteredSentRequests);
+    setRemovedRequests((prev) => {
+      return [...prev, request];
+    });
+  }, []);
+
+  const resendRequest = useCallback(async (request: sentRequestCard) => {
+    let { resentRequest, unansweredRequests } =
+      await requestsAPI.resendDirectConversationRequest(request.id);
+    socket.emit("addToDirectRequestList", {
+      request: resentRequest,
+      unansweredRequests,
+      to: request.requestedUser,
+    });
+
+    let filteredRemovedRequests = removedRequests.filter((r) => {
+      return r.id !== request.id;
+    });
+    setRemovedRequests(filteredRemovedRequests);
+    setSendRequests((prev) => {
+      return [...prev, request];
+    });
+  }, []);
+
   return {
     viewedRequests,
     currentTitleAndDesc,
@@ -84,6 +119,8 @@ const useRequestListPage = () => {
     receivedRequests,
     removedRequests,
     changeViewedRequests,
+    removeRequest,
+    resendRequest,
   };
 };
 

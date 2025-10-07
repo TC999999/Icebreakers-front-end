@@ -11,6 +11,8 @@ const RequestListPage = () => {
     removedRequests,
     currentTitleAndDesc,
     changeViewedRequests,
+    removeRequest,
+    resendRequest,
   } = useRequestListPage();
   return (
     <main>
@@ -85,11 +87,13 @@ const RequestListPage = () => {
               requestType="sent"
               requestList={sentRequests}
               show={viewedRequests === "sent"}
+              removeRequest={removeRequest}
             />
             <RequestList
               requestType="removed"
               requestList={removedRequests}
               show={viewedRequests === "removed"}
+              resendRequest={resendRequest}
             />
           </div>
         </div>
