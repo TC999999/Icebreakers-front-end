@@ -58,16 +58,39 @@
         display: flex;
         justify-content: flex-start;
         width: 600px;
+        height: 100px;
         overflow: scroll;
 
-        button {
-          padding: 20px;
-          background: none;
-          border: none;
-          &:hover {
-            background-color: c.$thirdly;
-            color: c.$secondary;
-            text-decoration: underline;
+        .navlink {
+          height: 100%;
+          position: relative;
+
+          button {
+            padding: 20px;
+            background: none;
+            border: none;
+            height: 100%;
+
+            &:hover {
+              background-color: c.$thirdly;
+              color: c.$secondary;
+              text-decoration: underline;
+            }
+          }
+
+          .notification-label {
+            position: absolute;
+            left: 80px;
+            bottom: 50px;
+            background-color: rgb(224, 23, 23);
+            padding: 5px;
+
+            text-align: center;
+            border-radius: 50px;
+            color: white;
+            border: solid rgb(141, 7, 7);
+            z-index: 20;
+            font-weight: bold;
           }
         }
       }

@@ -38,16 +38,30 @@ const NavBar = (): JSX.Element => {
         {user ? (
           <div className="tabs">
             <div id="scrollable-tabs">
-              <button>Conversations</button>
-              <button>Groups</button>
-              <button onClick={() => goTo("/user/search")}>
-                Search For Friends
-              </button>
-              <button>Search For Groups</button>
-              <button onClick={() => goTo("/request")}>Requests</button>
+              <div className="navlink">
+                <button>Conversations</button>
+              </div>
+              <div className="navlink">
+                <button>Groups</button>
+              </div>
+              <div className="navlink">
+                <button onClick={() => goTo("/user/search")}>
+                  Search For Friends
+                </button>
+              </div>
+              <div className="navlink">
+                <button>Search For Groups</button>
+              </div>
+              <div className="navlink">
+                {user.unansweredRequests > 0 && (
+                  <div className="notification-label">
+                    {user.unansweredRequests}
+                  </div>
+                )}
+                <button onClick={() => goTo("/request")}>Requests</button>
+              </div>
             </div>
             <div id="user-tabs">
-              <span>{user.unansweredRequests}</span>
               <button
                 id="user-button"
                 style={{ backgroundColor: user.favoriteColor }}
