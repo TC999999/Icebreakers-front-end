@@ -1,7 +1,8 @@
 import API from "./api";
-import {
-  type directConversationRequest,
-  type requestsList,
+import type {
+  directConversationRequest,
+  requestsList,
+  directConversationResponse,
 } from "../types/requestTypes";
 
 class requestsAPI extends API {
@@ -32,6 +33,13 @@ class requestsAPI extends API {
     id: number
   ): Promise<any> {
     let res = await this.patchRequest(`request/resend/${id}`);
+    return res;
+  }
+
+  public static async respondToDirectConversationRequest(
+    response: directConversationResponse
+  ): Promise<any> {
+    let res = await this.postRequest("response", response);
     return res;
   }
 }

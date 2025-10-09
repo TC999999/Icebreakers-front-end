@@ -2,16 +2,21 @@ import { useEffect, useState, useCallback } from "react";
 import { useAppSelector } from "../../features/hooks";
 import { useAppDispatch } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import {
+  setFormLoading,
+  setUnansweredRequests,
+} from "../../features/slices/auth";
 import requestsAPI from "../../apis/requestsAPI";
 import type {
   sentRequestCard,
   receivedRequestCard,
   requestType,
+  directConversationResponse,
 } from "../../types/requestTypes";
 import requestDesc from "../../helpers/maps/requestList";
 import { type titleAndDesc } from "../../types/miscTypes";
 import removeRequestFromRequested from "../../helpers/removeRequest";
+import removeSentRequest from "../../helpers/removeSentRequest";
 import addRequest from "../../helpers/addRequest";
 import socket from "../../helpers/socket";
 
@@ -33,6 +38,11 @@ const useRequestListPage = () => {
     receivedRequestCard[]
   >([]);
   const [removedRequests, setRemovedRequests] = useState<sentRequestCard[]>([]);
+  const [groupInvitations, setGroupInvitations] = useState([]);
+  const [groupRequestsReceived, setGroupRequestsReceived] = useState([]);
+  const [groupRequestsSent, setGroupRequestsSent] = useState([]);
+  const [groupRequestsRemoved, setGroupRequestsRemoved] = useState([]);
+  const [groupRequestsToApprove, setGroupRequestsToApprove] = useState([]);
 
   useEffect(() => {
     const getAllRequests = async () => {
@@ -61,9 +71,14 @@ const useRequestListPage = () => {
       removeRequestFromRequested(from, setReceivedRequests);
     });
 
+    socket.on("removeSentRequest", ({ id }) => {
+      removeSentRequest(id, setSendRequests);
+    });
+
     return () => {
       socket.off("addToDirectRequestList");
       socket.off("removeDirectRequest");
+      socket.off("removeSentRequest");
     };
   }, []);
 
@@ -112,15 +127,36 @@ const useRequestListPage = () => {
     });
   }, []);
 
+  const respondToRequest = useCallback(
+    async (response: directConversationResponse) => {
+      let { requestResponse } =
+        await requestsAPI.respondToDirectConversationRequest(response);
+
+      removeRequestFromRequested(response.requesterUser, setReceivedRequests);
+      dispatch(setUnansweredRequests(requestResponse.unansweredRequests));
+      socket.emit("directResponse", {
+        response: requestResponse,
+        to: response.requesterUser,
+      });
+    },
+    []
+  );
+
   return {
     viewedRequests,
     currentTitleAndDesc,
     sentRequests,
     receivedRequests,
     removedRequests,
+    groupInvitations,
+    groupRequestsReceived,
+    groupRequestsSent,
+    groupRequestsRemoved,
+    groupRequestsToApprove,
     changeViewedRequests,
     removeRequest,
     resendRequest,
+    respondToRequest,
   };
 };
 

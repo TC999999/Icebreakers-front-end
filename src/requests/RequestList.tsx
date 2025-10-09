@@ -2,6 +2,7 @@ import { type JSX } from "react";
 import type {
   sentRequestCard,
   receivedRequestCard,
+  directConversationResponse,
   requestType,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
@@ -11,6 +12,7 @@ type Props = {
   requestType: requestType;
   requestList: receivedRequestCard[] | sentRequestCard[];
   show: boolean;
+  respondToRequest?: (response: directConversationResponse) => void;
   removeRequest?: (request: sentRequestCard) => void;
   resendRequest?: (request: sentRequestCard) => void;
 };
@@ -19,6 +21,7 @@ const RequestList: React.FC<Props> = ({
   requestType,
   requestList,
   show,
+  respondToRequest,
   removeRequest,
   resendRequest,
 }): JSX.Element | null => {
@@ -31,6 +34,7 @@ const RequestList: React.FC<Props> = ({
               key={`request-${requestType}-${request.id}`}
               requestType={requestType}
               request={request}
+              respondToRequest={respondToRequest}
               removeRequest={removeRequest}
               resendRequest={resendRequest}
             />

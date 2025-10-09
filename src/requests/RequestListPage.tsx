@@ -9,10 +9,16 @@ const RequestListPage = () => {
     receivedRequests,
     viewedRequests,
     removedRequests,
+    groupInvitations,
+    groupRequestsReceived,
+    groupRequestsSent,
+    groupRequestsRemoved,
+    groupRequestsToApprove,
     currentTitleAndDesc,
     changeViewedRequests,
     removeRequest,
     resendRequest,
+    respondToRequest,
   } = useRequestListPage();
   return (
     <main>
@@ -28,48 +34,56 @@ const RequestListPage = () => {
             title="Received"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={receivedRequests.length}
           />
           <RequestTab
             requestType="sent"
             title="Sent"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={sentRequests.length}
           />
           <RequestTab
             requestType="removed"
             title="Removed"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={removedRequests.length}
           />
           <RequestTab
             requestType="group-invites-received"
             title="Group Invitations"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={groupInvitations.length}
           />
           <RequestTab
             requestType="group-requests-received"
             title="Group Requests Received"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={groupRequestsReceived.length}
           />
           <RequestTab
             requestType="group-requests-sent"
             title="Group Requests Sent"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={groupRequestsSent.length}
           />
           <RequestTab
             requestType="group-requests-removed"
             title="Group Requests Removed"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={groupRequestsRemoved.length}
           />
           <RequestTab
             requestType="group-invites-to-approve"
             title="Group Invitations to Approve"
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
+            requestAmount={groupRequestsToApprove.length}
           />
         </div>
         <div id="request-list">
@@ -82,6 +96,7 @@ const RequestListPage = () => {
               requestType="received"
               requestList={receivedRequests}
               show={viewedRequests === "received"}
+              respondToRequest={respondToRequest}
             />
             <RequestList
               requestType="sent"

@@ -12,18 +12,15 @@ export const setUpSocket = (socket: Socket) => {
     console.log("hello, you are connected");
   });
 
-  //   socket.on("direct response", ({ response, from, to }) => {
-  //     console.log({ response, from, to });
-  //   });
-
-  //   socket.on("direct message", ({ message, from }) => {
-  //     console.log({ message, from });
-  //   });
+  socket.on("directResponse", ({ response, from }) => {
+    console.log({ response, from });
+  });
 
   socket.on("disconnect", () => {
     console.log("disconnected");
     socket.off("connect");
     socket.off("disconnect");
+    socket.off("directResponse");
   });
 };
 

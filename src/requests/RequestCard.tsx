@@ -1,15 +1,17 @@
 import type {
+  directConversationResponse,
   receivedRequestCard,
   sentRequestCard,
   requestType,
 } from "../types/requestTypes";
 import { DateTime } from "luxon";
 import "../styles/RequestCard.scss";
-import useRequestCard from "./hooks/useRequestCard";
+import { useAppSelector } from "../features/hooks";
 
 type Props = {
   requestType: requestType;
   request: receivedRequestCard | sentRequestCard;
+  respondToRequest?: (response: directConversationResponse) => void;
   removeRequest?: (request: sentRequestCard) => void;
   resendRequest?: (request: sentRequestCard) => void;
 };
@@ -17,6 +19,7 @@ type Props = {
 const RequestCard: React.FC<Props> = ({
   requestType,
   request,
+  respondToRequest,
   removeRequest,
   resendRequest,
 }) => {
@@ -24,9 +27,20 @@ const RequestCard: React.FC<Props> = ({
     "LLLL d, yyyy 'at' h:mm a"
   );
 
-  const { acceptRequest, declineRequest } = useRequestCard({
-    request,
+  const username = useAppSelector((store) => {
+    return store.user.user?.username;
   });
+
+  const respond = (accepted: boolean) => {
+    if (respondToRequest && "requesterUser" in request) {
+      respondToRequest({
+        id: request.id,
+        requesterUser: request.requesterUser,
+        requestedUser: username!,
+        accepted,
+      });
+    }
+  };
 
   const remove = () => {
     if (removeRequest && "requestedUser" in request) {
@@ -67,10 +81,10 @@ const RequestCard: React.FC<Props> = ({
       <div id="response-list">
         {requestType === "received" && (
           <div className="response-buttons" id="received-response">
-            <button className="accept-button" onClick={() => acceptRequest()}>
+            <button className="accept-button" onClick={() => respond(true)}>
               Accept
             </button>
-            <button className="decline-button" onClick={() => declineRequest()}>
+            <button className="decline-button" onClick={() => respond(false)}>
               Decline
             </button>
           </div>
