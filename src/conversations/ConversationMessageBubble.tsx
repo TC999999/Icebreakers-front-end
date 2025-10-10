@@ -16,48 +16,20 @@ const ConversationMessageBubble: React.FC<Props> = ({
   );
   return (
     <div
-      className={`direct-message-bubble-window ${
+      className={`direct-message-bubble ${
         conversationMessage.username === username
-          ? "self-bubble-window"
-          : "other-bubble-window"
+          ? "self-bubble"
+          : "other-bubble"
       }`}
     >
-      <div
-        className={`direct-message-bubble ${
-          conversationMessage.username === username
-            ? "self-bubble"
-            : "other-bubble"
-        }`}
-      >
-        <div>
-          <p>{conversationMessage.content}</p>
-          <small>{newDate}</small>
-          <br />
-          <small>From: {conversationMessage.username}</small>
-        </div>
+      <div>
+        <p>{conversationMessage.content}</p>
+        <small>{newDate}</small>
+        <br />
+        <small>From: {conversationMessage.username}</small>
       </div>
-      <div className={`bubble-tail`}></div>
     </div>
   );
-
-  //   return (
-  //     <table>
-  //       <tr className="bubble-row">
-  //         <td colSpan={6} className="bubble">
-  //           <p>{conversationMessage.content}</p>
-  //           <small>{newDate}</small>
-  //         </td>
-  //       </tr>
-  //       <tr className="bubble-tail">
-  //         <td className="tail">t</td>
-  //         <td> </td>
-  //         <td> </td>
-  //         <td> </td>
-  //         <td> </td>
-  //         <td> </td>
-  //       </tr>
-  //     </table>
-  //   );
 };
 
 export default ConversationMessageBubble;

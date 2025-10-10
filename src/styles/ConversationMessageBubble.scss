@@ -1,53 +1,48 @@
 @use "colors" as c;
 @use "settings" as s;
 
-.direct-message-bubble-window {
-  display: flex;
+.direct-message-bubble {
+  width: 30%;
+  padding: 10px;
+  margin: 10px;
+  position: relative;
 
-  &.self-bubble-window {
-    justify-content: flex-end;
+  &.self-bubble {
+    background-color: blue;
+    color: white;
+    border-radius: s.$borderRadius;
+    align-self: flex-end;
   }
 
-  .direct-message-bubble {
-    width: 30%;
-    padding: 10px;
-    // border-radius: s.$borderRadius;
-
-    &.self-bubble {
-      background-color: blue;
-      color: white;
-      border-radius: s.$borderRadius s.$borderRadius 0px s.$borderRadius;
-      margin: 10px 0px 10px 10px;
-    }
-
-    &.other-bubble {
-      background-color: white;
-      border-radius: s.$borderRadius s.$borderRadius s.$borderRadius 0px;
-      margin: 10px 10px 10px 0px;
-    }
+  &.other-bubble {
+    background-color: white;
+    border-radius: s.$borderRadius;
   }
 }
 
-.self-bubble-window::after {
+.self-bubble::after {
   content: " ";
   width: 0;
   height: 0;
-  position: relative;
-  top: 97.5px;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid blue;
-  border-left: 10px solid blue;
-  border-right: 10px solid transparent;
+  position: absolute;
+  top: 80%;
+  left: 70%;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 20px solid transparent;
+  border-right: 20px solid blue;
 }
 
-.other-bubble-window::before {
+.other-bubble::before {
   content: " ";
+  z-index: -1;
   width: 0;
   height: 0;
-  position: relative;
-  top: 97.5px;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid white;
-  border-left: 10px solid transparent;
-  border-right: 10px solid white;
+  position: absolute;
+  top: 80%;
+  right: 70%;
+  border-top: 20px solid white;
+  border-bottom: 20px solid transparent;
+  border-left: 20px solid white;
+  border-right: 20px solid transparent;
 }
