@@ -1,0 +1,53 @@
+@use "colors" as c;
+@use "settings" as s;
+
+.direct-message-bubble-window {
+  display: flex;
+
+  &.self-bubble-window {
+    justify-content: flex-end;
+  }
+
+  .direct-message-bubble {
+    width: 30%;
+    padding: 10px;
+    // border-radius: s.$borderRadius;
+
+    &.self-bubble {
+      background-color: blue;
+      color: white;
+      border-radius: s.$borderRadius s.$borderRadius 0px s.$borderRadius;
+      margin: 10px 0px 10px 10px;
+    }
+
+    &.other-bubble {
+      background-color: white;
+      border-radius: s.$borderRadius s.$borderRadius s.$borderRadius 0px;
+      margin: 10px 10px 10px 0px;
+    }
+  }
+}
+
+.self-bubble-window::after {
+  content: " ";
+  width: 0;
+  height: 0;
+  position: relative;
+  top: 97.5px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid blue;
+  border-left: 10px solid blue;
+  border-right: 10px solid transparent;
+}
+
+.other-bubble-window::before {
+  content: " ";
+  width: 0;
+  height: 0;
+  position: relative;
+  top: 97.5px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid white;
+  border-left: 10px solid transparent;
+  border-right: 10px solid white;
+}

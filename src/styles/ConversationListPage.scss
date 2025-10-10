@@ -1,0 +1,51 @@
+@use "colors" as c;
+@use "settings" as s;
+
+#conversations-list-page {
+  header {
+    text-align: center;
+    color: c.$secondary;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+  }
+
+  #conversation-list {
+    height: 600px;
+    border: s.$borderSettings c.$primary;
+    #conversation-list-window {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: flex-start;
+
+      #conversation-messages-window {
+        background-color: c.$thirdly;
+        width: 80%;
+        height: 100%;
+        #conversation-messages {
+          height: 95%;
+          overflow-y: scroll;
+        }
+
+        #conversation-message-input {
+          height: 5%;
+          background-color: c.$primary;
+
+          input {
+            width: 80%;
+            padding: 5px;
+            border: s.$borderSettings c.$secondary;
+            border-radius: s.$borderRadius;
+            // padding: 1%;
+          }
+        }
+      }
+      #conversation-tabs {
+        background-color: c.$secondary;
+        width: 20%;
+        height: 100%;
+        border-right: s.$borderSettings c.$primary;
+      }
+    }
+  }
+}

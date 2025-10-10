@@ -39,7 +39,9 @@ const NavBar = (): JSX.Element => {
           <div className="tabs">
             <div id="scrollable-tabs">
               <div className="navlink">
-                <button>Conversations</button>
+                <button onClick={() => goTo("/conversations")}>
+                  Conversations
+                </button>
               </div>
               <div className="navlink">
                 <button>Groups</button>

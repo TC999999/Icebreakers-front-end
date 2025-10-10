@@ -13,19 +13,19 @@ h1#request-list-page-header {
   justify-content: flex-start;
   background-color: c.$thirdly;
   border: s.$borderSettings c.$secondary;
-  //   border-radius: s.$borderRadius;
+  height: 600px;
 
   div#request-tabs {
     border-right: s.$borderSettings c.$secondary;
     background-color: c.$primary;
-    // border-top-left-radius: s.$borderRadius;
-    // border-bottom-left-radius: s.$borderRadius;
     width: 300px;
+    height: 100%;
   }
 
   #request-list {
     padding: 10px;
     margin: auto;
+    width: 600px;
 
     header#request-list-header {
       text-align: center;
@@ -33,7 +33,6 @@ h1#request-list-page-header {
 
     #requests {
       height: 500px;
-      overflow: scroll;
     }
   }
 }

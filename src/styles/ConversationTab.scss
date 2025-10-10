@@ -1,0 +1,14 @@
+@use "colors" as c;
+@use "settings" as s;
+
+.conversation-tab {
+  background-color: white;
+  padding: 1px;
+  border-bottom: s.$borderSettings c.$primary;
+}
+
+.selected {
+  background-color: beige;
+  color: blue;
+  text-decoration: underline;
+}

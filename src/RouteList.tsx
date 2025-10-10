@@ -9,6 +9,7 @@ import UserProfile from "./users/UserProfile";
 import UserSearch from "./users/UserSearch";
 import RequestPage from "./requests/RequestPage";
 import RequestListPage from "./requests/RequestListPage";
+import ConversationListPage from "./conversations/ConversationListPage";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -35,6 +36,9 @@ const RouteList = (): JSX.Element | null => {
         <Route path="/request">
           <Route index element={<RequestListPage />} />
           <Route path=":requestedUser" element={<RequestPage />} />
+        </Route>
+        <Route path="/conversations">
+          <Route index element={<ConversationListPage />} />
         </Route>
         <Route element={<ErrorRoutes />}>
           <Route path="/error" element={<Error />} />
