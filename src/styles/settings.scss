@@ -12,3 +12,41 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
     @content;
   }
 }
+
+// animations
+@keyframes spinner {
+  0% {
+    transform: rotate(0turn);
+  }
+
+  20% {
+    transform: rotate(0.2turn);
+  }
+
+  40% {
+    transform: rotate(0.4turn);
+  }
+
+  60% {
+    transform: rotate(0.6turn);
+  }
+
+  80% {
+    transform: rotate(0.8turn);
+  }
+
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes ellipses {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

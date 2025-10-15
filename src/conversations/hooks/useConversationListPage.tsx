@@ -23,7 +23,7 @@ const useConversationListPage = () => {
     []
   );
   const [messageInput, setMessageInput] = useState<savedMessage>(initialInput);
-  const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
 
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);

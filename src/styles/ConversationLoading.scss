@@ -1,0 +1,76 @@
+@use "colors" as c;
+@use "settings" as s;
+
+#conversation-messages-loading-window {
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  #conversation-messages-loading-box {
+    background-color: white;
+    padding: 50px;
+    width: 30%;
+    text-align: center;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+    font-weight: bold;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+
+    display: flex;
+    justify-content: center;
+
+    #conversation-messages-loading-message {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ellipsis {
+      opacity: 0;
+      animation: ellipses 1.5s infinite;
+    }
+
+    .ellipsis:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .ellipsis:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    .ellipsis:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    // #ellipses span {
+    //   opacity: 0;
+    //   animation: ellipses 6s infinite;
+    // }
+
+    // #ellipsis-1 {
+    //   animation-delay: 0s;
+    // }
+
+    // #ellipsis-2 {
+    //   animation-delay: 2s;
+    // }
+
+    // #ellipsis-3 {
+    //   animation-delay: 4s;
+    // }
+
+    #loading-hourglass {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      animation: spinner 0.5s infinite;
+    }
+
+    .box-text {
+      margin: 10px;
+    }
+  }
+}
