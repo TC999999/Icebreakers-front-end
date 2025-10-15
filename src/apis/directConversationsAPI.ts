@@ -14,9 +14,12 @@ class directConversationsAPI extends API {
 
   public static async getMessages(
     username: string,
-    id: number
+    id: number,
+    unreadMessages: number
   ): Promise<conversationMessage[]> {
-    let res = await this.getRequest(`${username}/conversation/${id}/messages`);
+    let res = await this.getRequest(`${username}/conversation/${id}/messages`, {
+      unreadMessages,
+    });
     return res.messages;
   }
 

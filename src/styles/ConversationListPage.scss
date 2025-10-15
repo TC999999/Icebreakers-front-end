@@ -29,6 +29,13 @@
           flex-direction: column;
         }
 
+        #messages-header {
+          background-color: c.$primary;
+          position: sticky;
+          top: 0;
+          z-index: 2;
+        }
+
         #conversation-message-input {
           height: 5%;
           background-color: c.$primary;

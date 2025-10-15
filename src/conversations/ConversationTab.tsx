@@ -21,7 +21,10 @@ const ConversationTab: React.FC<Props> = ({
       onClick={() => handleCurrentConversation(conversation)}
       className={`conversation-tab ${selected ? "selected" : ""}`}
     >
-      <p>{conversation.title}</p>
+      <p>
+        {conversation.title}{" "}
+        {conversation.unreadMessages > 0 && `(${conversation.unreadMessages})`}
+      </p>
       <p>{newDate}</p>
     </div>
   );

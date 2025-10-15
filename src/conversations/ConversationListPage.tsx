@@ -2,9 +2,11 @@ import "../styles/ConversationListPage.scss";
 import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationTab from "./ConversationTab";
 import ConversationMessageBubble from "./ConversationMessageBubble";
+import ConversationLoading from "./ConversationLoading";
 
 const ConversationListPage = () => {
   const {
+    loadingMessages,
     messageInput,
     currentConversation,
     conversations,
@@ -14,6 +16,7 @@ const ConversationListPage = () => {
     handleCurrentConversation,
     handleSend,
   } = useConversationListPage();
+
   return (
     <main id="conversations-list-page">
       <header>
@@ -36,18 +39,22 @@ const ConversationListPage = () => {
             })}
           </div>
           <div id="conversation-messages-window">
-            <div ref={scrollRef} id="conversation-messages">
-              {currentConversation}
+            {loadingMessages ? (
+              <ConversationLoading />
+            ) : (
+              <div ref={scrollRef} id="conversation-messages">
+                <header id="messages-header">{currentConversation}</header>
 
-              {currentMessages.map((m) => {
-                return (
-                  <ConversationMessageBubble
-                    key={`conversation-${m.id}`}
-                    conversationMessage={m}
-                  />
-                );
-              })}
-            </div>
+                {currentMessages.map((m) => {
+                  return (
+                    <ConversationMessageBubble
+                      key={`conversation-${m.id}`}
+                      conversationMessage={m}
+                    />
+                  );
+                })}
+              </div>
+            )}
             <div id="conversation-message-input">
               <form name="content" onSubmit={handleSend}>
                 <input

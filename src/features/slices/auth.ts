@@ -22,6 +22,10 @@ const authSlice = createSlice({
     setUnansweredRequests: (state, action) => {
       state.user!.unansweredRequests = action.payload;
     },
+    // updates total number of unread messages on client side
+    setUnreadMessages: (state, action) => {
+      state.user!.unreadMessages += action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,6 +74,7 @@ export const {
   setPageLoading,
   setLoadError,
   setUnansweredRequests,
+  setUnreadMessages,
 } = authSlice.actions;
 
 export default authSlice.reducer;

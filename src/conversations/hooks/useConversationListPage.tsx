@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setUnreadMessages } from "../../features/slices/auth";
 import type {
   conversation,
   conversationMessage,
@@ -15,20 +15,20 @@ const useConversationListPage = () => {
   const username = useAppSelector((store) => {
     return store.user.user?.username;
   });
+
+  const initialInput: savedMessage = { content: "" };
   const [conversations, setConversations] = useState<conversation[]>([]);
   const [currentConversation, setCurrentConversation] = useState<number>(0);
   const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
     []
   );
-  //   const savedMessages = new Map<number, savedMessage>();
-
-  const initialInput: savedMessage = { content: "" };
-
   const [messageInput, setMessageInput] = useState<savedMessage>(initialInput);
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
 
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // gets all of a user's direct conversations
   useEffect(() => {
     try {
       dispatch(setFormLoading(true));
@@ -37,7 +37,6 @@ const useConversationListPage = () => {
           const conversations = await directConversationsAPI.getConversations(
             username
           );
-          //   console.log(conversations);
           setConversations(conversations);
         }
       };
@@ -56,48 +55,57 @@ const useConversationListPage = () => {
     }
   }, [currentMessages]);
 
+  // updates list of current messages when a message from current conversation is added from other user in conversation
   useEffect(() => {
     socket.on("directMessage", ({ message, id }) => {
       if (id === currentConversation) {
-        console.log("Insert into current messages");
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
+        dispatch(setUnreadMessages(-1));
+        socket.emit("decreaseUnreadMessages", { id });
       } else {
-        console.log("this does not belong in current messages");
+        const newConversations = conversations.map((convo) => {
+          return convo.id === id
+            ? { ...convo, unreadMessages: convo.unreadMessages + 1 }
+            : convo;
+        });
+        setConversations(newConversations);
       }
     });
 
     return () => {
       socket.off("directMessage");
     };
-  }, [currentConversation]);
+  }, [currentConversation, conversations]);
 
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
-      //   console.log(conversation);
+      setLoadingMessages(true);
       setCurrentConversation(conversation.id);
       setMessageInput((prev) => ({ ...prev, content: "" }));
+      if (conversation.unreadMessages > 0) {
+        const newConversations = conversations.map((convo) =>
+          convo.id === conversation.id ? { ...convo, unreadMessages: 0 } : convo
+        );
+        setConversations(newConversations);
+        dispatch(setUnreadMessages(conversation.unreadMessages * -1));
+      }
       let messages = await directConversationsAPI.getMessages(
         username!,
-        conversation.id
+        conversation.id,
+        conversation.unreadMessages
       );
       setCurrentMessages(messages);
+      setLoadingMessages(false);
     },
-    [currentConversation]
+    [loadingMessages, currentConversation, conversations]
   );
 
   const handleChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       let { name, value } = e.target;
       setMessageInput((prev) => ({ ...prev, [name]: value }));
-      //   if (messageInput.content.length > 0) {
-      //     savedMessages.set(currentConversation, {
-      //       content: value,
-      //     });
-      //   } else {
-      //     savedMessages.delete(currentConversation);
-      //   }
     },
     [messageInput]
   );
@@ -106,18 +114,15 @@ const useConversationListPage = () => {
     async (e: React.FormEvent) => {
       try {
         e.preventDefault();
-        // console.log(messageInput);
-
         if (!messageInput.content) {
           throw new Error("message cannot be empty");
         }
-        let { message, otherUser } = await directConversationsAPI.createMessage(
-          messageInput,
-          username!,
-          currentConversation
-        );
-        // console.log(message);
-        // console.log(otherUser);
+        const { message, otherUser } =
+          await directConversationsAPI.createMessage(
+            messageInput,
+            username!,
+            currentConversation
+          );
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
@@ -135,6 +140,7 @@ const useConversationListPage = () => {
   );
 
   return {
+    loadingMessages,
     conversations,
     currentConversation,
     messageInput,

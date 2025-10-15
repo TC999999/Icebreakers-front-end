@@ -39,6 +39,11 @@ const NavBar = (): JSX.Element => {
           <div className="tabs">
             <div id="scrollable-tabs">
               <div className="navlink">
+                {user.unreadMessages > 0 && (
+                  <div className="notification-label">
+                    {user.unreadMessages}
+                  </div>
+                )}
                 <button onClick={() => goTo("/conversations")}>
                   Conversations
                 </button>

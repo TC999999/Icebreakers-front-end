@@ -2,6 +2,7 @@ export type conversation = {
   id: number;
   title: string;
   lastUpdatedAt: string;
+  unreadMessages: number;
 };
 
 export type conversationMessage = {

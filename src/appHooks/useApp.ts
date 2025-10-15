@@ -5,7 +5,10 @@ import { getCurrentUser } from "../features/actions/auth";
 import { useAppSelector } from "../features/hooks";
 import type { UserState } from "../types/authTypes";
 import socket from "../helpers/socket";
-import { setUnansweredRequests } from "../features/slices/auth";
+import {
+  setUnansweredRequests,
+  setUnreadMessages,
+} from "../features/slices/auth";
 
 const useApp = () => {
   const dispatch: AppDispatch = useAppDispatch();
@@ -23,12 +26,18 @@ const useApp = () => {
   useEffect((): (() => void) | undefined => {
     if (user) {
       socket.on("updateUnansweredRequests", ({ unansweredRequests }) => {
-        dispatch(setUnansweredRequests(unansweredRequests.unansweredRequests));
+        dispatch(setUnansweredRequests(unansweredRequests));
         socket.emit("updateUnansweredRequests", { unansweredRequests });
+      });
+
+      socket.on("increaseUnreadMessages", () => {
+        dispatch(setUnreadMessages(1));
+        socket.emit("increaseUnreadMessages");
       });
 
       return () => {
         socket.off("updateUnansweredRequests");
+        socket.off("increaseUnreadMessages");
       };
     }
   }, [user]);
