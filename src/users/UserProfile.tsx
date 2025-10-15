@@ -51,9 +51,17 @@ const UserProfile = () => {
             </div>
           ) : (
             <div>
-              {userState.requestSent ? (
+              {userState.requestSent && !userState.conversationExists && (
                 <p id="request-message">Request Has Already Been Sent!</p>
-              ) : (
+              )}
+
+              {!userState.requestSent && userState.conversationExists && (
+                <p id="request-message">
+                  You are already chatting with this user!
+                </p>
+              )}
+
+              {!userState.requestSent && !userState.conversationExists && (
                 <button
                   onClick={() => navigate(`/request/${userState.username}`)}
                 >

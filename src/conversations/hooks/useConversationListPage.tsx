@@ -59,12 +59,14 @@ const useConversationListPage = () => {
   useEffect(() => {
     socket.on("directMessage", ({ message, id }) => {
       if (id === currentConversation) {
+        console.log("THIS SHOULD DECREASE MESSAGES NOTIFICATIONS");
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
         dispatch(setUnreadMessages(-1));
         socket.emit("decreaseUnreadMessages", { id });
       } else {
+        console.log("THIS SHOULD INCREASE MESSAGES NOTIFICATIONS");
         const newConversations = conversations.map((convo) => {
           return convo.id === id
             ? { ...convo, unreadMessages: convo.unreadMessages + 1 }
@@ -90,6 +92,9 @@ const useConversationListPage = () => {
         );
         setConversations(newConversations);
         dispatch(setUnreadMessages(conversation.unreadMessages * -1));
+        socket.emit("clearTotalUnreadMessages", {
+          unreadMessages: conversation.unreadMessages,
+        });
       }
       let messages = await directConversationsAPI.getMessages(
         username!,
@@ -97,6 +102,7 @@ const useConversationListPage = () => {
         conversation.unreadMessages
       );
       setCurrentMessages(messages);
+
       setLoadingMessages(false);
     },
     [loadingMessages, currentConversation, conversations]
