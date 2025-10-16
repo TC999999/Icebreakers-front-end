@@ -10,6 +10,11 @@ type getMessagesReturn = {
   conversationData: currentConversation;
 };
 
+type createMessagesReturn = {
+  message: conversationMessage;
+  otherUser: { username: string };
+};
+
 class directConversationsAPI extends API {
   public static route = "directMessage";
 
@@ -36,7 +41,7 @@ class directConversationsAPI extends API {
     message: savedMessage,
     username: string,
     id: number
-  ): Promise<any> {
+  ): Promise<createMessagesReturn> {
     const res = await this.postRequest(
       `${username}/conversation/${id}/message`,
       message

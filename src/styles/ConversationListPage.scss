@@ -54,10 +54,12 @@
         #typing-message {
           background-color: c.$primary;
           border: s.$borderSettings;
+          border-radius: s.$borderRadius;
           width: 30%;
           position: sticky;
           padding: 2px;
-          bottom: 0;
+          left: 5px;
+          bottom: 5px;
           z-index: 2;
           text-align: center;
           font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;

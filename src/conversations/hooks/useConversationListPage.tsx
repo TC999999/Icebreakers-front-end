@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
+import { useSearchParams } from "react-router-dom";
 import { setFormLoading, setUnreadMessages } from "../../features/slices/auth";
 import type {
   conversation,
@@ -17,6 +18,7 @@ const useConversationListPage = () => {
   const username = useAppSelector((store) => {
     return store.user.user?.username;
   });
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const initialInput: savedMessage = { content: "" };
   const initialConversationData: currentConversation = { id: 0, recipient: "" };
@@ -43,6 +45,19 @@ const useConversationListPage = () => {
             username
           );
           setConversations(conversations);
+          const currentID = searchParams.get("id");
+          if (currentID) {
+            setLoadingMessages(true);
+            let { messages, conversationData } =
+              await directConversationsAPI.getMessages(
+                username!,
+                parseFloat(currentID),
+                0
+              );
+            setCurrentConversation(conversationData);
+            setCurrentMessages(messages);
+            setLoadingMessages(false);
+          }
         }
       };
       getConversations();
@@ -67,6 +82,13 @@ const useConversationListPage = () => {
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
+
+        const newConversations = conversations.map((convo) => {
+          return convo.id === currentConversation.id
+            ? { ...convo, lastUpdatedAt: message.createdAt }
+            : convo;
+        });
+        setConversations(newConversations);
         dispatch(setUnreadMessages(-1));
         socket.emit("decreaseUnreadMessages", { id });
       } else {
@@ -142,6 +164,7 @@ const useConversationListPage = () => {
       setCurrentMessages(messages);
       setTypingMessage("");
       setLoadingMessages(false);
+      setSearchParams({ id: conversation.id.toString() });
     },
     [
       loadingMessages,
@@ -225,6 +248,13 @@ const useConversationListPage = () => {
         });
 
         setMessageInput(initialInput);
+
+        const newConversations = conversations.map((convo) => {
+          return convo.id === currentConversation.id
+            ? { ...convo, lastUpdatedAt: message.createdAt }
+            : convo;
+        });
+        setConversations(newConversations);
         socket.emit("directMessage", {
           message,
           id: currentConversation.id,

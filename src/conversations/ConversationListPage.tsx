@@ -48,9 +48,11 @@ const ConversationListPage = () => {
               <div ref={scrollRef} id="conversation-messages">
                 <header id="messages-header">
                   {currentConversation.recipient}
-                  <div id="edit-conversation-button">
-                    <button>Edit</button>
-                  </div>
+                  {currentConversation.id > 0 && (
+                    <div id="edit-conversation-button">
+                      <button>Edit</button>
+                    </div>
+                  )}
                 </header>
 
                 {currentMessages.map((m) => {
