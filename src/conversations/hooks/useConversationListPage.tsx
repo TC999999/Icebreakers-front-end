@@ -6,9 +6,11 @@ import type {
   conversation,
   conversationMessage,
   savedMessage,
+  currentConversation,
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import socket from "../../helpers/socket";
+import savedMessages from "../../helpers/maps/savedMessages";
 
 const useConversationListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
@@ -17,13 +19,16 @@ const useConversationListPage = () => {
   });
 
   const initialInput: savedMessage = { content: "" };
+  const initialConversationData: currentConversation = { id: 0, recipient: "" };
   const [conversations, setConversations] = useState<conversation[]>([]);
-  const [currentConversation, setCurrentConversation] = useState<number>(0);
+  const [currentConversation, setCurrentConversation] =
+    useState<currentConversation>(initialConversationData);
   const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
     []
   );
   const [messageInput, setMessageInput] = useState<savedMessage>(initialInput);
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
+  const [typingMessage, setTypingMessage] = useState<string>("");
 
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,15 +63,13 @@ const useConversationListPage = () => {
   // updates list of current messages when a message from current conversation is added from other user in conversation
   useEffect(() => {
     socket.on("directMessage", ({ message, id }) => {
-      if (id === currentConversation) {
-        console.log("THIS SHOULD DECREASE MESSAGES NOTIFICATIONS");
+      if (id === currentConversation.id) {
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
         dispatch(setUnreadMessages(-1));
         socket.emit("decreaseUnreadMessages", { id });
       } else {
-        console.log("THIS SHOULD INCREASE MESSAGES NOTIFICATIONS");
         const newConversations = conversations.map((convo) => {
           return convo.id === id
             ? { ...convo, unreadMessages: convo.unreadMessages + 1 }
@@ -81,11 +84,36 @@ const useConversationListPage = () => {
     };
   }, [currentConversation, conversations]);
 
+  // lets user know when other user in the conversation is typing
+  useEffect(() => {
+    socket.on("isTyping", ({ otherUser, id }) => {
+      if (id === currentConversation.id) {
+        setTypingMessage(`${otherUser} is typing`);
+      }
+    });
+
+    socket.on("isNotTyping", ({ id }) => {
+      if (id === currentConversation.id) {
+        setTypingMessage("");
+      }
+    });
+
+    return () => {
+      socket.off("isTyping");
+      socket.off("isNotTyping");
+    };
+  }, [currentConversation]);
+
+  // handles when a user changes conversation tabs
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
       setLoadingMessages(true);
-      setCurrentConversation(conversation.id);
-      setMessageInput((prev) => ({ ...prev, content: "" }));
+      savedMessages.delete(currentConversation.id);
+
+      if (currentConversation.id > 0 && messageInput.content.length > 0) {
+        savedMessages.set(currentConversation.id, messageInput.content);
+      }
+
       if (conversation.unreadMessages > 0) {
         const newConversations = conversations.map((convo) =>
           convo.id === conversation.id ? { ...convo, unreadMessages: 0 } : convo
@@ -96,26 +124,89 @@ const useConversationListPage = () => {
           unreadMessages: conversation.unreadMessages,
         });
       }
-      let messages = await directConversationsAPI.getMessages(
-        username!,
-        conversation.id,
-        conversation.unreadMessages
-      );
-      setCurrentMessages(messages);
+      let { messages, conversationData } =
+        await directConversationsAPI.getMessages(
+          username!,
+          conversation.id,
+          conversation.unreadMessages
+        );
 
+      const convoMessage = savedMessages.get(conversation.id);
+
+      setMessageInput((prev) => ({
+        ...prev,
+        content: convoMessage ? convoMessage : "",
+      }));
+
+      setCurrentConversation(conversationData);
+      setCurrentMessages(messages);
+      setTypingMessage("");
       setLoadingMessages(false);
     },
-    [loadingMessages, currentConversation, conversations]
+    [
+      loadingMessages,
+      currentConversation,
+      conversations,
+      typingMessage,
+      messageInput,
+      savedMessages,
+    ]
   );
 
+  // handles change event on message input, also lets other user know
+  // if user is typing something
   const handleChangeInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       let { name, value } = e.target;
       setMessageInput((prev) => ({ ...prev, [name]: value }));
+
+      if (currentConversation.id > 0 && value.length > 0) {
+        socket.emit("isTyping", {
+          otherUser: username,
+          id: currentConversation.id,
+          to: currentConversation.recipient,
+        });
+      } else if (currentConversation.id > 0 && value.length === 0) {
+        socket.emit("isNotTyping", {
+          otherUser: username,
+          id: currentConversation.id,
+          to: currentConversation.recipient,
+        });
+      }
+    },
+    [messageInput, currentConversation]
+  );
+
+  const handleFocus = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      if (currentConversation.id > 0 && messageInput.content.length > 0) {
+        socket.emit("isTyping", {
+          otherUser: username,
+          id: currentConversation.id,
+          to: currentConversation.recipient,
+        });
+      }
     },
     [messageInput]
   );
 
+  const handleBlur = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      if (currentConversation.id > 0) {
+        socket.emit("isNotTyping", {
+          otherUser: username,
+          id: currentConversation.id,
+          to: currentConversation.recipient,
+        });
+      }
+    },
+    [messageInput]
+  );
+
+  // handles sending message to other users, including updated db
+  // and sending a socket signal to other user
   const handleSend = useCallback(
     async (e: React.FormEvent) => {
       try {
@@ -127,16 +218,22 @@ const useConversationListPage = () => {
           await directConversationsAPI.createMessage(
             messageInput,
             username!,
-            currentConversation
+            currentConversation.id
           );
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
+
         setMessageInput(initialInput);
         socket.emit("directMessage", {
           message,
-          id: currentConversation,
+          id: currentConversation.id,
           to: otherUser.username,
+        });
+        socket.emit("isNotTyping", {
+          otherUser: username,
+          id: currentConversation.id,
+          to: currentConversation.recipient,
         });
       } catch (err) {
         console.log(err);
@@ -151,9 +248,12 @@ const useConversationListPage = () => {
     currentConversation,
     messageInput,
     currentMessages,
+    typingMessage,
     scrollRef,
     handleCurrentConversation,
     handleChangeInput,
+    handleFocus,
+    handleBlur,
     handleSend,
   };
 };

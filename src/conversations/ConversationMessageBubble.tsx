@@ -25,8 +25,6 @@ const ConversationMessageBubble: React.FC<Props> = ({
       <div>
         <p>{conversationMessage.content}</p>
         <small>{newDate}</small>
-        <br />
-        <small>From: {conversationMessage.username}</small>
       </div>
     </div>
   );

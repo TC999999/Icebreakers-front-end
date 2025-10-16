@@ -2,7 +2,13 @@ import API from "./api";
 import type {
   savedMessage,
   conversationMessage,
+  currentConversation,
 } from "../types/conversationTypes";
+
+type getMessagesReturn = {
+  messages: conversationMessage[];
+  conversationData: currentConversation;
+};
 
 class directConversationsAPI extends API {
   public static route = "directMessage";
@@ -16,11 +22,14 @@ class directConversationsAPI extends API {
     username: string,
     id: number,
     unreadMessages: number
-  ): Promise<conversationMessage[]> {
-    let res = await this.getRequest(`${username}/conversation/${id}/messages`, {
-      unreadMessages,
-    });
-    return res.messages;
+  ): Promise<getMessagesReturn> {
+    const res = await this.getRequest(
+      `${username}/conversation/${id}/messages`,
+      {
+        unreadMessages,
+      }
+    );
+    return res;
   }
 
   public static async createMessage(

@@ -11,10 +11,13 @@ const ConversationListPage = () => {
     currentConversation,
     conversations,
     currentMessages,
+    typingMessage,
     scrollRef,
     handleChangeInput,
     handleCurrentConversation,
     handleSend,
+    handleBlur,
+    handleFocus,
   } = useConversationListPage();
 
   return (
@@ -32,7 +35,7 @@ const ConversationListPage = () => {
                 <ConversationTab
                   key={`conversation-${c.id}`}
                   conversation={c}
-                  selected={currentConversation === c.id}
+                  selected={currentConversation.id === c.id}
                   handleCurrentConversation={handleCurrentConversation}
                 />
               );
@@ -43,7 +46,12 @@ const ConversationListPage = () => {
               <ConversationLoading />
             ) : (
               <div ref={scrollRef} id="conversation-messages">
-                <header id="messages-header">{currentConversation}</header>
+                <header id="messages-header">
+                  {currentConversation.recipient}
+                  <div id="edit-conversation-button">
+                    <button>Edit</button>
+                  </div>
+                </header>
 
                 {currentMessages.map((m) => {
                   return (
@@ -53,8 +61,25 @@ const ConversationListPage = () => {
                     />
                   );
                 })}
+                {typingMessage.length > 0 && (
+                  <div id="typing-message">
+                    {typingMessage}
+                    <span id="ellipses">
+                      <span className="ellipsis" id="ellipsis-1">
+                        .
+                      </span>
+                      <span className="ellipsis" id="ellipsis-2">
+                        .
+                      </span>
+                      <span className="ellipsis" id="ellipsis-3">
+                        .
+                      </span>
+                    </span>
+                  </div>
+                )}
               </div>
             )}
+
             <div id="conversation-message-input">
               <form name="content" onSubmit={handleSend}>
                 <input
@@ -63,10 +88,12 @@ const ConversationListPage = () => {
                   name="content"
                   value={messageInput.content}
                   onChange={handleChangeInput}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
                   placeholder="Type a message here"
-                  readOnly={currentConversation === 0}
+                  disabled={currentConversation.id === 0}
                 />
-                <button disabled={currentConversation === 0}>Send</button>
+                <button disabled={currentConversation.id === 0}>Send</button>
               </form>
             </div>
           </div>
