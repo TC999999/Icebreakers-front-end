@@ -3,7 +3,7 @@ import { useAppSelector } from "../features/hooks";
 import useUserSearch from "./hooks/useUserSearch";
 import UserSearchSkeleton from "./skeletons/UserSearchSkeleton";
 import UserSearchCard from "./UserSearchCard";
-import "../styles/UserSearch.scss";
+import "../styles/users/UserSearch.scss";
 import { shallowEqual } from "react-redux";
 
 const UserSearch = (): JSX.Element => {

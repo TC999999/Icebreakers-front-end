@@ -1,7 +1,7 @@
 import { useAppSelector } from "../features/hooks";
 import type { conversationMessage } from "../types/conversationTypes";
 import { DateTime } from "luxon";
-import "../styles/ConversationMessageBubble.scss";
+import "../styles/conversations/ConversationMessageBubble.scss";
 
 type Props = { conversationMessage: conversationMessage };
 

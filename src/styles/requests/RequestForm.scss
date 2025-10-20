@@ -1,5 +1,5 @@
-@use "colors" as c;
-@use "settings" as s;
+@use "../colors" as c;
+@use "../settings" as s;
 
 #direct-conversation-request-form {
   background-color: c.$thirdly;

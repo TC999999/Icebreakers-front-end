@@ -1,6 +1,6 @@
 import useUserProfile from "./hooks/useUserProfile";
 import { MdPerson } from "react-icons/md";
-import "../styles/UserProfile.scss";
+import "../styles/users/UserProfile.scss";
 import { useAppSelector } from "../features/hooks";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { shallowEqual } from "react-redux";

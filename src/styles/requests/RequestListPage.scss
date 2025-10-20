@@ -1,5 +1,5 @@
-@use "settings" as s;
-@use "colors" as c;
+@use "../settings" as s;
+@use "../colors" as c;
 
 h1#request-list-page-header {
   text-align: center;

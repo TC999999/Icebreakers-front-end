@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import { type directConversationRequestPair } from "../types/requestTypes";
 import useRequestForm from "./hooks/useRequestForm";
-import "../styles/RequestForm.scss";
+import "../styles/requests/RequestForm.scss";
 
 const RequestForm: React.FC<directConversationRequestPair> = ({
   requestedUser,

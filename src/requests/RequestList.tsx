@@ -6,7 +6,7 @@ import type {
   requestType,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
-import "../styles/RequestList.scss";
+import "../styles/requests/RequestList.scss";
 
 type Props = {
   requestType: requestType;

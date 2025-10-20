@@ -1,4 +1,4 @@
-import "../styles/ConversationListPage.scss";
+import "../styles/conversations/ConversationListPage.scss";
 import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationTab from "./ConversationTab";
 import ConversationMessageBubble from "./ConversationMessageBubble";

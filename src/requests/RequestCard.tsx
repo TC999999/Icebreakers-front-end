@@ -5,7 +5,7 @@ import type {
   requestType,
 } from "../types/requestTypes";
 import { DateTime } from "luxon";
-import "../styles/RequestCard.scss";
+import "../styles/requests/RequestCard.scss";
 import { useAppSelector } from "../features/hooks";
 
 type Props = {

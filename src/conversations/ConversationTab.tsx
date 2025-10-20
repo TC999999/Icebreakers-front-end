@@ -1,6 +1,6 @@
 import type { conversation } from "../types/conversationTypes";
 import { DateTime } from "luxon";
-import "../styles/ConversationTab.scss";
+import "../styles/conversations/ConversationTab.scss";
 
 type Props = {
   conversation: conversation;

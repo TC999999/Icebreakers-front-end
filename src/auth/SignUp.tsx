@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import useSignUp from "./hooks/useSignUp";
-import "../styles/SignUp.scss";
+import "../styles/auth/SignUp.scss";
 
 const SignUp = (): JSX.Element => {
   const {

@@ -1,7 +1,7 @@
 import { type JSX } from "react";
 import Skeleton from "react-loading-skeleton";
 import { MdPerson } from "react-icons/md";
-import "../../styles/UserSearchCard.scss";
+import "../../styles/users/UserSearchCard.scss";
 
 const UserSearchCardSkeleton = (): JSX.Element => {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import { type requestType } from "../types/requestTypes";
-import "../styles/RequestTab.scss";
+import "../styles/requests/RequestTab.scss";
 
 type Props = {
   title: string;

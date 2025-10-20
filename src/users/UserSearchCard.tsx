@@ -2,7 +2,7 @@ import { type JSX } from "react";
 import { type UserCard } from "../types/userTypes";
 import { MdPerson } from "react-icons/md";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
-import "../styles/UserSearchCard.scss";
+import "../styles/users/UserSearchCard.scss";
 
 type Props = {
   user: UserCard;

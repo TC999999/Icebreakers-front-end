@@ -1,7 +1,7 @@
 import useRequestListPage from "./hooks/useRequestListPage";
 import RequestList from "./RequestList";
 import RequestTab from "./RequestTab";
-import "../styles/RequestListPage.scss";
+import "../styles/requests/RequestListPage.scss";
 
 const RequestListPage = () => {
   const {

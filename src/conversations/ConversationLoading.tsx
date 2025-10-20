@@ -1,4 +1,4 @@
-import "../styles/ConversationLoading.scss";
+import "../styles/conversations/ConversationLoading.scss";
 import { FaHourglass } from "react-icons/fa6";
 
 const ConversationLoading = () => {
