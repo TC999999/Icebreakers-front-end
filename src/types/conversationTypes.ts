@@ -18,5 +18,14 @@ export type savedMessage = {
 
 export type currentConversation = {
   id: number;
+  title: string;
   recipient: string;
+};
+
+export type updateConversation = { title: string };
+
+export type returnUpdateConversation = {
+  id: number;
+  title: string;
+  lastUpdatedAt: string;
 };

@@ -3,6 +3,7 @@ import type {
   savedMessage,
   conversationMessage,
   currentConversation,
+  updateConversation,
 } from "../types/conversationTypes";
 
 type getMessagesReturn = {
@@ -47,6 +48,18 @@ class directConversationsAPI extends API {
       message
     );
     return res;
+  }
+
+  public static async updateConversation(
+    conversation: updateConversation,
+    username: string,
+    id: number
+  ): Promise<any> {
+    const res = await this.patchRequest(
+      `${username}/conversation/${id}`,
+      conversation
+    );
+    return res.updatedConversation;
   }
 }
 

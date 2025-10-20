@@ -3,6 +3,7 @@ import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationTab from "./ConversationTab";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
+import EditConversation from "./EditConversation";
 
 const ConversationListPage = () => {
   const {
@@ -12,16 +13,26 @@ const ConversationListPage = () => {
     conversations,
     currentMessages,
     typingMessage,
+    showEditForm,
     scrollRef,
     handleChangeInput,
     handleCurrentConversation,
+    toggleEditForm,
     handleSend,
     handleBlur,
     handleFocus,
+    updateConversations,
   } = useConversationListPage();
 
   return (
     <main id="conversations-list-page">
+      <EditConversation
+        show={showEditForm}
+        currentConversation={currentConversation}
+        hideForm={toggleEditForm}
+        updateConversations={updateConversations}
+      />
+
       <header>
         <h1>Your Conversations</h1>
         <h3>All of your direct messages with other users.</h3>
@@ -50,7 +61,9 @@ const ConversationListPage = () => {
                   {currentConversation.recipient}
                   {currentConversation.id > 0 && (
                     <div id="edit-conversation-button">
-                      <button>Edit</button>
+                      <button type="button" onClick={(e) => toggleEditForm(e)}>
+                        Edit
+                      </button>
                     </div>
                   )}
                 </header>
@@ -83,7 +96,7 @@ const ConversationListPage = () => {
             )}
 
             <div id="conversation-message-input">
-              <form name="content" onSubmit={handleSend}>
+              <form onSubmit={handleSend}>
                 <input
                   type="text"
                   id="content"

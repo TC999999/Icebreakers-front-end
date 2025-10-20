@@ -8,20 +8,26 @@ import type {
   conversationMessage,
   savedMessage,
   currentConversation,
+  returnUpdateConversation,
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import socket from "../../helpers/socket";
 import savedMessages from "../../helpers/maps/savedMessages";
+import { shallowEqual } from "react-redux";
 
 const useConversationListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const username = useAppSelector((store) => {
     return store.user.user?.username;
-  });
+  }, shallowEqual);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialInput: savedMessage = { content: "" };
-  const initialConversationData: currentConversation = { id: 0, recipient: "" };
+  const initialConversationData: currentConversation = {
+    id: 0,
+    title: "",
+    recipient: "",
+  };
   const [conversations, setConversations] = useState<conversation[]>([]);
   const [currentConversation, setCurrentConversation] =
     useState<currentConversation>(initialConversationData);
@@ -31,6 +37,7 @@ const useConversationListPage = () => {
   const [messageInput, setMessageInput] = useState<savedMessage>(initialInput);
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [typingMessage, setTypingMessage] = useState<string>("");
+  const [showEditForm, setShowEditForm] = useState<boolean>(false);
 
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -179,6 +186,18 @@ const useConversationListPage = () => {
     ]
   );
 
+  const toggleEditForm = useCallback(
+    (
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent
+    ): void => {
+      e.preventDefault();
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      setShowEditForm(!showEditForm);
+    },
+    [showEditForm]
+  );
+
   // handles change event on message input, also lets other user know
   // if user is typing something
   const handleChangeInput = useCallback(
@@ -231,12 +250,30 @@ const useConversationListPage = () => {
     [messageInput]
   );
 
+  const updateConversations = useCallback(
+    (newConversation: returnUpdateConversation) => {
+      const newConversations = conversations.map((c) => {
+        return c.id === newConversation.id ? { ...c, ...newConversation } : c;
+      });
+
+      setConversations(newConversations);
+      setCurrentConversation((prev) => ({
+        ...prev,
+        title: newConversation.title,
+      }));
+    },
+    [currentConversation, conversations]
+  );
+
   // handles sending message to other users, including updated db
   // and sending a socket signal to other user
   const handleSend = useCallback(
     async (e: React.FormEvent) => {
       try {
         e.preventDefault();
+        if (document.activeElement instanceof HTMLElement)
+          document.activeElement.blur();
+
         if (!messageInput.content) {
           throw new Error("message cannot be empty");
         }
@@ -283,11 +320,14 @@ const useConversationListPage = () => {
     currentMessages,
     typingMessage,
     scrollRef,
+    showEditForm,
     handleCurrentConversation,
+    toggleEditForm,
     handleChangeInput,
     handleFocus,
     handleBlur,
     handleSend,
+    updateConversations,
   };
 };
 
