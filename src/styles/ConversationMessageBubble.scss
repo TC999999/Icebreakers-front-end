@@ -1,10 +1,43 @@
 @use "colors" as c;
 @use "settings" as s;
 
+// @keyframes bubbleEntrance {
+//   0% {
+//     opacity: 0;
+//     transform: translateX(-100%);
+//   }
+//   100% {
+//     opacity: 1;
+//     transform: translateX(0%);
+//   }
+// }
+
+@keyframes otherBubbleEntrance {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+@keyframes selfBubbleEntrance {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
 .direct-message-bubble {
   width: 30%;
   padding: 10px;
-  margin: 10px;
+  margin: 12px;
   position: relative;
 
   &.self-bubble {
@@ -12,11 +45,13 @@
     color: white;
     border-radius: s.$borderRadius;
     align-self: flex-end;
+    animation: selfBubbleEntrance 0.5s;
   }
 
   &.other-bubble {
     background-color: white;
     border-radius: s.$borderRadius;
+    animation: otherBubbleEntrance 0.5s;
   }
 }
 

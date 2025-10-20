@@ -23,7 +23,11 @@ const ConversationTab: React.FC<Props> = ({
     >
       <p>
         {conversation.title}{" "}
-        {conversation.unreadMessages > 0 && `(${conversation.unreadMessages})`}
+        {conversation.unreadMessages > 0 && (
+          <span className="unread-messages-count">
+            {conversation.unreadMessages}
+          </span>
+        )}
       </p>
       <p>{newDate}</p>
     </div>

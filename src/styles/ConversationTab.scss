@@ -5,6 +5,19 @@
   background-color: white;
   padding: 1px;
   border-bottom: s.$borderSettings c.$primary;
+
+  &:hover {
+    background-color: aliceblue;
+    color: blue;
+  }
+
+  .unread-messages-count {
+    background-color: rgb(9, 191, 223);
+    color: white;
+    padding: 5px;
+    border: s.$borderSettings;
+    border-radius: s.$borderRadius;
+  }
 }
 
 .selected {

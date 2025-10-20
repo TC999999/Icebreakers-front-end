@@ -82,7 +82,6 @@ const useConversationListPage = () => {
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
-
         const newConversations = conversations.map((convo) => {
           return convo.id === currentConversation.id
             ? { ...convo, lastUpdatedAt: message.createdAt }
@@ -94,7 +93,11 @@ const useConversationListPage = () => {
       } else {
         const newConversations = conversations.map((convo) => {
           return convo.id === id
-            ? { ...convo, unreadMessages: convo.unreadMessages + 1 }
+            ? {
+                ...convo,
+                unreadMessages: convo.unreadMessages + 1,
+                lastUpdatedAt: message.createdAt,
+              }
             : convo;
         });
         setConversations(newConversations);
