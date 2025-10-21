@@ -9,6 +9,7 @@ import type {
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import { shallowEqual } from "react-redux";
+import socket from "../../helpers/socket";
 
 type input = {
   currentConversation: currentConversation;
@@ -53,12 +54,16 @@ const useEditConversation = ({
         e.preventDefault();
         dispatch(setFormLoading(true));
         hideForm(e);
-        const returnData = await directConversationsAPI.updateConversation(
+        const conversation = await directConversationsAPI.updateConversation(
           formData,
           username!,
           currentConversation.id
         );
-        updateConversations(returnData);
+        updateConversations(conversation);
+        socket.emit("editConversation", {
+          conversation,
+          to: currentConversation.recipient,
+        });
       } catch (err) {
         console.log(err);
         hideForm(e);

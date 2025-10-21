@@ -136,6 +136,25 @@ const useConversationListPage = () => {
     };
   }, [currentConversation]);
 
+  // handles when a user edits the title of a conversation
+  useEffect(() => {
+    socket.on("editConversation", ({ conversation }) => {
+      const newConversations = conversations.map((c) => {
+        return c.id === conversation.id ? { ...c, ...conversation } : c;
+      });
+
+      setConversations(newConversations);
+      setCurrentConversation((prev) => ({
+        ...prev,
+        title: conversation.title,
+      }));
+    });
+
+    return () => {
+      socket.off("editConversation");
+    };
+  }, [conversations, currentConversation]);
+
   // handles when a user changes conversation tabs
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
