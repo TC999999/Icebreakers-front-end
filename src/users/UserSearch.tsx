@@ -79,13 +79,13 @@ const UserSearch = (): JSX.Element => {
 
       <div id="user-search-results">
         {formLoading && <UserSearchSkeleton cards={10} />}
-        {!formLoading && !searchedUsers.length && (
+        {!formLoading && searchedUsers.length === 0 && (
           <div>
             <h1 id="not-found-message">No users could be found</h1>
           </div>
         )}
         {!formLoading &&
-          searchedUsers.length &&
+          searchedUsers.length > 0 &&
           searchedUsers.map((u) => {
             return <UserSearchCard key={`${u.username}-card`} user={u} />;
           })}

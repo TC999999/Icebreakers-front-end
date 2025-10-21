@@ -63,6 +63,20 @@
         color: rgb(73, 3, 73);
         font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
       }
+
+      button {
+        background-color: c.$secondary;
+        color: c.$primary;
+        border: s.$borderSettings purple;
+        border-radius: s.$borderRadius;
+        margin: 5px;
+
+        &:hover {
+          background-color: c.$thirdly;
+          color: c.$secondary;
+          cursor: pointer;
+        }
+      }
     }
   }
 }

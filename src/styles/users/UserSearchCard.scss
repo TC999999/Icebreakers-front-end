@@ -42,15 +42,28 @@
     }
   }
 
-  ul {
+  .interest-list {
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+
     h3 {
       color: c.$fourthly;
       text-decoration: underline;
+      text-align: center;
+      margin: 0;
     }
 
-    li {
-      color: c.$fourthly;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    ul {
+      background-color: c.$secondary;
+      margin: 0;
+      height: 100px;
+      overflow: scroll;
+      border-radius: 0 0 18px 18px;
+
+      li {
+        color: c.$fourthly;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
     }
   }
 }

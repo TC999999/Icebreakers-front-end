@@ -25,12 +25,15 @@ const UserSearchCard: React.FC<Props> = ({ user }): JSX.Element => {
         <h3>{user.username}</h3>
       </div>
 
-      <ul>
+      <div className="interest-list">
         <h3>Interests</h3>
-        {user.interests.map((i, index) => {
-          return <li key={`${user.username}-interest-${index}`}>{i}</li>;
-        })}
-      </ul>
+
+        <ul>
+          {user.interests.map((i, index) => {
+            return <li key={`${user.username}-interest-${index}`}>{i}</li>;
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

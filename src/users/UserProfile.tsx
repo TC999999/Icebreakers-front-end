@@ -63,12 +63,13 @@ const UserProfile = () => {
 
               {!userState.requestSent && !userState.conversationExists && (
                 <button
+                  id="send-request-button"
                   onClick={() => navigate(`/request/${userState.username}`)}
                 >
                   Request Conversation
                 </button>
               )}
-              <button>Invite to a Group</button>
+              <button id="invite-to-group-button">Invite to a Group</button>
             </div>
           )}
         </div>
