@@ -1,5 +1,6 @@
 import API from "./api";
 import type {
+  conversation,
   savedMessage,
   conversationMessage,
   currentConversation,
@@ -19,7 +20,9 @@ type createMessagesReturn = {
 class directConversationsAPI extends API {
   public static route = "directMessage";
 
-  public static async getConversations(username: string): Promise<any> {
+  public static async getConversations(
+    username: string
+  ): Promise<conversation[]> {
     let res = await this.getRequest(`conversations/${username}`);
     return res.conversations;
   }

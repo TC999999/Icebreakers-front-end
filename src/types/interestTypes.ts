@@ -4,3 +4,5 @@ export type interest = {
 };
 
 export type interests = interest[];
+
+export type interestMap = { [key: string]: interest };

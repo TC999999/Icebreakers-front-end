@@ -46,7 +46,6 @@ const EditConversation: React.FC<Props> = ({
                   placeholder="Enter New Title Here"
                   value={formData.title}
                   onChange={handleChange}
-                  required
                 />
               </label>
             </div>

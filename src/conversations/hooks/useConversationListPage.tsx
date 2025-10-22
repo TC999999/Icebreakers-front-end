@@ -42,7 +42,8 @@ const useConversationListPage = () => {
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // gets all of a user's direct conversations
+  // gets all of a user's direct conversations on initial render. If there's a conversation id in parameters,
+  // retrieves messages from that conversation
   useEffect(() => {
     try {
       dispatch(setFormLoading(true));
@@ -175,12 +176,11 @@ const useConversationListPage = () => {
           unreadMessages: conversation.unreadMessages,
         });
       }
-      let { messages, conversationData } =
-        await directConversationsAPI.getMessages(
-          username!,
-          conversation.id,
-          conversation.unreadMessages
-        );
+      let { messages } = await directConversationsAPI.getMessages(
+        username!,
+        conversation.id,
+        conversation.unreadMessages
+      );
 
       const convoMessage = savedMessages.get(conversation.id);
 
@@ -189,7 +189,11 @@ const useConversationListPage = () => {
         content: convoMessage ? convoMessage : "",
       }));
 
-      setCurrentConversation(conversationData);
+      setCurrentConversation({
+        id: conversation.id,
+        title: conversation.title,
+        recipient: conversation.otherUser,
+      });
       setCurrentMessages(messages);
       setTypingMessage("");
       setLoadingMessages(false);

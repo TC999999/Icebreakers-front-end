@@ -22,7 +22,9 @@ const ConversationTab: React.FC<Props> = ({
       className={`conversation-tab ${selected ? "selected" : ""}`}
     >
       <p>
-        {conversation.title}{" "}
+        {conversation.title.length > 0
+          ? conversation.title
+          : conversation.otherUser}
         {conversation.unreadMessages > 0 && (
           <span className="unread-messages-count">
             {conversation.unreadMessages}

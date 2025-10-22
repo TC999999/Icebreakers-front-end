@@ -46,7 +46,11 @@ const UserProfile = () => {
         <div id="button-row">
           {user?.username === userState.username ? (
             <div>
-              <button>Edit Profile</button>
+              <button
+                onClick={() => navigate(`/user/${userState.username}/edit`)}
+              >
+                Edit Profile
+              </button>
               <button>View Blocked List</button>
             </div>
           ) : (

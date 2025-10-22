@@ -1,0 +1,54 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+#edit-user-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  header {
+    text-align: center;
+    color: c.$secondary;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  #edit-user-form {
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+    width: 40%;
+    padding: 20px;
+    background-color: c.$thirdly;
+
+    textarea {
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+      padding: 5px;
+      width: 100%;
+    }
+
+    #interests-checklist {
+      text-align: center;
+      h3 {
+        color: c.$secondary;
+      }
+      ul {
+        background-color: white;
+        border: s.$borderSettings c.$secondary;
+        border-radius: s.$borderRadius;
+        height: 150px;
+        overflow: scroll;
+        li {
+          font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+            "Lucida Sans", Arial, sans-serif;
+          list-style-type: none;
+        }
+      }
+    }
+
+    #buttons-row {
+      display: flex;
+      justify-content: space-evenly;
+    }
+  }
+}

@@ -26,6 +26,10 @@ const authSlice = createSlice({
     setUnreadMessages: (state, action) => {
       state.user!.unreadMessages += action.payload;
     },
+    // updates user's favorite color on client side
+    setFavoriteColor: (state, action) => {
+      state.user!.favoriteColor = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -75,6 +79,7 @@ export const {
   setLoadError,
   setUnansweredRequests,
   setUnreadMessages,
+  setFavoriteColor,
 } = authSlice.actions;
 
 export default authSlice.reducer;

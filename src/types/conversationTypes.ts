@@ -1,6 +1,7 @@
 export type conversation = {
   id: number;
   title: string;
+  otherUser: string;
   lastUpdatedAt: string;
   unreadMessages: number;
 };

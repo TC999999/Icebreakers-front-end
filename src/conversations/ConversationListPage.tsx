@@ -58,7 +58,9 @@ const ConversationListPage = () => {
             ) : (
               <div ref={scrollRef} id="conversation-messages">
                 <header id="messages-header">
-                  {currentConversation.recipient}
+                  {currentConversation.title.length > 0
+                    ? currentConversation.title
+                    : currentConversation.recipient}
                   {currentConversation.id > 0 && (
                     <div id="edit-conversation-button">
                       <button type="button" onClick={(e) => toggleEditForm(e)}>

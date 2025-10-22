@@ -1,3 +1,5 @@
+import type { interestMap } from "./interestTypes";
+
 export type UserProfile = {
   username: string;
   biography: string;
@@ -17,4 +19,12 @@ export type UserCard = {
 export type UserSearch = {
   username: string;
   findSimilarInterests: boolean;
+};
+
+export type UserEdit = {
+  username: string;
+  emailAddress: string;
+  favoriteColor: string;
+  biography: string;
+  interests: interestMap;
 };

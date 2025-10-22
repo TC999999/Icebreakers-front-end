@@ -7,6 +7,7 @@ import NotFound from "./NotFound";
 import Error from "./Error";
 import UserProfile from "./users/UserProfile";
 import UserSearch from "./users/UserSearch";
+import EditUser from "./users/EditUser";
 import RequestPage from "./requests/RequestPage";
 import RequestListPage from "./requests/RequestListPage";
 import ConversationListPage from "./conversations/ConversationListPage";
@@ -30,7 +31,10 @@ const RouteList = (): JSX.Element | null => {
       </Route>
       <Route element={<UserRoutes />}>
         <Route path="/user">
-          <Route path=":username" element={<UserProfile />} />
+          <Route path=":username">
+            <Route index element={<UserProfile />} />
+            <Route path="edit" element={<EditUser />} />
+          </Route>
           <Route path="search" element={<UserSearch />} />
         </Route>
         <Route path="/request">
