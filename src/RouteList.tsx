@@ -11,6 +11,8 @@ import EditUser from "./users/EditUser";
 import RequestPage from "./requests/RequestPage";
 import RequestListPage from "./requests/RequestListPage";
 import ConversationListPage from "./conversations/ConversationListPage";
+import GroupList from "./groups/GroupList";
+import CreateGroupForm from "./groups/CreateGroupForm";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -46,6 +48,10 @@ const RouteList = (): JSX.Element | null => {
         </Route>
         <Route element={<ErrorRoutes />}>
           <Route path="/error" element={<Error />} />
+        </Route>
+        <Route path="/groups">
+          <Route index element={<GroupList />} />
+          <Route path="new" element={<CreateGroupForm />} />
         </Route>
       </Route>
 

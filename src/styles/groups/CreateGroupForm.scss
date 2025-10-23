@@ -1,0 +1,47 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#create-group-form-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  header {
+    color: c.$secondary;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+
+  #create-group-form {
+    text-align: center;
+    background-color: c.$thirdly;
+    padding: 20px;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+
+    textarea {
+      padding: 10px;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+    }
+
+    #interests-div {
+      h3 {
+        color: c.$secondary;
+      }
+      ul {
+        background-color: white;
+        border: s.$borderSettings c.$secondary;
+        border-radius: s.$borderRadius;
+        height: 200px;
+        overflow: scroll;
+
+        li {
+          list-style-type: none;
+          font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+            "Lucida Sans", Arial, sans-serif;
+        }
+      }
+    }
+  }
+}

@@ -49,7 +49,7 @@ const NavBar = (): JSX.Element => {
                 </button>
               </div>
               <div className="navlink">
-                <button>Groups</button>
+                <button onClick={() => goTo("/groups")}>Groups</button>
               </div>
               <div className="navlink">
                 <button onClick={() => goTo("/user/search")}>
