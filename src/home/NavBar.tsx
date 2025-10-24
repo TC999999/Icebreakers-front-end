@@ -1,36 +1,23 @@
 import { type JSX } from "react";
-import { useNavigate, type NavigateFunction, Link } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../features/hooks";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../features/hooks";
 import { shallowEqual } from "react-redux";
-import { type AppDispatch } from "../features/store";
-import { LogOutUser } from "../features/actions/auth";
+import useNavbar from "./hooks/useNavbar";
 import "../styles/Navbar.scss";
 import { MdPerson } from "react-icons/md";
 
 const NavBar = (): JSX.Element => {
-  const navigate: NavigateFunction = useNavigate();
-  const dispatch: AppDispatch = useAppDispatch();
-
   const { user } = useAppSelector((store) => store.user, shallowEqual);
 
-  const logOutAndNavigate = async () => {
-    await dispatch(LogOutUser({}));
-    navigate("/");
-  };
-
-  const goToProfile = () => {
-    navigate(`/user/${user?.username}`);
-  };
-
-  const goTo = (endpoint: string) => {
-    navigate(endpoint);
-  };
+  const { selectedNav, logOutAndNavigate, move, resetNav } = useNavbar();
 
   return (
     <nav id="nav-bar">
       <div id="logo">
         <h1>
-          <Link to="/">Join The Conversation!</Link>
+          <Link onClick={resetNav} to="/">
+            Join The Conversation!
+          </Link>
         </h1>
       </div>
 
@@ -44,15 +31,34 @@ const NavBar = (): JSX.Element => {
                     {user.unreadMessages}
                   </div>
                 )}
-                <button onClick={() => goTo("/conversations")}>
+                <button
+                  name="conversations"
+                  value={"/conversations"}
+                  onClick={move}
+                  className={
+                    selectedNav === "conversations" ? "selectedNav" : ""
+                  }
+                >
                   Conversations
                 </button>
               </div>
               <div className="navlink">
-                <button onClick={() => goTo("/groups")}>Groups</button>
+                <button
+                  name="groups"
+                  value={"/groups"}
+                  onClick={move}
+                  className={selectedNav === "groups" ? "selectedNav" : ""}
+                >
+                  Groups
+                </button>
               </div>
               <div className="navlink">
-                <button onClick={() => goTo("/user/search")}>
+                <button
+                  name="searchUsers"
+                  value={"/user/search"}
+                  onClick={move}
+                  className={selectedNav === "searchUsers" ? "selectedNav" : ""}
+                >
                   Search For Friends
                 </button>
               </div>
@@ -65,7 +71,14 @@ const NavBar = (): JSX.Element => {
                     {user.unansweredRequests}
                   </div>
                 )}
-                <button onClick={() => goTo("/request")}>Requests</button>
+                <button
+                  name="requests"
+                  value={"/request"}
+                  onClick={move}
+                  className={selectedNav === "requests" ? "selectedNav" : ""}
+                >
+                  Requests
+                </button>
               </div>
             </div>
             <div id="user-tabs">
@@ -73,7 +86,10 @@ const NavBar = (): JSX.Element => {
                 id="user-button"
                 style={{ backgroundColor: user.favoriteColor }}
                 title={user.username}
-                onClick={goToProfile}
+                name="userProfile"
+                value={`/user/${user?.username}`}
+                onClick={move}
+                className={selectedNav === "userProfile" ? "selectedUser" : ""}
               >
                 <MdPerson />
               </button>
@@ -91,14 +107,18 @@ const NavBar = (): JSX.Element => {
             <button
               className="auth-button"
               id="login-button"
-              onClick={() => navigate("/login")}
+              name="login"
+              value={"/login"}
+              onClick={move}
             >
               Log In
             </button>
             <button
               className="auth-button"
               id="register-button"
-              onClick={() => navigate("/register")}
+              name="register"
+              value={"/register"}
+              onClick={move}
             >
               Register
             </button>

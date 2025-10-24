@@ -9,12 +9,13 @@ import {
   setUnansweredRequests,
   setUnreadMessages,
 } from "../features/slices/auth";
+import { shallowEqual } from "react-redux";
 
 const useApp = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const user: UserState | null = useAppSelector((store) => {
     return store.user.user;
-  });
+  }, shallowEqual);
 
   useEffect((): void => {
     const getUserInfo = async () => {

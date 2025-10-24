@@ -1,0 +1,41 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+.groups-list-div {
+  header {
+    text-align: center;
+    color: c.$secondary;
+  }
+  .group-list {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &#hosted-groups-list-div {
+    #make-group-button {
+      display: flex;
+      justify-content: center;
+      button {
+        background-color: c.$secondary;
+        color: c.$thirdly;
+        padding: 10px;
+        border: s.$borderSettings c.$thirdly;
+        border-radius: s.$borderRadius;
+
+        &:hover {
+          cursor: pointer;
+          background-color: c.$thirdly;
+          color: c.$secondary;
+          border-color: c.$secondary;
+        }
+
+        &:active {
+          background-color: c.$fourthly;
+          color: c.$primary;
+          border-color: c.$primary;
+        }
+      }
+    }
+  }
+}

@@ -1,15 +1,22 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useAppSelector } from "../../features/hooks";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../features/hooks";
+import type { AppDispatch } from "../../features/store";
 import { shallowEqual } from "react-redux";
 import type { newGroup } from "../../types/groupTypes";
 import interestsAPI from "../../apis/interestsAPI";
 import type { interestMap } from "../../types/interestTypes";
+import groupConversationsAPI from "../../apis/groupConversationsAPI";
+import { setFormLoading } from "../../features/slices/auth";
 
 const useCreateGroupForm = () => {
   const username = useAppSelector(
     (store) => store.user.user?.username,
     shallowEqual
   );
+
+  const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
 
   const initialData: newGroup = {
     title: "",
@@ -19,13 +26,12 @@ const useCreateGroupForm = () => {
   };
 
   const [formData, setFormData] = useState<newGroup>(initialData);
-  const interestsList = useRef<interestMap>({});
+  const [interestList, setInterestList] = useState<interestMap>({});
 
   useEffect(() => {
     const getInterests = async () => {
       const interests = await interestsAPI.getInterestsMap();
-      interestsList.current = interests;
-      console.log(Object.values(interests));
+      setInterestList(interests);
     };
     getInterests();
   }, []);
@@ -39,11 +45,19 @@ const useCreateGroupForm = () => {
   );
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      console.log(formData);
+    async (e: React.FormEvent) => {
+      try {
+        e.preventDefault();
+        dispatch(setFormLoading(true));
+        await groupConversationsAPI.createConversation(formData);
+        navigate("/groups");
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
+      }
     },
-    [formData]
+    [formData, dispatch]
   );
 
   const handleCheckBox = useCallback(
@@ -54,9 +68,13 @@ const useCreateGroupForm = () => {
           ...prev,
           interests: {
             ...prev.interests,
-            [value]: interestsList.current[value],
+            [value]: interestList[value],
           },
         }));
+      } else {
+        let newInterestList = { ...formData.interests };
+        delete newInterestList[value];
+        setFormData((prev) => ({ ...prev, interests: newInterestList }));
       }
     },
     [formData]
@@ -64,7 +82,7 @@ const useCreateGroupForm = () => {
 
   return {
     formData,
-    interestsList,
+    interestList,
     handleChange,
     handleCheckBox,
     handleSubmit,

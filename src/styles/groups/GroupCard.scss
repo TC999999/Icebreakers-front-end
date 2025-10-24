@@ -1,0 +1,31 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+.group-card {
+  background-color: c.$thirdly;
+  color: c.$secondary;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+  text-align: center;
+  padding: 10px;
+  width: 20%;
+  transition: 0.2s ease;
+
+  h3 {
+    text-decoration: underline;
+  }
+
+  &:hover {
+    background-color: c.$fourthly;
+    color: c.$primary;
+    border-color: c.$primary;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: c.$secondary;
+    color: c.$thirdly;
+    border-color: c.$thirdly;
+    transform: scale(0.95);
+  }
+}

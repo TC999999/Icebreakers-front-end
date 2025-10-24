@@ -1,7 +1,8 @@
 import { useAppSelector } from "../features/hooks";
 import type { conversationMessage } from "../types/conversationTypes";
-import { DateTime } from "luxon";
 import "../styles/conversations/ConversationMessageBubble.scss";
+import createDate from "../helpers/createDate";
+import { shallowEqual } from "react-redux";
 
 type Props = { conversationMessage: conversationMessage };
 
@@ -10,10 +11,8 @@ const ConversationMessageBubble: React.FC<Props> = ({
 }) => {
   const username = useAppSelector((store) => {
     return store.user.user?.username;
-  });
-  let newDate = DateTime.fromISO(conversationMessage.createdAt).toFormat(
-    "MM/dd/yy, h:mm a"
-  );
+  }, shallowEqual);
+
   return (
     <div
       className={`direct-message-bubble ${
@@ -24,7 +23,7 @@ const ConversationMessageBubble: React.FC<Props> = ({
     >
       <div>
         <p>{conversationMessage.content}</p>
-        <small>{newDate}</small>
+        <small>{createDate(conversationMessage.createdAt, "short")}</small>
       </div>
     </div>
   );

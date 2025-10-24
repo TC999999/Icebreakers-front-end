@@ -19,12 +19,13 @@ import removeRequestFromRequested from "../../helpers/removeRequest";
 import removeSentRequest from "../../helpers/removeSentRequest";
 import addRequest from "../../helpers/addRequest";
 import socket from "../../helpers/socket";
+import { shallowEqual } from "react-redux";
 
 const useRequestListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const username = useAppSelector((store) => {
     return store.user.user?.username;
-  });
+  }, shallowEqual);
 
   const defaultTitleAndDesc: titleAndDesc = { title: "", description: "" };
 

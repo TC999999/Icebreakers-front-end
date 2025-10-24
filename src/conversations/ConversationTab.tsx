@@ -1,6 +1,6 @@
 import type { conversation } from "../types/conversationTypes";
-import { DateTime } from "luxon";
 import "../styles/conversations/ConversationTab.scss";
+import createDate from "../helpers/createDate";
 
 type Props = {
   conversation: conversation;
@@ -13,9 +13,6 @@ const ConversationTab: React.FC<Props> = ({
   selected,
   handleCurrentConversation,
 }) => {
-  let newDate = DateTime.fromISO(conversation.lastUpdatedAt).toFormat(
-    "MM/dd/yy, h:mm a"
-  );
   return (
     <div
       onClick={() => handleCurrentConversation(conversation)}
@@ -31,7 +28,7 @@ const ConversationTab: React.FC<Props> = ({
           </span>
         )}
       </p>
-      <p>{newDate}</p>
+      <p>{createDate(conversation.lastUpdatedAt, "short")}</p>
     </div>
   );
 };

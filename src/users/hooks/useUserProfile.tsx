@@ -6,7 +6,7 @@ import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import { type UserProfile } from "../../types/userTypes";
 import userAPI from "../../apis/userAPI";
-import { DateTime } from "luxon";
+import createDate from "../../helpers/createDate";
 
 const useUserProfile = () => {
   const dispatch: AppDispatch = useAppDispatch();
@@ -26,10 +26,11 @@ const useUserProfile = () => {
       try {
         if (username) {
           let user = await userAPI.getUserProfile(username);
-          let newDate = DateTime.fromISO(user.createdAt).toFormat(
-            "LLLL d, yyyy 'at' h:mm a"
-          );
-          setUserState((prev) => ({ ...prev, ...user, createdAt: newDate }));
+          setUserState((prev) => ({
+            ...prev,
+            ...user,
+            createdAt: createDate(user.createdAt, "long"),
+          }));
         }
       } catch (err: any) {
         let error = JSON.parse(err.message);

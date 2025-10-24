@@ -4,9 +4,10 @@ import type {
   sentRequestCard,
   requestType,
 } from "../types/requestTypes";
-import { DateTime } from "luxon";
 import "../styles/requests/RequestCard.scss";
 import { useAppSelector } from "../features/hooks";
+import { shallowEqual } from "react-redux";
+import createDate from "../helpers/createDate";
 
 type Props = {
   requestType: requestType;
@@ -23,13 +24,9 @@ const RequestCard: React.FC<Props> = ({
   removeRequest,
   resendRequest,
 }) => {
-  let newDate = DateTime.fromISO(request.createdAt).toFormat(
-    "LLLL d, yyyy 'at' h:mm a"
-  );
-
   const username = useAppSelector((store) => {
     return store.user.user?.username;
-  });
+  }, shallowEqual);
 
   const respond = (accepted: boolean) => {
     if (respondToRequest && "requesterUser" in request) {
@@ -67,7 +64,7 @@ const RequestCard: React.FC<Props> = ({
 
       <div>
         <span>
-          <small>Made At: {newDate}</small>
+          <small>Made At: {createDate(request.createdAt, "long")}</small>
         </span>
       </div>
       <div>

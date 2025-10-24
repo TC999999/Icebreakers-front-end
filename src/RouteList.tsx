@@ -17,11 +17,13 @@ import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
 import ErrorRoutes from "./routes/ErrorRoutes";
+import { shallowEqual } from "react-redux";
 
 const RouteList = (): JSX.Element | null => {
   const location = useLocation();
   const loading: boolean = useAppSelector(
-    (store) => store.user.loading.loadingInfo.pageLoading
+    (store) => store.user.loading.loadingInfo.pageLoading,
+    shallowEqual
   );
 
   return !loading ? (

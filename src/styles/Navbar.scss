@@ -14,6 +14,7 @@
       a {
         text-decoration: none;
         color: c.$linkPrimary;
+        transition: 0.3s ease;
         &:hover {
           color: c.$linkHover;
           text-decoration: underline;
@@ -33,7 +34,6 @@
     .tabs {
       background-color: c.$primary;
       border: s.$borderSettings c.$secondary;
-
       display: flex;
       justify-content: space-evenly;
       button {
@@ -70,8 +70,14 @@
             background: none;
             border: none;
             height: 100%;
+            transition: 0.4s ease;
 
             &:hover {
+              background-color: c.$thirdly;
+              color: c.$secondary;
+              text-decoration: underline;
+            }
+            &.selectedNav {
               background-color: c.$thirdly;
               color: c.$secondary;
               text-decoration: underline;
@@ -84,13 +90,13 @@
             bottom: 60%;
             background-color: rgb(224, 23, 23);
             padding: 5px;
-
             text-align: center;
             border-radius: 50px;
             color: white;
             border: solid rgb(141, 7, 7);
             z-index: 20;
             font-weight: bold;
+            animation: notificationPopUp 0.5s;
           }
         }
       }
@@ -105,8 +111,14 @@
           padding: 5px;
           width: 30px;
           height: 30px;
+          transition: 0.4s ease;
 
           &:hover {
+            border-color: rgb(70, 182, 246);
+            color: rgb(70, 182, 246);
+          }
+
+          &.selectedUser {
             border-color: rgb(70, 182, 246);
             color: rgb(70, 182, 246);
           }

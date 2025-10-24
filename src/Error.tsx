@@ -1,10 +1,11 @@
 import { type JSX, useEffect } from "react";
 import { useAppSelector } from "./features/hooks";
+import { shallowEqual } from "react-redux";
 
 const Error = (): JSX.Element => {
   const loadingError = useAppSelector((store) => {
     return store.user.loading.loadingError;
-  });
+  }, shallowEqual);
 
   useEffect(() => {
     console.log(loadingError);

@@ -50,3 +50,13 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
     opacity: 1;
   }
 }
+
+@keyframes notificationPopUp {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

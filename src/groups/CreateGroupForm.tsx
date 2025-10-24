@@ -2,13 +2,8 @@ import useCreateGroupForm from "./hooks/useCreateGroupForm";
 import "../styles/groups/CreateGroupForm.scss";
 
 const CreateGroupForm = () => {
-  const {
-    formData,
-    interestsList,
-    handleChange,
-    handleCheckBox,
-    handleSubmit,
-  } = useCreateGroupForm();
+  const { formData, interestList, handleChange, handleCheckBox, handleSubmit } =
+    useCreateGroupForm();
   return (
     <main id="create-group-form-page">
       <header>
@@ -55,6 +50,7 @@ const CreateGroupForm = () => {
               rows={10}
               required
               maxLength={400}
+              placeholder="Type a short description about what you want this group to be about."
               value={formData.description}
               onChange={handleChange}
             ></textarea>
@@ -62,7 +58,7 @@ const CreateGroupForm = () => {
           <div id="interests-div">
             <h3>Interests:</h3>
             <ul>
-              {Object.values(interestsList.current).map((i) => {
+              {Object.values(interestList).map((i) => {
                 return (
                   <li key={`interest-${i.id}`}>
                     <label htmlFor={`interest-${i.id}`}>{i.topic}</label>
