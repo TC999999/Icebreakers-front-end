@@ -1,0 +1,37 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+.group-user-card {
+  background-color: c.$primary;
+  border: s.$borderSettings;
+  border-radius: s.$borderRadius;
+  width: 200px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: 0.4s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: c.$secondary;
+    color: c.$thirdly;
+  }
+
+  &:active {
+    background-color: c.$fourthly;
+    color: c.$primary;
+  }
+
+  .user-logo {
+    border-radius: s.$borderRadius;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+  }
+}

@@ -13,6 +13,7 @@ import RequestListPage from "./requests/RequestListPage";
 import ConversationListPage from "./conversations/ConversationListPage";
 import GroupList from "./groups/GroupList";
 import CreateGroupForm from "./groups/CreateGroupForm";
+import GroupPage from "./groups/GroupPage";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -54,6 +55,7 @@ const RouteList = (): JSX.Element | null => {
         <Route path="/groups">
           <Route index element={<GroupList />} />
           <Route path="new" element={<CreateGroupForm />} />
+          <Route path=":id" element={<GroupPage />} />
         </Route>
       </Route>
 

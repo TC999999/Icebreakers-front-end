@@ -1,0 +1,38 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+#group-page {
+  header {
+    color: c.$secondary;
+    text-align: center;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+  }
+
+  div#group-info {
+    background-color: c.$primary;
+    padding: 10px;
+    border: s.$borderSettings;
+    border-radius: s.$borderRadius;
+    color: purple;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+
+    div {
+      background-color: c.$secondary;
+      color: c.$primary;
+      padding: 5px;
+      border: s.$borderSettings;
+      border-radius: s.$borderRadius;
+    }
+  }
+
+  #group-users {
+    h2 {
+      text-decoration: underline;
+      color: c.$secondary;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+    }
+  }
+}

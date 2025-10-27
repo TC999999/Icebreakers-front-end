@@ -7,6 +7,10 @@ const GroupList = () => {
   const { hostedGroups, nonHostedGroups } = useGroupList();
   const navigate: NavigateFunction = useNavigate();
 
+  const goToGroup = (id: string): void => {
+    navigate(`/groups/${id}`);
+  };
+
   return (
     <main>
       <div className="groups-list-div" id="hosted-groups-list-div">
@@ -20,7 +24,13 @@ const GroupList = () => {
         {hostedGroups.length > 0 ? (
           <div className="group-list" id="hosted-group-list">
             {hostedGroups.map((g) => {
-              return <GroupCard key={`group-${g.id}`} group={g} />;
+              return (
+                <GroupCard
+                  key={`group-${g.id}`}
+                  group={g}
+                  goToGroup={goToGroup}
+                />
+              );
             })}
           </div>
         ) : (
@@ -35,7 +45,7 @@ const GroupList = () => {
         {nonHostedGroups.length > 0 ? (
           <div className="group-list" id="non-hosted-group-list">
             {nonHostedGroups.map((g) => {
-              return <GroupCard group={g} />;
+              return <GroupCard group={g} goToGroup={goToGroup} />;
             })}
           </div>
         ) : (

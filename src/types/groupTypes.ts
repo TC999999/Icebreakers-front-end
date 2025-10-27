@@ -1,4 +1,5 @@
 import type { interestMap } from "./interestTypes";
+import type { groupUser } from "./userTypes";
 
 export type newGroup = {
   title: string;
@@ -23,4 +24,14 @@ export type nonHostedGroupCard = {
 export type allGroups = {
   hostedGroups: hostedGroupCard[];
   nonHostedGroups: nonHostedGroupCard[];
+};
+
+export type GroupPage = {
+  id: string;
+  title: string;
+  description: string;
+  host: string;
+  createdAt: string;
+  users: groupUser[];
+  interests: string[];
 };

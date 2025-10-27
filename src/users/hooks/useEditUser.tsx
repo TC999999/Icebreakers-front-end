@@ -9,6 +9,7 @@ import {
   setFavoriteColor,
 } from "../../features/slices/auth";
 import userAPI from "../../apis/userAPI";
+import socket from "../../helpers/socket";
 
 const useEditUser = () => {
   const { username } = useParams();
@@ -62,6 +63,7 @@ const useEditUser = () => {
       e.preventDefault();
       const { newFavoriteColor } = await userAPI.editUser(userData);
       dispatch(setFavoriteColor(newFavoriteColor));
+      socket.emit("updateFavoriteColor", { favoriteColor: newFavoriteColor });
       navigate(`/user/${username}`);
     },
     [userData]

@@ -21,6 +21,8 @@ export type UserSearch = {
   findSimilarInterests: boolean;
 };
 
+export type groupUser = { favoriteColor: string; username: string };
+
 export type UserEdit = {
   username: string;
   emailAddress: string;
