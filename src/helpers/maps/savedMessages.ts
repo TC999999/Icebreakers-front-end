@@ -1,3 +1,3 @@
-const savedMessages = new Map<number, string>();
+const savedMessages = new Map<string, string>();
 
 export default savedMessages;

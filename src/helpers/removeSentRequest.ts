@@ -1,7 +1,7 @@
 import type { sentRequestCard } from "../types/requestTypes";
 
 const removeSentRequest = (
-  id: number,
+  id: string,
   sentRequestsSetter: React.Dispatch<React.SetStateAction<sentRequestCard[]>>
 ): void => {
   sentRequestsSetter((prev) => {

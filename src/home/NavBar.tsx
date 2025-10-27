@@ -105,7 +105,9 @@ const NavBar = (): JSX.Element => {
         ) : (
           <div className="tabs" id="logged-out-tabs">
             <button
-              className="auth-button"
+              className={`auth-button ${
+                selectedNav === "login" ? "selectedNav" : ""
+              }`}
               id="login-button"
               name="login"
               value={"/login"}
@@ -114,7 +116,9 @@ const NavBar = (): JSX.Element => {
               Log In
             </button>
             <button
-              className="auth-button"
+              className={`auth-button ${
+                selectedNav === "register" ? "selectedNav" : ""
+              }`}
               id="register-button"
               name="register"
               value={"/register"}

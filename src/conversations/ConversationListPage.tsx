@@ -61,7 +61,7 @@ const ConversationListPage = () => {
                   {currentConversation.title.length > 0
                     ? currentConversation.title
                     : currentConversation.recipient}
-                  {currentConversation.id > 0 && (
+                  {currentConversation.id.length > 0 && (
                     <div id="edit-conversation-button">
                       <button type="button" onClick={(e) => toggleEditForm(e)}>
                         Edit
@@ -108,9 +108,11 @@ const ConversationListPage = () => {
                   onFocus={handleFocus}
                   onBlur={handleBlur}
                   placeholder="Type a message here"
-                  disabled={currentConversation.id === 0}
+                  disabled={currentConversation.id.length === 0}
                 />
-                <button disabled={currentConversation.id === 0}>Send</button>
+                <button disabled={currentConversation.id.length === 0}>
+                  Send
+                </button>
               </form>
             </div>
           </div>

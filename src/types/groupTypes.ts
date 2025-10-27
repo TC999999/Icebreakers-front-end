@@ -8,13 +8,13 @@ export type newGroup = {
 };
 
 export type hostedGroupCard = {
-  id: number;
+  id: string;
   title: string;
   createdAt: string;
 };
 
 export type nonHostedGroupCard = {
-  id: number;
+  id: string;
   title: string;
   host: string;
   createdAt: string;

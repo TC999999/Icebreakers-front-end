@@ -132,12 +132,25 @@ const useRequestListPage = () => {
     async (response: directConversationResponse) => {
       let { requestResponse } =
         await requestsAPI.respondToDirectConversationRequest(response);
+      if (requestResponse.conversation) {
+        socket.emit("addConversation", {
+          conversation: {
+            ...requestResponse.conversation,
+            unreadMessages: 0,
+            otherUser: response.requestedUser,
+          },
+          to: response.requesterUser,
+        });
+      }
 
       removeRequestFromRequested(response.requesterUser, setReceivedRequests);
       dispatch(setUnansweredRequests(requestResponse.unansweredRequests));
       socket.emit("directResponse", {
         response: requestResponse,
         to: response.requesterUser,
+      });
+      socket.emit("updateUnansweredRequests", {
+        unansweredRequests: requestResponse.unansweredRequests,
       });
     },
     []

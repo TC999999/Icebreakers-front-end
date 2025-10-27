@@ -27,6 +27,7 @@ const useApp = () => {
   useEffect((): (() => void) | undefined => {
     if (user) {
       socket.on("updateUnansweredRequests", ({ unansweredRequests }) => {
+        console.log(unansweredRequests);
         dispatch(setUnansweredRequests(unansweredRequests));
         socket.emit("updateUnansweredRequests", { unansweredRequests });
       });

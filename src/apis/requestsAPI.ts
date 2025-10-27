@@ -23,14 +23,14 @@ class requestsAPI extends API {
   }
 
   public static async removeDirectConversationRequest(
-    id: number
+    id: string
   ): Promise<any> {
     let res = await this.patchRequest(`request/remove/${id}`);
     return res;
   }
 
   public static async resendDirectConversationRequest(
-    id: number
+    id: string
   ): Promise<any> {
     let res = await this.patchRequest(`request/resend/${id}`);
     return res;

@@ -24,7 +24,7 @@ const useConversationListPage = () => {
 
   const initialInput: savedMessage = { content: "" };
   const initialConversationData: currentConversation = {
-    id: 0,
+    id: "",
     title: "",
     recipient: "",
   };
@@ -57,11 +57,7 @@ const useConversationListPage = () => {
           if (currentID) {
             setLoadingMessages(true);
             let { messages, conversationData } =
-              await directConversationsAPI.getMessages(
-                username!,
-                parseFloat(currentID),
-                0
-              );
+              await directConversationsAPI.getMessages(username!, currentID, 0);
             setCurrentConversation(conversationData);
             setCurrentMessages(messages);
             setLoadingMessages(false);
@@ -119,23 +115,30 @@ const useConversationListPage = () => {
 
   // lets user know when other user in the conversation is typing
   useEffect(() => {
-    socket.on("isTyping", ({ otherUser, id }) => {
+    socket.on("isTyping", ({ otherUser, id, isTyping }) => {
       if (id === currentConversation.id) {
-        setTypingMessage(`${otherUser} is typing`);
-      }
-    });
-
-    socket.on("isNotTyping", ({ id }) => {
-      if (id === currentConversation.id) {
-        setTypingMessage("");
+        if (isTyping) {
+          setTypingMessage(`${otherUser} is typing`);
+        } else {
+          setTypingMessage("");
+        }
       }
     });
 
     return () => {
       socket.off("isTyping");
-      socket.off("isNotTyping");
     };
   }, [currentConversation]);
+
+  useEffect(() => {
+    socket.on("addConversation", ({ conversation }) => {
+      setConversations((prev) => [conversation, ...prev]);
+    });
+
+    return () => {
+      socket.off("addConversation");
+    };
+  });
 
   // handles when a user edits the title of a conversation
   useEffect(() => {
@@ -162,7 +165,7 @@ const useConversationListPage = () => {
       setLoadingMessages(true);
       savedMessages.delete(currentConversation.id);
 
-      if (currentConversation.id > 0 && messageInput.content.length > 0) {
+      if (currentConversation.id && messageInput.content.length > 0) {
         savedMessages.set(currentConversation.id, messageInput.content);
       }
 
@@ -227,18 +230,19 @@ const useConversationListPage = () => {
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       let { name, value } = e.target;
       setMessageInput((prev) => ({ ...prev, [name]: value }));
-
-      if (currentConversation.id > 0 && value.length > 0) {
+      if (currentConversation.id.length > 0 && value.length > 0) {
         socket.emit("isTyping", {
           otherUser: username,
           id: currentConversation.id,
           to: currentConversation.recipient,
+          isTyping: true,
         });
-      } else if (currentConversation.id > 0 && value.length === 0) {
-        socket.emit("isNotTyping", {
+      } else if (currentConversation.id.length > 0 && value.length === 0) {
+        socket.emit("isTyping", {
           otherUser: username,
           id: currentConversation.id,
           to: currentConversation.recipient,
+          isTyping: false,
         });
       }
     },
@@ -248,11 +252,15 @@ const useConversationListPage = () => {
   const handleFocus = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       e.preventDefault();
-      if (currentConversation.id > 0 && messageInput.content.length > 0) {
+      if (
+        currentConversation.id.length > 0 &&
+        messageInput.content.length > 0
+      ) {
         socket.emit("isTyping", {
           otherUser: username,
           id: currentConversation.id,
           to: currentConversation.recipient,
+          isTyping: true,
         });
       }
     },
@@ -262,11 +270,12 @@ const useConversationListPage = () => {
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       e.preventDefault();
-      if (currentConversation.id > 0) {
-        socket.emit("isNotTyping", {
+      if (currentConversation.id.length > 0) {
+        socket.emit("isTyping", {
           otherUser: username,
           id: currentConversation.id,
           to: currentConversation.recipient,
+          isTyping: false,
         });
       }
     },
@@ -323,10 +332,11 @@ const useConversationListPage = () => {
           id: currentConversation.id,
           to: otherUser.username,
         });
-        socket.emit("isNotTyping", {
+        socket.emit("isTyping", {
           otherUser: username,
           id: currentConversation.id,
           to: currentConversation.recipient,
+          isTyping: false,
         });
       } catch (err) {
         console.log(err);

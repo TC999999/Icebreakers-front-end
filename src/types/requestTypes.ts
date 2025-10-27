@@ -26,7 +26,7 @@ export type sentRequest = {
 };
 
 export type sentRequestCard = {
-  id: number;
+  id: string;
   requestedUser: string;
   content: string;
   createdAt: string;
@@ -39,14 +39,14 @@ export type receivedRequest = {
 };
 
 export type receivedRequestCard = {
-  id: number;
+  id: string;
   requesterUser: string;
   content: string;
   createdAt: string;
 };
 
 export type directRequestCard = {
-  id: number;
+  id: string;
   requesterUser: string;
   requestedUser: string;
   content: string;
@@ -54,7 +54,7 @@ export type directRequestCard = {
 };
 
 export type directConversationResponse = {
-  id: number;
+  id: string;
   requesterUser: string;
   requestedUser: string;
   accepted: boolean;

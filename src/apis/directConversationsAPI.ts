@@ -29,7 +29,7 @@ class directConversationsAPI extends API {
 
   public static async getMessages(
     username: string,
-    id: number,
+    id: string,
     unreadMessages: number
   ): Promise<getMessagesReturn> {
     const res = await this.getRequest(
@@ -44,7 +44,7 @@ class directConversationsAPI extends API {
   public static async createMessage(
     message: savedMessage,
     username: string,
-    id: number
+    id: string
   ): Promise<createMessagesReturn> {
     const res = await this.postRequest(
       `${username}/conversation/${id}/message`,
@@ -56,7 +56,7 @@ class directConversationsAPI extends API {
   public static async updateConversation(
     conversation: updateConversation,
     username: string,
-    id: number
+    id: string
   ): Promise<any> {
     const res = await this.patchRequest(
       `${username}/conversation/${id}`,

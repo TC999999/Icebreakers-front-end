@@ -1,5 +1,5 @@
 export type conversation = {
-  id: number;
+  id: string;
   title: string;
   otherUser: string;
   lastUpdatedAt: string;
@@ -7,7 +7,7 @@ export type conversation = {
 };
 
 export type conversationMessage = {
-  id: number;
+  id: string;
   content: string;
   username: string;
   createdAt: string;
@@ -18,7 +18,7 @@ export type savedMessage = {
 };
 
 export type currentConversation = {
-  id: number;
+  id: string;
   title: string;
   recipient: string;
 };
@@ -26,7 +26,7 @@ export type currentConversation = {
 export type updateConversation = { title: string };
 
 export type returnUpdateConversation = {
-  id: number;
+  id: string;
   title: string;
   lastUpdatedAt: string;
 };
