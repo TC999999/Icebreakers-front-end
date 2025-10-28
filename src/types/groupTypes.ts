@@ -8,6 +8,11 @@ export type newGroup = {
   interests: interestMap;
 };
 
+export type simpleGroup = {
+  id: string;
+  title: string;
+};
+
 export type hostedGroupCard = {
   id: string;
   title: string;
@@ -34,4 +39,11 @@ export type GroupPage = {
   createdAt: string;
   users: groupUser[];
   interests: string[];
+};
+
+export type GroupInvitation = {
+  to: string;
+  from: string;
+  group: string;
+  content: string;
 };

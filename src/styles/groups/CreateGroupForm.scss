@@ -25,21 +25,26 @@
       border-radius: s.$borderRadius;
     }
 
-    #interests-div {
-      h3 {
+    #interests-checklist {
+      legend {
         color: c.$secondary;
+        font-size: large;
+        font-weight: bold;
       }
-      ul {
-        background-color: white;
-        border: s.$borderSettings c.$secondary;
-        border-radius: s.$borderRadius;
-        height: 200px;
-        overflow: scroll;
 
-        li {
-          list-style-type: none;
-          font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-            "Lucida Sans", Arial, sans-serif;
+      background-color: white;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+      height: 200px;
+      overflow: scroll;
+
+      div.interest-check {
+        list-style-type: none;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+
+        input[type="checkbox"] {
+          accent-color: c.$secondary;
         }
       }
     }

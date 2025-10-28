@@ -55,25 +55,24 @@ const CreateGroupForm = () => {
               onChange={handleChange}
             ></textarea>
           </div>
-          <div id="interests-div">
-            <h3>Interests:</h3>
-            <ul>
-              {Object.values(interestList).map((i) => {
-                return (
-                  <li key={`interest-${i.id}`}>
-                    <label htmlFor={`interest-${i.id}`}>{i.topic}</label>
-                    <input
-                      type="checkbox"
-                      name={`interest-${i.id}`}
-                      id={`interest-${i.id}`}
-                      value={i.id}
-                      onChange={handleCheckBox}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <fieldset id="interests-checklist">
+            <legend>Interests:</legend>
+
+            {Object.values(interestList).map((i) => {
+              return (
+                <div className="interest-check" key={`interest-${i.id}`}>
+                  <label htmlFor={`interest-${i.id}`}>{i.topic}</label>
+                  <input
+                    type="checkbox"
+                    name={`interest-${i.id}`}
+                    id={`interest-${i.id}`}
+                    value={i.id}
+                    onChange={handleCheckBox}
+                  />
+                </div>
+              );
+            })}
+          </fieldset>
           <div id="buttons">
             <button className="submit-button">Make Group</button>
           </div>

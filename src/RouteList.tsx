@@ -14,6 +14,7 @@ import ConversationListPage from "./conversations/ConversationListPage";
 import GroupList from "./groups/GroupList";
 import CreateGroupForm from "./groups/CreateGroupForm";
 import GroupPage from "./groups/GroupPage";
+import GroupInvite from "./groups/GroupInvite";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -56,6 +57,7 @@ const RouteList = (): JSX.Element | null => {
           <Route index element={<GroupList />} />
           <Route path="new" element={<CreateGroupForm />} />
           <Route path=":id" element={<GroupPage />} />
+          <Route path="invite/:to" element={<GroupInvite />} />
         </Route>
       </Route>
 

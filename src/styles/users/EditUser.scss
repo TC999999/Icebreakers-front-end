@@ -29,19 +29,23 @@
 
     #interests-checklist {
       text-align: center;
-      h3 {
+      background-color: white;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+      height: 150px;
+      overflow: scroll;
+      legend {
         color: c.$secondary;
+        font-size: large;
+        font-weight: bold;
       }
-      ul {
-        background-color: white;
-        border: s.$borderSettings c.$secondary;
-        border-radius: s.$borderRadius;
-        height: 150px;
-        overflow: scroll;
-        li {
-          font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-            "Lucida Sans", Arial, sans-serif;
-          list-style-type: none;
+
+      div.interest-check {
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+
+        input[type="checkbox"] {
+          accent-color: c.$secondary;
         }
       }
     }

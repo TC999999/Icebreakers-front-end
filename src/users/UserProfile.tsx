@@ -73,7 +73,12 @@ const UserProfile = () => {
                   Request Conversation
                 </button>
               )}
-              <button id="invite-to-group-button">Invite to a Group</button>
+              <button
+                id="invite-to-group-button"
+                onClick={() => navigate(`/groups/invite/${userState.username}`)}
+              >
+                Invite to a Group
+              </button>
             </div>
           )}
         </div>

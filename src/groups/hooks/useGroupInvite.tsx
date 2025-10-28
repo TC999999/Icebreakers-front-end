@@ -1,0 +1,72 @@
+import { useEffect, useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import type { simpleGroup, GroupInvitation } from "../../types/groupTypes";
+import { useAppSelector, useAppDispatch } from "../../features/hooks";
+import type { AppDispatch } from "../../features/store";
+import { setFormLoading } from "../../features/slices/auth";
+import groupConversationsAPI from "../../apis/groupConversationsAPI";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
+
+const useGroupInvite = () => {
+  const from = useAppSelector((store) => {
+    return store.user.user?.username;
+  });
+  const navigate: NavigateFunction = useNavigate();
+  const dispatch: AppDispatch = useAppDispatch();
+
+  const { to } = useParams();
+  const initialData: GroupInvitation = {
+    to: "",
+    from: "",
+    content: "",
+    group: "",
+  };
+
+  const [formData, setFormData] = useState<GroupInvitation>(initialData);
+  const [groupList, setGroupList] = useState<simpleGroup[]>([]);
+
+  useEffect(() => {
+    if (from && to) {
+      setFormData((prev) => ({ ...prev, from, to }));
+      const getGroups = async () => {
+        const groups = await groupConversationsAPI.getAllGroups(from, {
+          getSingle: true,
+        });
+        if (Array.isArray(groups)) setGroupList(groups);
+      };
+      getGroups();
+    }
+  }, []);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    },
+    [formData]
+  );
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      try {
+        dispatch(setFormLoading(true));
+        console.log(formData);
+
+        const invitation = await groupConversationsAPI.sendInvitation(formData);
+
+        console.log(invitation);
+        navigate(`/user/${to}`);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
+      }
+    },
+    [formData]
+  );
+
+  return { formData, groupList, handleChange, handleSubmit };
+};
+
+export default useGroupInvite;

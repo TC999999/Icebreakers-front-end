@@ -8,10 +8,9 @@
   border-radius: s.$borderRadius;
   text-align: center;
   padding: 10px;
+  margin: 10px;
   width: 20%;
-  transition: 0.2s ease;
-
-  h3 {
+  transition: 0.2s ease h3 {
     text-decoration: underline;
   }
 

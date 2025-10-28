@@ -1,0 +1,55 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+#group-invite-form-page {
+  text-align: center;
+
+  header {
+    color: c.$secondary;
+  }
+
+  #invitation-form-div {
+    display: flex;
+    justify-content: center;
+
+    form {
+      background-color: c.$thirdly;
+      width: 60%;
+      padding: 1px;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+
+      textarea {
+        border: s.$borderSettings c.$secondary;
+        border-radius: s.$borderRadius;
+        padding: 10px;
+      }
+
+      #group-radio-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        #group-radio-div {
+          background-color: white;
+          font-family: Georgia, "Times New Roman", Times, serif;
+          border: s.$borderSettings c.$secondary;
+          border-radius: s.$borderRadius;
+          height: 100px;
+          overflow: scroll;
+          width: 60%;
+
+          legend {
+            color: c.$secondary;
+            font-size: large;
+            font-weight: bold;
+          }
+
+          input[type="radio"] {
+            accent-color: c.$secondary;
+          }
+        }
+      }
+    }
+  }
+}

@@ -56,26 +56,25 @@ const EditUser = (): JSX.Element => {
               onChange={handleChange}
             />
           </div>
-          <div id="interests-checklist">
-            <h3 id="interests-header">Select Your Interests</h3>
-            <ul>
-              {Object.values(interestsList.current).map((i) => (
-                <li key={`interest-${i.id}`}>
-                  <label htmlFor={`interest-${i.id}`}>
-                    {i.topic}
-                    <input
-                      type="checkbox"
-                      name={`interest-${i.id}`}
-                      id={`interest-${i.id}`}
-                      value={i.id}
-                      checked={checkUserInterests(i.id)}
-                      onChange={handleCheckBox}
-                    />
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <fieldset id="interests-checklist">
+            <legend id="interests-header">Select Your Interests</legend>
+
+            {Object.values(interestsList.current).map((i) => (
+              <div className="interest-check" key={`interest-${i.id}`}>
+                <label htmlFor={`interest-${i.id}`}>
+                  {i.topic}
+                  <input
+                    type="checkbox"
+                    name={`interest-${i.id}`}
+                    id={`interest-${i.id}`}
+                    value={i.id}
+                    checked={checkUserInterests(i.id)}
+                    onChange={handleCheckBox}
+                  />
+                </label>
+              </div>
+            ))}
+          </fieldset>
           <div id="buttons-row">
             <button
               type="button"

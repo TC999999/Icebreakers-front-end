@@ -1,5 +1,11 @@
 import API from "./api";
-import type { newGroup, allGroups, GroupPage } from "../types/groupTypes";
+import type {
+  newGroup,
+  allGroups,
+  GroupPage,
+  simpleGroup,
+  GroupInvitation,
+} from "../types/groupTypes";
 
 type returnGroup = {
   group: GroupPage;
@@ -14,14 +20,22 @@ class groupConversationsAPI extends API {
     return res;
   }
 
-  public static async getAllGroups(username: string): Promise<allGroups> {
-    const res = await this.getRequest(username);
+  public static async getAllGroups(
+    username: string,
+    params: any
+  ): Promise<allGroups | simpleGroup[]> {
+    const res = await this.getRequest(username, params);
     return res.groups;
   }
 
   public static async getGroup(id: string): Promise<returnGroup> {
     const res = await this.getRequest(`id/${id}`);
     return res;
+  }
+
+  public static async sendInvitation(group: GroupInvitation): Promise<any> {
+    const res = await this.postRequest(`invitation/${group.from}`, group);
+    return res.invitation;
   }
 }
 

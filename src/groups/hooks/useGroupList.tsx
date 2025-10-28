@@ -26,9 +26,11 @@ const useGroupList = () => {
     const getAllGroups = async () => {
       if (username) {
         dispatch(setFormLoading(true));
-        const groups = await groupConversationsAPI.getAllGroups(username);
-        setHostedGroups(groups.hostedGroups);
-        setNonHostedGroups(groups.nonHostedGroups);
+        const groups = await groupConversationsAPI.getAllGroups(username, {});
+        if (!Array.isArray(groups)) {
+          setHostedGroups(groups.hostedGroups);
+          setNonHostedGroups(groups.nonHostedGroups);
+        }
         dispatch(setFormLoading(false));
       }
     };
