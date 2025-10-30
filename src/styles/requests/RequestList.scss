@@ -1,9 +1,23 @@
 @use "../colors" as c;
-
+@use "../settings" as s;
 .request-list {
   text-align: center;
-  height: 500px;
   overflow: scroll;
+  position: relative;
+  width: 90%;
+
+  header#request-list-header {
+    text-align: center;
+    background-color: c.$primary;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    border-bottom: s.$borderSettings c.$secondary;
+
+    h2 {
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    }
+  }
 
   h2.list-title {
     color: c.$secondary;
@@ -13,5 +27,11 @@
 
   h3.message {
     font-style: italic;
+  }
+
+  li {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
   }
 }

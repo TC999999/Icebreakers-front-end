@@ -13,19 +13,19 @@ import { type AppDispatch } from "../../features/store";
 import { shallowEqual } from "react-redux";
 
 const useRequestPage = () => {
-  const { requestedUser } = useParams();
+  const { to } = useParams();
   const navigate: NavigateFunction = useNavigate();
   const dispatch: AppDispatch = useAppDispatch();
 
-  const requesterUser: string | undefined = useAppSelector((store) => {
+  const from: string | undefined = useAppSelector((store) => {
     return store.user.user?.username;
   }, shallowEqual);
 
   useEffect(() => {
     const setPairing = async () => {
       try {
-        if (requestedUser !== requesterUser) {
-          await userAPI.userCheck(requestedUser!);
+        if (to !== from) {
+          await userAPI.userCheck(to!);
         } else {
           throw new Error(
             JSON.stringify({
@@ -44,7 +44,7 @@ const useRequestPage = () => {
     setPairing();
   }, [dispatch]);
 
-  return { requestedUser, requesterUser };
+  return { to, from };
 };
 
 export default useRequestPage;

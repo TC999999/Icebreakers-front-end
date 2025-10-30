@@ -3,61 +3,59 @@ import type {
   receivedRequestCard,
   sentRequestCard,
   requestType,
+  SentGroupCard,
+  ReceivedGroupCard,
 } from "../types/requestTypes";
+
 import "../styles/requests/RequestCard.scss";
-import { useAppSelector } from "../features/hooks";
-import { shallowEqual } from "react-redux";
 import createDate from "../helpers/createDate";
+import useRequestCard from "./hooks/useRequestCard";
 
 type Props = {
   requestType: requestType;
-  request: receivedRequestCard | sentRequestCard;
-  respondToRequest?: (response: directConversationResponse) => void;
-  removeRequest?: (request: sentRequestCard) => void;
-  resendRequest?: (request: sentRequestCard) => void;
+  request:
+    | receivedRequestCard
+    | sentRequestCard
+    | SentGroupCard
+    | ReceivedGroupCard;
+  respondToDirectRequest: (response: directConversationResponse) => void;
+  removeDirectRequest: (request: sentRequestCard) => void;
+  resendDirectRequest: (request: sentRequestCard) => void;
+  removeGroupRequest: (request: SentGroupCard) => void;
+  removeGroupInvitation: (request: SentGroupCard) => void;
+  resendGroupInvitation: (request: SentGroupCard) => void;
 };
 
 const RequestCard: React.FC<Props> = ({
   requestType,
   request,
-  respondToRequest,
-  removeRequest,
-  resendRequest,
+  respondToDirectRequest,
+  removeDirectRequest,
+  removeGroupRequest,
+  resendDirectRequest,
+  removeGroupInvitation,
+  resendGroupInvitation,
 }) => {
-  const username = useAppSelector((store) => {
-    return store.user.user?.username;
-  }, shallowEqual);
-
-  const respond = (accepted: boolean) => {
-    if (respondToRequest && "requesterUser" in request) {
-      respondToRequest({
-        id: request.id,
-        requesterUser: request.requesterUser,
-        requestedUser: username!,
-        accepted,
-      });
-    }
-  };
-
-  const remove = () => {
-    if (removeRequest && "requestedUser" in request) {
-      removeRequest(request);
-    }
-  };
-
-  const resend = () => {
-    if (resendRequest && "requestedUser" in request) {
-      resendRequest(request);
-    }
-  };
+  const { respond, remove, resend } = useRequestCard({
+    requestType,
+    request,
+    respondToDirectRequest,
+    removeDirectRequest,
+    removeGroupRequest,
+    resendDirectRequest,
+    removeGroupInvitation,
+    resendGroupInvitation,
+  });
 
   return (
     <div className="request-card">
       <h2>
-        {"requesterUser" in request
-          ? `Request From ${request.requesterUser}`
-          : `Request For ${request.requestedUser}`}
+        {"from" in request
+          ? `Request From ${request.from}`
+          : `Request For ${request.to}`}
       </h2>
+
+      {"groupTitle" in request && <h3>For Group: {request.groupTitle}</h3>}
       <div className="request-message">
         <p>{request.content}</p>
       </div>
@@ -76,7 +74,7 @@ const RequestCard: React.FC<Props> = ({
       </div>
 
       <div id="response-list">
-        {requestType === "received" && (
+        {requestType === "direct-requests-received" && (
           <div className="response-buttons" id="received-response">
             <button className="accept-button" onClick={() => respond(true)}>
               Accept
@@ -86,7 +84,9 @@ const RequestCard: React.FC<Props> = ({
             </button>
           </div>
         )}
-        {requestType === "sent" && (
+        {(requestType === "direct-requests-sent" ||
+          requestType === "group-invites-sent" ||
+          requestType === "group-requests-sent") && (
           <div className="response-buttons" id="sent-response">
             <button className="remove-button" onClick={() => remove()}>
               Remove
@@ -94,7 +94,8 @@ const RequestCard: React.FC<Props> = ({
           </div>
         )}
 
-        {requestType === "removed" && (
+        {(requestType === "direct-requests-removed" ||
+          requestType === "group-invites-removed") && (
           <div className="response-buttons" id="removed-response">
             <button className="resend-button" onClick={() => resend()}>
               Resend

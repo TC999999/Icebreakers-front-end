@@ -1,45 +1,15 @@
 import API from "./api";
-import type {
-  directConversationRequest,
-  requestsList,
-  directConversationResponse,
-} from "../types/requestTypes";
 
 class requestsAPI extends API {
-  public static route = "directMessage";
+  public static route = "requests";
 
-  public static async makeDirectConversationRequest(
-    request: directConversationRequest
-  ): Promise<any> {
-    let res = await this.postRequest("request", request);
-    return res;
-  }
-
-  public static async getDirectConversationRequests(
-    username: string
-  ): Promise<requestsList> {
-    let res = await this.getRequest(`request/${username}`);
+  public static async getRequests(username: string, params: any): Promise<any> {
+    let res = await this.getRequest(username, params);
     return res.requests;
   }
 
-  public static async removeDirectConversationRequest(
-    id: string
-  ): Promise<any> {
-    let res = await this.patchRequest(`request/remove/${id}`);
-    return res;
-  }
-
-  public static async resendDirectConversationRequest(
-    id: string
-  ): Promise<any> {
-    let res = await this.patchRequest(`request/resend/${id}`);
-    return res;
-  }
-
-  public static async respondToDirectConversationRequest(
-    response: directConversationResponse
-  ): Promise<any> {
-    let res = await this.postRequest("response", response);
+  public static async getRequestCount(username: string): Promise<any> {
+    let res = await this.getRequest(`count/${username}`);
     return res;
   }
 }

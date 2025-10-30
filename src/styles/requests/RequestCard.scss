@@ -4,10 +4,12 @@
 .request-card {
   background-color: c.$primary;
   color: c.$secondary;
-  padding: 10px;
-  margin: auto;
+  padding: 5px;
+  margin: 30px;
+  width: 70%;
   border: s.$borderSettings;
   border-radius: s.$borderRadius;
+  text-align: center;
 
   .request-message {
     font-weight: bold;
@@ -19,6 +21,7 @@
 
     button {
       padding: 10px;
+      margin: 5px;
       border: s.$borderSettings black;
       border-radius: s.$borderRadius;
 

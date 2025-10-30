@@ -73,7 +73,9 @@ const NavBar = (): JSX.Element => {
                 )}
                 <button
                   name="requests"
-                  value={"/request"}
+                  value={
+                    "/request?directOrGroup=direct&requestOrInvitation=requests&type=received"
+                  }
                   onClick={move}
                   className={selectedNav === "requests" ? "selectedNav" : ""}
                 >

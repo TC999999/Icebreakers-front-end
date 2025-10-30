@@ -1,7 +1,10 @@
 import { type JSX } from "react";
+import type { titleAndDesc } from "../types/miscTypes";
 import type {
   sentRequestCard,
   receivedRequestCard,
+  SentGroupCard,
+  ReceivedGroupCard,
   directConversationResponse,
   requestType,
 } from "../types/requestTypes";
@@ -9,44 +12,64 @@ import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
 
 type Props = {
-  requestType: requestType;
-  requestList: receivedRequestCard[] | sentRequestCard[];
-  show: boolean;
-  respondToRequest?: (response: directConversationResponse) => void;
-  removeRequest?: (request: sentRequestCard) => void;
-  resendRequest?: (request: sentRequestCard) => void;
+  currentRequestType: requestType;
+  currentTitleAndDesc: titleAndDesc;
+  requestList: (
+    | receivedRequestCard
+    | sentRequestCard
+    | ReceivedGroupCard
+    | SentGroupCard
+  )[];
+
+  respondToDirectRequest: (response: directConversationResponse) => void;
+  removeDirectRequest: (request: sentRequestCard) => void;
+  resendDirectRequest: (request: sentRequestCard) => void;
+  removeGroupRequest: (request: SentGroupCard) => void;
+  removeGroupInvitation: (request: SentGroupCard) => void;
+  resendGroupInvitation: (request: SentGroupCard) => void;
 };
 
 const RequestList: React.FC<Props> = ({
-  requestType,
+  currentRequestType,
+  currentTitleAndDesc,
   requestList,
-  show,
-  respondToRequest,
-  removeRequest,
-  resendRequest,
-}): JSX.Element | null => {
-  return show ? (
+  respondToDirectRequest,
+  removeDirectRequest,
+  removeGroupRequest,
+  resendDirectRequest,
+  removeGroupInvitation,
+  resendGroupInvitation,
+}): JSX.Element => {
+  return (
     <div className="request-list">
+      <header id="request-list-header">
+        <h2>{currentTitleAndDesc.title}</h2>
+        <p id="request-description">{currentTitleAndDesc.description}</p>
+      </header>
       {requestList && requestList.length > 0 ? (
-        <div className="request-card-list">
+        <ul>
           {requestList.map((request) => (
-            <RequestCard
-              key={`request-${requestType}-${request.id}`}
-              requestType={requestType}
-              request={request}
-              respondToRequest={respondToRequest}
-              removeRequest={removeRequest}
-              resendRequest={resendRequest}
-            />
+            <li key={`request-${currentRequestType}-${request.id}`}>
+              <RequestCard
+                requestType={currentRequestType}
+                request={request}
+                respondToDirectRequest={respondToDirectRequest}
+                removeDirectRequest={removeDirectRequest}
+                removeGroupRequest={removeGroupRequest}
+                resendDirectRequest={resendDirectRequest}
+                removeGroupInvitation={removeGroupInvitation}
+                resendGroupInvitation={resendGroupInvitation}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
         <div>
           <h3 className="message">This list is currently empty!</h3>
         </div>
       )}
     </div>
-  ) : null;
+  );
 };
 
 export default RequestList;

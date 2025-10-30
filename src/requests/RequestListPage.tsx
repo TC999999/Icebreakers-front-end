@@ -5,21 +5,19 @@ import "../styles/requests/RequestListPage.scss";
 
 const RequestListPage = () => {
   const {
-    sentRequests,
-    receivedRequests,
     viewedRequests,
-    removedRequests,
-    groupInvitations,
-    groupRequestsReceived,
-    groupRequestsSent,
-    groupRequestsRemoved,
-    groupRequestsToApprove,
+    currentRequests,
+    requestCount,
     currentTitleAndDesc,
     changeViewedRequests,
-    removeRequest,
-    resendRequest,
-    respondToRequest,
+    removeDirectRequest,
+    removeGroupRequest,
+    resendDirectRequest,
+    respondToDirectRequest,
+    removeGroupInvitation,
+    resendGroupInvitation,
   } = useRequestListPage();
+
   return (
     <main>
       <header>
@@ -30,88 +28,126 @@ const RequestListPage = () => {
       <div id="request-list-page">
         <div id="request-tabs">
           <RequestTab
-            requestType="received"
+            requestType="direct-requests-received"
             title="Received"
+            params={{
+              directOrGroup: "direct",
+              requestOrInvitation: "requests",
+              type: "received",
+            }}
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={receivedRequests.length}
+            requestAmount={requestCount.receivedDirectRequestCount}
           />
           <RequestTab
-            requestType="sent"
+            requestType="direct-requests-sent"
             title="Sent"
+            params={{
+              directOrGroup: "direct",
+              requestOrInvitation: "requests",
+              type: "sent",
+            }}
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={sentRequests.length}
+            requestAmount={requestCount.sentDirectRequestCount}
           />
           <RequestTab
-            requestType="removed"
+            requestType="direct-requests-removed"
             title="Removed"
             viewedRequests={viewedRequests}
+            params={{
+              directOrGroup: "direct",
+              requestOrInvitation: "requests",
+              type: "removed",
+            }}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={removedRequests.length}
-          />
-          <RequestTab
-            requestType="group-invites-received"
-            title="Group Invitations"
-            viewedRequests={viewedRequests}
-            changeViewedRequests={changeViewedRequests}
-            requestAmount={groupInvitations.length}
+            requestAmount={requestCount.removedDirectRequestCount}
           />
           <RequestTab
             requestType="group-requests-received"
             title="Group Requests Received"
+            params={{
+              directOrGroup: "group",
+              requestOrInvitation: "requests",
+              type: "received",
+            }}
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={groupRequestsReceived.length}
+            requestAmount={requestCount.receivedGroupRequestCount}
           />
           <RequestTab
             requestType="group-requests-sent"
             title="Group Requests Sent"
+            params={{
+              directOrGroup: "group",
+              requestOrInvitation: "requests",
+              type: "sent",
+            }}
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={groupRequestsSent.length}
+            requestAmount={requestCount.sentGroupRequestCount}
           />
           <RequestTab
             requestType="group-requests-removed"
             title="Group Requests Removed"
+            params={{
+              directOrGroup: "group",
+              requestOrInvitation: "requests",
+              type: "removed",
+            }}
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={groupRequestsRemoved.length}
+            requestAmount={requestCount.removedGroupRequestCount}
           />
           <RequestTab
-            requestType="group-invites-to-approve"
-            title="Group Invitations to Approve"
+            requestType="group-invites-received"
+            title="Group Invitations Received"
+            params={{
+              directOrGroup: "group",
+              requestOrInvitation: "invitations",
+              type: "received",
+            }}
             viewedRequests={viewedRequests}
             changeViewedRequests={changeViewedRequests}
-            requestAmount={groupRequestsToApprove.length}
+            requestAmount={requestCount.receivedGroupInvitationCount}
+          />
+          <RequestTab
+            requestType="group-invites-sent"
+            title="Group Invitations Sent"
+            params={{
+              directOrGroup: "group",
+              requestOrInvitation: "invitations",
+              type: "sent",
+            }}
+            viewedRequests={viewedRequests}
+            changeViewedRequests={changeViewedRequests}
+            requestAmount={requestCount.sentGroupInvitationCount}
+          />
+          <RequestTab
+            requestType="group-invites-removed"
+            title="Group Invitations Removed"
+            params={{
+              directOrGroup: "group",
+              requestOrInvitation: "invitations",
+              type: "removed",
+            }}
+            viewedRequests={viewedRequests}
+            changeViewedRequests={changeViewedRequests}
+            requestAmount={requestCount.removedGroupInvitationCount}
           />
         </div>
-        <div id="request-list">
-          <header id="request-list-header">
-            <h2>{currentTitleAndDesc.title}</h2>
-            <p id="request-description">{currentTitleAndDesc.description}</p>
-          </header>
-          <div id="requests">
-            <RequestList
-              requestType="received"
-              requestList={receivedRequests}
-              show={viewedRequests === "received"}
-              respondToRequest={respondToRequest}
-            />
-            <RequestList
-              requestType="sent"
-              requestList={sentRequests}
-              show={viewedRequests === "sent"}
-              removeRequest={removeRequest}
-            />
-            <RequestList
-              requestType="removed"
-              requestList={removedRequests}
-              show={viewedRequests === "removed"}
-              resendRequest={resendRequest}
-            />
-          </div>
-        </div>
+
+        <RequestList
+          currentRequestType={viewedRequests}
+          currentTitleAndDesc={currentTitleAndDesc}
+          requestList={currentRequests}
+          respondToDirectRequest={respondToDirectRequest}
+          removeDirectRequest={removeDirectRequest}
+          removeGroupRequest={removeGroupRequest}
+          resendDirectRequest={resendDirectRequest}
+          removeGroupInvitation={removeGroupInvitation}
+          resendGroupInvitation={resendGroupInvitation}
+        />
       </div>
     </main>
   );

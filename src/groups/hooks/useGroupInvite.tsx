@@ -6,6 +6,7 @@ import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import socket from "../../helpers/socket";
 
 const useGroupInvite = () => {
   const from = useAppSelector((store) => {
@@ -51,9 +52,14 @@ const useGroupInvite = () => {
       e.preventDefault();
       try {
         dispatch(setFormLoading(true));
-        console.log(formData);
 
         const invitation = await groupConversationsAPI.sendInvitation(formData);
+        socket.emit("addRequest", {
+          requestType: "group-invites-received",
+          countType: "receivedGroupInvitationCount",
+          to: formData.to,
+          request: invitation,
+        });
 
         console.log(invitation);
         navigate(`/user/${to}`);

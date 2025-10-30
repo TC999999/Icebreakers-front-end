@@ -3,13 +3,10 @@ import useRequestPage from "./hooks/useRequestPage";
 import RequestForm from "./RequestForm";
 
 const RequestPage = (): JSX.Element => {
-  const { requestedUser, requesterUser } = useRequestPage();
+  const { to, from } = useRequestPage();
   return (
     <div>
-      <RequestForm
-        requestedUser={requestedUser!}
-        requesterUser={requesterUser!}
-      />
+      <RequestForm to={to!} from={from!} />
     </div>
   );
 };

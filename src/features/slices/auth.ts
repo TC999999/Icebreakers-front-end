@@ -20,7 +20,7 @@ const authSlice = createSlice({
     },
     // updates number of unanswered requests on client side
     setUnansweredRequests: (state, action) => {
-      state.user!.unansweredRequests = action.payload;
+      state.user!.unansweredRequests += action.payload;
     },
     // updates total number of unread messages on client side
     setUnreadMessages: (state, action) => {

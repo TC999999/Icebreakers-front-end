@@ -45,7 +45,7 @@ const RouteList = (): JSX.Element | null => {
         </Route>
         <Route path="/request">
           <Route index element={<RequestListPage />} />
-          <Route path=":requestedUser" element={<RequestPage />} />
+          <Route path=":to" element={<RequestPage />} />
         </Route>
         <Route path="/conversations">
           <Route index element={<ConversationListPage />} />

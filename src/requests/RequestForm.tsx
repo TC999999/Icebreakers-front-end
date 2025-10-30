@@ -4,21 +4,17 @@ import useRequestForm from "./hooks/useRequestForm";
 import "../styles/requests/RequestForm.scss";
 
 const RequestForm: React.FC<directConversationRequestPair> = ({
-  requestedUser,
-  requesterUser,
+  to,
+  from,
 }): JSX.Element => {
-  const { requestData, handleChange, handleSubmit } = useRequestForm(
-    requestedUser,
-    requesterUser
-  );
+  const { requestData, handleChange, handleSubmit } = useRequestForm(to, from);
   return (
     <div id="direct-conversation-request-form">
       <form onSubmit={handleSubmit}>
-        <h1>Request to Chat with {requestedUser}</h1>
+        <h1>Request to Chat with {to}</h1>
         <div id="direct-conversation-request-message-div" className="form-div">
           <label htmlFor="content">
-            Type a friendly message to {requestedUser}:{" "}
-            <span id="required">*</span>
+            Type a friendly message to {to}: <span id="required">*</span>
           </label>
           <textarea
             name="content"

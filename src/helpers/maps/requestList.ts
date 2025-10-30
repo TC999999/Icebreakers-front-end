@@ -1,9 +1,8 @@
-import { type requestType } from "../../types/requestTypes";
 import { type titleAndDesc } from "../../types/miscTypes";
 
-const requestDesc = new Map<requestType, titleAndDesc>([
+const requestDesc = new Map<string, titleAndDesc>([
   [
-    "received",
+    "direct-requests-received",
     {
       title: "Received Requests",
       description:
@@ -11,7 +10,7 @@ const requestDesc = new Map<requestType, titleAndDesc>([
     },
   ],
   [
-    "sent",
+    "direct-requests-sent",
     {
       title: "Sent Requests",
       description:
@@ -19,7 +18,7 @@ const requestDesc = new Map<requestType, titleAndDesc>([
     },
   ],
   [
-    "removed",
+    "direct-requests-removed",
     {
       title: "Removed Requests",
       description:
@@ -31,7 +30,23 @@ const requestDesc = new Map<requestType, titleAndDesc>([
     {
       title: "Received Group Invitations",
       description:
-        "Invitations from a group member to join a group. These invitations have already been approved by the group host.",
+        "Invitations from a group member to join a group that they are a part of.",
+    },
+  ],
+  [
+    "group-invites-sent",
+    {
+      title: "Sent Group Invitations",
+      description:
+        "Invitations that you have sent to other users to join a group that you are a part of",
+    },
+  ],
+  [
+    "group-invites-removed",
+    {
+      title: "Received Group Invitations",
+      description:
+        "Invitations that you had sent to other users to join a group that you are a part of that you have removed afterwards",
     },
   ],
   [
@@ -56,14 +71,6 @@ const requestDesc = new Map<requestType, titleAndDesc>([
       title: "Removed Group Requests",
       description:
         "Requests that you have sent to a group host to join a group, but removed afterwards. The host will not be able to see this request. You can either delete this request permanently, or resend it to the host.",
-    },
-  ],
-  [
-    "group-invites-to-approve",
-    {
-      title: "Group Invites to Approve",
-      description:
-        "Invitations sent by members of a group that you host that must be approved by you to be seen by the intended recepient.",
     },
   ],
 ]);

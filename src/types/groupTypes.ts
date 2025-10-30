@@ -47,3 +47,21 @@ export type GroupInvitation = {
   group: string;
   content: string;
 };
+
+export type fromGroupInvitationCard = {
+  content: string;
+  createdAt: string;
+  groupID: string;
+  groupTitle: string;
+  id: string;
+  from: string;
+};
+
+export type sentGroupInvitationCard = {
+  content: string;
+  createdAt: string;
+  groupID: string;
+  groupTitle: string;
+  id: string;
+  to: string;
+};

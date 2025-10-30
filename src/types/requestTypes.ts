@@ -1,62 +1,71 @@
 export type requestType =
-  | "received"
-  | "sent"
-  | "removed"
+  | "direct-requests-received"
+  | "direct-requests-sent"
+  | "direct-requests-removed"
   | "group-invites-received"
-  | "group-requests-sent"
-  | "group-requests-removed"
+  | "group-invites-sent"
+  | "group-invites-removed"
   | "group-requests-received"
-  | "group-invites-to-approve";
+  | "group-requests-sent"
+  | "group-requests-removed";
 
 export type directConversationRequest = {
-  requestedUser: string;
-  requesterUser: string;
+  to: string;
+  from: string;
   content: string;
 };
 
 export type directConversationRequestPair = {
-  requestedUser: string;
-  requesterUser: string;
+  to: string;
+  from: string;
 };
 
 export type sentRequest = {
-  requestedUser: string;
+  to: string;
   content: string;
   createdAt: string;
 };
 
 export type sentRequestCard = {
   id: string;
-  requestedUser: string;
+  to: string;
   content: string;
   createdAt: string;
 };
 
 export type receivedRequest = {
-  requesterUser: string;
+  from: string;
   content: string;
   createdAt: string;
 };
 
 export type receivedRequestCard = {
   id: string;
-  requesterUser: string;
+  from: string;
   content: string;
   createdAt: string;
 };
 
 export type directRequestCard = {
   id: string;
-  requesterUser: string;
-  requestedUser: string;
+  from: string;
+  to: string;
   content: string;
   createdAt: string;
 };
 
 export type directConversationResponse = {
   id: string;
-  requesterUser: string;
-  requestedUser: string;
+  from: string;
+  to: string;
+  accepted: boolean;
+};
+
+export type groupConversationResponse = {
+  id: string;
+  from: string;
+  groupID: string;
+  to: string;
   accepted: boolean;
 };
 
@@ -65,3 +74,46 @@ export type requestsList = {
   receivedRequestList: receivedRequestCard[];
   removedRequestList: sentRequestCard[];
 };
+
+export type requestParams = {
+  directOrGroup: "direct" | "group";
+  requestOrInvitation: "requests" | "invitations";
+  type: "received" | "sent" | "removed";
+};
+
+export type requestCountSTR =
+  | "receivedDirectRequestCount"
+  | "sentDirectRequestCount"
+  | "removedDirectRequestCount"
+  | "receivedGroupInvitationCount"
+  | "sentGroupInvitationCount"
+  | "removedGroupInvitationCount"
+  | "receivedGroupRequestCount"
+  | "sentGroupRequestCount"
+  | "removedGroupRequestCount";
+
+export type requestCount = {
+  [T in requestCountSTR]: number;
+};
+
+export type requestCountChange = {
+  addRequest?: requestCountSTR;
+  subtractRequest?: requestCountSTR;
+};
+
+// group cards
+interface GroupCardTemplate {
+  groupTitle: string;
+  groupID: string;
+  content: string;
+  createdAt: string;
+  id: string;
+}
+
+export interface ReceivedGroupCard extends GroupCardTemplate {
+  from: string;
+}
+
+export interface SentGroupCard extends GroupCardTemplate {
+  to: string;
+}

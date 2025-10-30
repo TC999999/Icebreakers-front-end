@@ -4,8 +4,8 @@ import { type directConversationRequest } from "../../types/requestTypes";
 import { useAppDispatch } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
 import { setFormLoading, setLoadError } from "../../features/slices/auth";
-import requestsAPI from "../../apis/requestsAPI";
 import socket from "../../helpers/socket";
+import directRequestsAPI from "../../apis/directRequestsAPI";
 
 const useRequestForm = (
   requestedUserInput: string,
@@ -15,8 +15,8 @@ const useRequestForm = (
   const navigate: NavigateFunction = useNavigate();
 
   const initialData: directConversationRequest = {
-    requestedUser: requestedUserInput,
-    requesterUser: requesterUserInput,
+    to: requestedUserInput,
+    from: requesterUserInput,
     content: "",
   };
   const [requestData, setRequestData] =
@@ -26,8 +26,8 @@ const useRequestForm = (
     const setUsers = () => {
       setRequestData((prev) => ({
         ...prev,
-        requestedUser: requestedUserInput,
-        requesterUser: requesterUserInput,
+        to: requestedUserInput,
+        from: requesterUserInput,
       }));
     };
 
@@ -47,14 +47,16 @@ const useRequestForm = (
       e.preventDefault();
       try {
         dispatch(setFormLoading(true));
-        const { request, unansweredRequests } =
-          await requestsAPI.makeDirectConversationRequest(requestData);
-        socket.emit("addToDirectRequestList", {
+        const { request } =
+          await directRequestsAPI.makeDirectConversationRequest(requestData);
+
+        socket.emit("addRequest", {
+          requestType: "direct-requests-received",
+          countType: "receivedDirectRequestCount",
+          to: requestData.to,
           request,
-          unansweredRequests,
-          to: requestData.requestedUser,
         });
-        navigate(`/user/${requestData.requestedUser}`);
+        navigate(`/user/${requestData.to}`);
       } catch (err: any) {
         dispatch(setLoadError(JSON.parse(err)));
       } finally {

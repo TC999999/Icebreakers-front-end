@@ -6,7 +6,7 @@ export type method = "get" | "post" | "patch" | "delete";
 // used for requests that don't require changes to redux state
 async function request(
   route: string,
-  endpoint: string,
+  endpoint: string = "",
   method: method,
   data = {}
 ): Promise<any> {

@@ -6,55 +6,104 @@ import {
   setFormLoading,
   setUnansweredRequests,
 } from "../../features/slices/auth";
+import directRequestsAPI from "../../apis/directRequestsAPI";
 import requestsAPI from "../../apis/requestsAPI";
 import type {
   sentRequestCard,
   receivedRequestCard,
   requestType,
   directConversationResponse,
+  requestCount,
+  requestParams,
+  SentGroupCard,
+  ReceivedGroupCard,
+  requestCountChange,
 } from "../../types/requestTypes";
 import requestDesc from "../../helpers/maps/requestList";
+import {
+  requestTypeMap,
+  DoGMap,
+  RoIMap,
+  tMap,
+} from "../../helpers/maps/requestTypeMap";
 import { type titleAndDesc } from "../../types/miscTypes";
-import removeRequestFromRequested from "../../helpers/removeRequest";
-import removeSentRequest from "../../helpers/removeSentRequest";
-import addRequest from "../../helpers/addRequest";
+import { useSearchParams } from "react-router-dom";
 import socket from "../../helpers/socket";
 import { shallowEqual } from "react-redux";
+import groupRequestsAPI from "../../apis/groupRequestsAPI";
+import {
+  updateSentRequests,
+  updateRequestCount,
+  type addOrRemove,
+} from "../../helpers/updateRequests";
 
 const useRequestListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const username = useAppSelector((store) => {
     return store.user.user?.username;
   }, shallowEqual);
 
   const defaultTitleAndDesc: titleAndDesc = { title: "", description: "" };
 
-  const [viewedRequests, setViewedRequests] = useState<requestType>("received");
+  const initialCount: requestCount = {
+    receivedDirectRequestCount: 0,
+    sentDirectRequestCount: 0,
+    removedDirectRequestCount: 0,
+
+    receivedGroupInvitationCount: 0,
+    sentGroupInvitationCount: 0,
+    removedGroupInvitationCount: 0,
+
+    receivedGroupRequestCount: 0,
+    sentGroupRequestCount: 0,
+    removedGroupRequestCount: 0,
+  };
+
+  const [viewedRequests, setViewedRequests] = useState<requestType>(
+    "direct-requests-received"
+  );
   const [currentTitleAndDesc, setViewedTitleAndDesc] = useState<titleAndDesc>(
-    requestDesc.get("received") || defaultTitleAndDesc
+    requestDesc.get("direct-requests-received") || defaultTitleAndDesc
   );
 
-  const [sentRequests, setSendRequests] = useState<sentRequestCard[]>([]);
-  const [receivedRequests, setReceivedRequests] = useState<
-    receivedRequestCard[]
-  >([]);
-  const [removedRequests, setRemovedRequests] = useState<sentRequestCard[]>([]);
-  const [groupInvitations, setGroupInvitations] = useState([]);
-  const [groupRequestsReceived, setGroupRequestsReceived] = useState([]);
-  const [groupRequestsSent, setGroupRequestsSent] = useState([]);
-  const [groupRequestsRemoved, setGroupRequestsRemoved] = useState([]);
-  const [groupRequestsToApprove, setGroupRequestsToApprove] = useState([]);
+  const [requestCount, setRequestCount] = useState<requestCount>(initialCount);
 
+  const [currentRequests, setCurrentRequests] = useState<
+    (
+      | sentRequestCard
+      | receivedRequestCard
+      | SentGroupCard
+      | ReceivedGroupCard
+    )[]
+  >([]);
+
+  // initial render
   useEffect(() => {
     const getAllRequests = async () => {
       try {
         dispatch(setFormLoading(true));
-        const requests = await requestsAPI.getDirectConversationRequests(
-          username!
-        );
-        setSendRequests(requests.sentRequestList);
-        setReceivedRequests(requests.receivedRequestList);
-        setRemovedRequests(requests.removedRequestList);
+        if (username) {
+          let DoG = searchParams.get("directOrGroup");
+          let RoI = searchParams.get("requestOrInvitation");
+          let t = searchParams.get("type");
+          let currRequests = requestTypeMap[`${DoG}-${RoI}-${t}`];
+          setViewedRequests(currRequests);
+          setViewedTitleAndDesc(
+            requestDesc.get(currRequests) || defaultTitleAndDesc
+          );
+          if (DoG && RoI && t) {
+            const params: requestParams = {
+              directOrGroup: DoGMap[DoG],
+              requestOrInvitation: RoIMap[RoI],
+              type: tMap[t],
+            };
+            const requests = await requestsAPI.getRequests(username, params);
+            setCurrentRequests(requests);
+          }
+          const count = await requestsAPI.getRequestCount(username);
+          setRequestCount(count);
+        }
       } catch (err) {
         console.log(err);
       } finally {
@@ -63,114 +112,210 @@ const useRequestListPage = () => {
     };
 
     getAllRequests();
+  }, []);
 
-    socket.on("addToDirectRequestList", ({ request }) => {
-      addRequest(request, setReceivedRequests);
+  //set new request count
+  const setNewRequestCount = (requestChange: requestCountChange) => {
+    updateRequestCount(requestChange, setRequestCount);
+  };
+
+  // sets new requests in state
+  const setNewRequests = (
+    request: SentGroupCard | sentRequestCard | directConversationResponse,
+    addOrRemove: addOrRemove
+  ) => {
+    updateSentRequests(request, addOrRemove, setCurrentRequests);
+  };
+
+  useEffect(() => {
+    socket.on("addRequest", ({ request, requestType, countType }) => {
+      setNewRequestCount({ addRequest: countType });
+      if (viewedRequests === requestType) {
+        setNewRequests(request, "add");
+      }
     });
 
-    socket.on("removeDirectRequest", ({ from }) => {
-      removeRequestFromRequested(from, setReceivedRequests);
-    });
-
-    socket.on("removeSentRequest", ({ id }) => {
-      removeSentRequest(id, setSendRequests);
+    socket.on("removeRequest", ({ request, requestType, countType }) => {
+      setNewRequestCount({ subtractRequest: countType });
+      if (viewedRequests === requestType) {
+        setNewRequests(request, "remove");
+      }
     });
 
     return () => {
-      socket.off("addToDirectRequestList");
-      socket.off("removeDirectRequest");
-      socket.off("removeSentRequest");
+      socket.off("addRequest");
+      socket.off("removeRequest");
     };
-  }, []);
+  }, [viewedRequests, requestCount]);
 
   const changeViewedRequests = useCallback(
-    (requestType: requestType) => {
+    async (requestType: requestType, params: requestParams) => {
       setViewedRequests(requestType);
+
       setViewedTitleAndDesc(
         requestDesc.get(requestType) || defaultTitleAndDesc
       );
+
+      if (username) {
+        setSearchParams(params);
+        const requests = await requestsAPI.getRequests(username, params);
+        setCurrentRequests(requests);
+      }
     },
     [viewedRequests]
   );
 
-  const removeRequest = useCallback(async (request: sentRequestCard) => {
-    let { unansweredRequests } =
-      await requestsAPI.removeDirectConversationRequest(request.id);
-    socket.emit("removeDirectRequest", {
-      unansweredRequests,
-      to: request.requestedUser,
-    });
+  // update direct requests
+  const removeDirectRequest = useCallback(
+    async (request: sentRequestCard) => {
+      let resentRequest =
+        await directRequestsAPI.removeDirectConversationRequest(
+          request.id,
+          true
+        );
 
-    let filteredSentRequests = sentRequests.filter((r) => {
-      return r.id !== request.id;
-    });
-    setSendRequests(filteredSentRequests);
-    setRemovedRequests((prev) => {
-      return [...prev, request];
-    });
+      setNewRequests(request, "remove");
+      setNewRequestCount({
+        addRequest: "removedDirectRequestCount",
+        subtractRequest: "sentDirectRequestCount",
+      });
+
+      socket.emit("removeRequest", {
+        requestType: "direct-requests-received",
+        countType: "receivedDirectRequestCount",
+        to: request.to,
+        request: resentRequest,
+      });
+    },
+    [currentRequests, requestCount]
+  );
+
+  const resendDirectRequest = useCallback(
+    async (request: sentRequestCard) => {
+      let resentRequest =
+        await directRequestsAPI.removeDirectConversationRequest(
+          request.id,
+          false
+        );
+
+      setNewRequests(request, "remove");
+      setNewRequestCount({
+        addRequest: "sentDirectRequestCount",
+        subtractRequest: "removedDirectRequestCount",
+      });
+
+      socket.emit("addRequest", {
+        requestType: "direct-requests-received",
+        countType: "receivedDirectRequestCount",
+        to: request.to,
+        request: resentRequest,
+      });
+    },
+    [currentRequests, requestCount]
+  );
+
+  const removeGroupRequest = useCallback(async (request: SentGroupCard) => {
+    console.log("group request");
+    console.log(request);
   }, []);
 
-  const resendRequest = useCallback(async (request: sentRequestCard) => {
-    let { resentRequest, unansweredRequests } =
-      await requestsAPI.resendDirectConversationRequest(request.id);
-    socket.emit("addToDirectRequestList", {
-      request: resentRequest,
-      unansweredRequests,
-      to: request.requestedUser,
-    });
+  // update group invitations
+  const removeGroupInvitation = useCallback(
+    async (request: SentGroupCard) => {
+      // console.log(request);
+      let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
+        request.id,
+        true
+      );
 
-    let filteredRemovedRequests = removedRequests.filter((r) => {
-      return r.id !== request.id;
-    });
-    setRemovedRequests(filteredRemovedRequests);
-    setSendRequests((prev) => {
-      return [...prev, request];
-    });
-  }, []);
+      setNewRequests(request, "remove");
+      setNewRequestCount({
+        addRequest: "removedGroupInvitationCount",
+        subtractRequest: "sentGroupInvitationCount",
+      });
 
-  const respondToRequest = useCallback(
+      socket.emit("removeRequest", {
+        requestType: "group-invites-received",
+        countType: "receivedGroupInvitationCount",
+        to: request.to,
+        request: invitation,
+      });
+    },
+    [currentRequests, requestCount]
+  );
+
+  const resendGroupInvitation = useCallback(
+    async (request: SentGroupCard) => {
+      // console.log(request);
+      let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
+        request.id,
+        false
+      );
+
+      setNewRequests(request, "remove");
+      setNewRequestCount({
+        addRequest: "sentGroupInvitationCount",
+        subtractRequest: "removedGroupInvitationCount",
+      });
+
+      socket.emit("addRequest", {
+        requestType: "group-invites-received",
+        countType: "receivedGroupInvitationCount",
+        to: request.to,
+        request: invitation,
+      });
+    },
+    [currentRequests, requestCount]
+  );
+
+  // RESPONSES
+  // respond to direct request
+  const respondToDirectRequest = useCallback(
     async (response: directConversationResponse) => {
       let { requestResponse } =
-        await requestsAPI.respondToDirectConversationRequest(response);
+        await directRequestsAPI.respondToDirectConversationRequest(response);
       if (requestResponse.conversation) {
         socket.emit("addConversation", {
           conversation: {
             ...requestResponse.conversation,
             unreadMessages: 0,
-            otherUser: response.requestedUser,
+            otherUser: response.to,
           },
-          to: response.requesterUser,
+          to: response.from,
         });
       }
 
-      removeRequestFromRequested(response.requesterUser, setReceivedRequests);
-      dispatch(setUnansweredRequests(requestResponse.unansweredRequests));
-      socket.emit("directResponse", {
-        response: requestResponse,
-        to: response.requesterUser,
+      setNewRequests(response, "remove");
+      setNewRequestCount({
+        subtractRequest: "receivedDirectRequestCount",
+      });
+
+      dispatch(setUnansweredRequests(-1));
+      socket.emit("response", {
+        response,
+        to: response.from,
+        requestType: "direct-requests-sent",
+        countType: "sentDirectRequestCount",
       });
       socket.emit("updateUnansweredRequests", {
-        unansweredRequests: requestResponse.unansweredRequests,
+        change: -1,
       });
     },
-    []
+    [currentRequests, dispatch]
   );
 
   return {
     viewedRequests,
     currentTitleAndDesc,
-    sentRequests,
-    receivedRequests,
-    removedRequests,
-    groupInvitations,
-    groupRequestsReceived,
-    groupRequestsSent,
-    groupRequestsRemoved,
-    groupRequestsToApprove,
+    currentRequests,
+    requestCount,
     changeViewedRequests,
-    removeRequest,
-    resendRequest,
-    respondToRequest,
+    removeDirectRequest,
+    removeGroupRequest,
+    resendDirectRequest,
+    removeGroupInvitation,
+    resendGroupInvitation,
+    respondToDirectRequest,
   };
 };
 

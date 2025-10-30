@@ -1,40 +1,96 @@
-// import { useCallback } from "react";
-// import type {
-//   sentRequestCard,
-//   receivedRequestCard,
-//   directConversationResponse,
-// } from "../../types/requestTypes";
-// import socket from "../../helpers/socket";
+import { useCallback } from "react";
+import type {
+  directConversationResponse,
+  receivedRequestCard,
+  sentRequestCard,
+  requestType,
+  SentGroupCard,
+  ReceivedGroupCard,
+} from "../../types/requestTypes";
+import { useAppSelector } from "../../features/hooks";
+import { shallowEqual } from "react-redux";
 
-// type input = {
-//   request: receivedRequestCard | sentRequestCard;
-// };
+type input = {
+  requestType: requestType;
+  request:
+    | receivedRequestCard
+    | sentRequestCard
+    | SentGroupCard
+    | ReceivedGroupCard;
+  respondToDirectRequest: (response: directConversationResponse) => void;
+  removeDirectRequest: (request: sentRequestCard) => void;
+  resendDirectRequest: (request: sentRequestCard) => void;
+  removeGroupRequest: (request: SentGroupCard) => void;
+  removeGroupInvitation: (request: SentGroupCard) => void;
+  resendGroupInvitation: (request: SentGroupCard) => void;
+};
 
-// const useRequestCard = ({ request }: input) => {
-//   const acceptRequest = useCallback(() => {
-//     if ("requesterUser" in request) {
-//       let response: directConversationResponse = {
-//         id: request.id,
-//         requesterUser: request.requesterUser,
-//         accepted: true,
-//       };
+const useRequestCard = ({
+  requestType,
+  request,
+  respondToDirectRequest,
+  removeDirectRequest,
+  resendDirectRequest,
+  removeGroupRequest,
+  removeGroupInvitation,
+  resendGroupInvitation,
+}: input) => {
+  const username = useAppSelector((store) => {
+    return store.user.user?.username;
+  }, shallowEqual);
 
-//       socket.emit("directResponse", { response, to: request.requesterUser });
-//     }
-//   }, []);
+  const respond = useCallback((accepted: boolean) => {
+    if ("from" in request && requestType === "direct-requests-received") {
+      respondToDirectRequest({
+        id: request.id,
+        from: request.from,
+        to: username!,
+        accepted,
+      });
+    }
+  }, []);
 
-//   const declineRequest = useCallback(() => {
-//     if ("requesterUser" in request) {
-//       let response: directConversationResponse = {
-//         id: request.id,
-//         requesterUser: request.requesterUser,
-//         accepted: false,
-//       };
-//       socket.emit("directResponse", { response, to: request.requesterUser });
-//     }
-//   }, []);
+  const remove = useCallback(() => {
+    if (
+      "to" in request &&
+      !("groupID" in request) &&
+      requestType === "direct-requests-sent"
+    ) {
+      removeDirectRequest(request);
+    } else if (
+      "to" in request &&
+      "groupID" in request &&
+      requestType === "group-requests-sent"
+    ) {
+      removeGroupRequest(request);
+    } else if (
+      "to" in request &&
+      "groupID" in request &&
+      requestType === "group-invites-sent"
+    ) {
+      removeGroupInvitation(request);
+    }
+  }, []);
 
-//   return { acceptRequest, declineRequest };
-// };
+  const resend = useCallback(() => {
+    if (
+      "to" in request &&
+      !("groupID" in request) &&
+      requestType === "direct-requests-removed"
+    ) {
+      resendDirectRequest(request);
+    }
 
-// export default useRequestCard;
+    if (
+      "to" in request &&
+      "groupID" in request &&
+      requestType === "group-invites-removed"
+    ) {
+      resendGroupInvitation(request);
+    }
+  }, []);
+
+  return { respond, remove, resend };
+};
+
+export default useRequestCard;

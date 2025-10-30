@@ -1,17 +1,22 @@
 import React from "react";
-import { type requestType } from "../types/requestTypes";
+import type { requestType, requestParams } from "../types/requestTypes";
 import "../styles/requests/RequestTab.scss";
 
 type Props = {
   title: string;
+  params: requestParams;
   requestType: requestType;
   viewedRequests: requestType;
-  changeViewedRequests: (requestType: requestType) => void;
+  changeViewedRequests: (
+    requestType: requestType,
+    requestParams: requestParams
+  ) => void;
   requestAmount: number;
 };
 
 const RequestTab: React.FC<Props> = ({
   title,
+  params,
   requestType,
   viewedRequests,
   changeViewedRequests,
@@ -23,7 +28,7 @@ const RequestTab: React.FC<Props> = ({
       className={`request-tab ${
         viewedRequests === requestType ? "selected-tab" : ""
       }`}
-      onClick={() => changeViewedRequests(requestType)}
+      onClick={() => changeViewedRequests(requestType, params)}
     >
       <span>{title}</span>{" "}
       {requestAmount > 0 && (
