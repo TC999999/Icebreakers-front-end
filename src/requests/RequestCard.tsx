@@ -5,6 +5,7 @@ import type {
   requestType,
   SentGroupCard,
   ReceivedGroupCard,
+  groupConversationResponse,
 } from "../types/requestTypes";
 
 import "../styles/requests/RequestCard.scss";
@@ -19,6 +20,7 @@ type Props = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
+  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
@@ -30,6 +32,7 @@ const RequestCard: React.FC<Props> = ({
   requestType,
   request,
   respondToDirectRequest,
+  respondToGroupInvitation,
   removeDirectRequest,
   removeGroupRequest,
   resendDirectRequest,
@@ -40,6 +43,7 @@ const RequestCard: React.FC<Props> = ({
     requestType,
     request,
     respondToDirectRequest,
+    respondToGroupInvitation,
     removeDirectRequest,
     removeGroupRequest,
     resendDirectRequest,
@@ -74,7 +78,8 @@ const RequestCard: React.FC<Props> = ({
       </div>
 
       <div id="response-list">
-        {requestType === "direct-requests-received" && (
+        {(requestType === "direct-requests-received" ||
+          requestType === "group-invites-received") && (
           <div className="response-buttons" id="received-response">
             <button className="accept-button" onClick={() => respond(true)}>
               Accept

@@ -18,7 +18,10 @@ import type {
   SentGroupCard,
   ReceivedGroupCard,
   requestCountChange,
+  socketRequest,
+  groupConversationResponse,
 } from "../../types/requestTypes";
+
 import requestDesc from "../../helpers/maps/requestList";
 import {
   requestTypeMap,
@@ -121,12 +124,38 @@ const useRequestListPage = () => {
 
   // sets new requests in state
   const setNewRequests = (
-    request: SentGroupCard | sentRequestCard | directConversationResponse,
+    request:
+      | SentGroupCard
+      | ReceivedGroupCard
+      | sentRequestCard
+      | receivedRequestCard
+      | directConversationResponse,
     addOrRemove: addOrRemove
   ) => {
     updateSentRequests(request, addOrRemove, setCurrentRequests);
   };
 
+  // reusable logic for updating request lists, setting the new count in state for request numbers, and emitting socket signals
+  const handleRequests = async (
+    request:
+      | sentRequestCard
+      | receivedRequestCard
+      | SentGroupCard
+      | ReceivedGroupCard
+      | directConversationResponse
+      | groupConversationResponse,
+
+    addOrRemove: addOrRemove,
+    requestChange: requestCountChange,
+    socketType: "addRequest" | "removeRequest" | "response",
+    socketRequest: socketRequest
+  ) => {
+    setNewRequests(request, addOrRemove);
+    setNewRequestCount(requestChange);
+    socket.emit(socketType, socketRequest);
+  };
+
+  // socket effects
   useEffect(() => {
     socket.on("addRequest", ({ request, requestType, countType }) => {
       setNewRequestCount({ addRequest: countType });
@@ -148,6 +177,7 @@ const useRequestListPage = () => {
     };
   }, [viewedRequests, requestCount]);
 
+  // change which requests to see when user clicks on respective tab
   const changeViewedRequests = useCallback(
     async (requestType: requestType, params: requestParams) => {
       setViewedRequests(requestType);
@@ -165,7 +195,8 @@ const useRequestListPage = () => {
     [viewedRequests]
   );
 
-  // update direct requests
+  // UPDATE DIRECT REQUESTS (SENDER'S SIDE ONLY)
+  // remove direct request from recipient's inbox
   const removeDirectRequest = useCallback(
     async (request: sentRequestCard) => {
       let resentRequest =
@@ -174,22 +205,26 @@ const useRequestListPage = () => {
           true
         );
 
-      setNewRequests(request, "remove");
-      setNewRequestCount({
-        addRequest: "removedDirectRequestCount",
-        subtractRequest: "sentDirectRequestCount",
-      });
-
-      socket.emit("removeRequest", {
-        requestType: "direct-requests-received",
-        countType: "receivedDirectRequestCount",
-        to: request.to,
-        request: resentRequest,
-      });
+      handleRequests(
+        request,
+        "remove",
+        {
+          addRequest: "removedDirectRequestCount",
+          subtractRequest: "sentDirectRequestCount",
+        },
+        "removeRequest",
+        {
+          requestType: "direct-requests-received",
+          countType: "receivedDirectRequestCount",
+          to: request.to,
+          request: resentRequest,
+        }
+      );
     },
     [currentRequests, requestCount]
   );
 
+  // resend direct request to recipient's inbox
   const resendDirectRequest = useCallback(
     async (request: sentRequestCard) => {
       let resentRequest =
@@ -198,77 +233,99 @@ const useRequestListPage = () => {
           false
         );
 
-      setNewRequests(request, "remove");
-      setNewRequestCount({
-        addRequest: "sentDirectRequestCount",
-        subtractRequest: "removedDirectRequestCount",
-      });
-
-      socket.emit("addRequest", {
-        requestType: "direct-requests-received",
-        countType: "receivedDirectRequestCount",
-        to: request.to,
-        request: resentRequest,
-      });
+      handleRequests(
+        request,
+        "remove",
+        {
+          addRequest: "sentDirectRequestCount",
+          subtractRequest: "removedDirectRequestCount",
+        },
+        "addRequest",
+        {
+          requestType: "direct-requests-received",
+          countType: "receivedDirectRequestCount",
+          to: request.to,
+          request: resentRequest,
+        }
+      );
     },
     [currentRequests, requestCount]
   );
 
+  // UPDATE GROUP REQUESTS (SENDER'S SIDE ONLY)
   const removeGroupRequest = useCallback(async (request: SentGroupCard) => {
     console.log("group request");
     console.log(request);
   }, []);
 
-  // update group invitations
+  // UPDATE GROUP INVITATIONS (SENDER'S SIDE ONLY)
+  // remove group invitation from recipient's inbox
   const removeGroupInvitation = useCallback(
     async (request: SentGroupCard) => {
-      // console.log(request);
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
         true
       );
 
-      setNewRequests(request, "remove");
-      setNewRequestCount({
-        addRequest: "removedGroupInvitationCount",
-        subtractRequest: "sentGroupInvitationCount",
-      });
-
-      socket.emit("removeRequest", {
-        requestType: "group-invites-received",
-        countType: "receivedGroupInvitationCount",
-        to: request.to,
-        request: invitation,
-      });
+      handleRequests(
+        request,
+        "remove",
+        {
+          addRequest: "removedGroupInvitationCount",
+          subtractRequest: "sentGroupInvitationCount",
+        },
+        "removeRequest",
+        {
+          requestType: "group-invites-received",
+          countType: "receivedGroupInvitationCount",
+          to: request.to,
+          request: invitation,
+        }
+      );
     },
     [currentRequests, requestCount]
   );
 
   const resendGroupInvitation = useCallback(
     async (request: SentGroupCard) => {
-      // console.log(request);
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
         false
       );
 
-      setNewRequests(request, "remove");
-      setNewRequestCount({
-        addRequest: "sentGroupInvitationCount",
-        subtractRequest: "removedGroupInvitationCount",
-      });
+      handleRequests(
+        request,
+        "remove",
+        {
+          addRequest: "sentGroupInvitationCount",
+          subtractRequest: "removedGroupInvitationCount",
+        },
+        "addRequest",
+        {
+          requestType: "group-invites-received",
+          countType: "receivedGroupInvitationCount",
+          to: request.to,
+          request: invitation,
+        }
+      );
 
-      socket.emit("addRequest", {
-        requestType: "group-invites-received",
-        countType: "receivedGroupInvitationCount",
-        to: request.to,
-        request: invitation,
-      });
+      // setNewRequests(request, "remove");
+      // setNewRequestCount({
+      //   addRequest: "sentGroupInvitationCount",
+      //   subtractRequest: "removedGroupInvitationCount",
+      // });
+
+      // socket.emit("addRequest", {
+      //   requestType: "group-invites-received",
+      //   countType: "receivedGroupInvitationCount",
+      //   to: request.to,
+      //   request: invitation,
+      // });
     },
     [currentRequests, requestCount]
   );
 
-  // RESPONSES
+  // RESPONSES (RECIPIENT'S SIDE ONLY)
   // respond to direct request
   const respondToDirectRequest = useCallback(
     async (response: directConversationResponse) => {
@@ -285,23 +342,64 @@ const useRequestListPage = () => {
         });
       }
 
-      setNewRequests(response, "remove");
-      setNewRequestCount({
-        subtractRequest: "receivedDirectRequestCount",
-      });
+      handleRequests(
+        response,
+        "remove",
+        {
+          subtractRequest: "receivedDirectRequestCount",
+        },
+        "response",
+        {
+          to: response.from,
+          requestType: "direct-requests-sent",
+          countType: "sentDirectRequestCount",
+          response,
+        }
+      );
 
       dispatch(setUnansweredRequests(-1));
-      socket.emit("response", {
-        response,
-        to: response.from,
-        requestType: "direct-requests-sent",
-        countType: "sentDirectRequestCount",
-      });
       socket.emit("updateUnansweredRequests", {
         change: -1,
       });
     },
     [currentRequests, dispatch]
+  );
+
+  // respond to group invitation
+  const respondToGroupInvitation = useCallback(
+    async (response: groupConversationResponse) => {
+      let res = await groupRequestsAPI.respondToGroupInvitation(response);
+      if (res.user) {
+        socket.emit("addUserToGroup", {
+          user: res.user,
+          groupID: response.groupID,
+        });
+      }
+      handleRequests(
+        response,
+        "remove",
+        {
+          subtractRequest: "receivedGroupInvitationCount",
+        },
+        "response",
+        {
+          to: response.from,
+          requestType: "group-invites-sent",
+          countType: "sentGroupInvitationCount",
+          response,
+        }
+      );
+
+      dispatch(setUnansweredRequests(-1));
+      socket.emit("updateUnansweredRequests", {
+        change: -1,
+      });
+
+      if (res.user) {
+        socket.emit("joinGroup", { group: { id: response.groupID } });
+      }
+    },
+    []
   );
 
   return {
@@ -316,6 +414,7 @@ const useRequestListPage = () => {
     removeGroupInvitation,
     resendGroupInvitation,
     respondToDirectRequest,
+    respondToGroupInvitation,
   };
 };
 

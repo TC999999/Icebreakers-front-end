@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
+import socket from "../../helpers/socket";
 
 const useGroupPage = () => {
   const { id } = useParams();
@@ -41,6 +42,19 @@ const useGroupPage = () => {
 
     getGroup();
   }, []);
+
+  useEffect(() => {
+    socket.on("addUserToGroup", ({ groupID, user }) => {
+      if (group.id === groupID) {
+        setGroup((prev) => ({ ...prev, users: [...prev.users, user] }));
+      }
+    });
+
+    return () => {
+      socket.off("addUserToGroup");
+    };
+  }, [group.users]);
+
   return { group, isInGroup };
 };
 

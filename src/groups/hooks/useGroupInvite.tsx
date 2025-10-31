@@ -39,6 +39,7 @@ const useGroupInvite = () => {
     }
   }, []);
 
+  // handles change in value of form data
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -47,6 +48,7 @@ const useGroupInvite = () => {
     [formData]
   );
 
+  // handles submission of form data
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -60,8 +62,6 @@ const useGroupInvite = () => {
           to: formData.to,
           request: invitation,
         });
-
-        console.log(invitation);
         navigate(`/user/${to}`);
       } catch (err) {
         console.log(err);

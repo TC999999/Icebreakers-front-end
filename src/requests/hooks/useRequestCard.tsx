@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import type {
   directConversationResponse,
+  groupConversationResponse,
   receivedRequestCard,
   sentRequestCard,
   requestType,
@@ -18,6 +19,7 @@ type input = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
+  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
@@ -29,6 +31,7 @@ const useRequestCard = ({
   requestType,
   request,
   respondToDirectRequest,
+  respondToGroupInvitation,
   removeDirectRequest,
   resendDirectRequest,
   removeGroupRequest,
@@ -40,11 +43,27 @@ const useRequestCard = ({
   }, shallowEqual);
 
   const respond = useCallback((accepted: boolean) => {
-    if ("from" in request && requestType === "direct-requests-received") {
+    if (
+      "from" in request &&
+      !("groupID" in request) &&
+      requestType === "direct-requests-received"
+    ) {
       respondToDirectRequest({
         id: request.id,
         from: request.from,
         to: username!,
+        accepted,
+      });
+    } else if (
+      "from" in request &&
+      "groupID" in request &&
+      requestType === "group-invites-received"
+    ) {
+      respondToGroupInvitation({
+        id: request.id,
+        from: request.from,
+        to: username!,
+        groupID: request.groupID,
         accepted,
       });
     }
@@ -80,7 +99,6 @@ const useRequestCard = ({
     ) {
       resendDirectRequest(request);
     }
-
     if (
       "to" in request &&
       "groupID" in request &&

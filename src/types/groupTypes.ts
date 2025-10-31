@@ -65,3 +65,13 @@ export type sentGroupInvitationCard = {
   id: string;
   to: string;
 };
+
+export type fullGroupCard = {
+  content: string;
+  createdAt: string;
+  groupID: string;
+  groupTitle: string;
+  id: string;
+  from: string;
+  to: string;
+};

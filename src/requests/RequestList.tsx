@@ -7,6 +7,7 @@ import type {
   ReceivedGroupCard,
   directConversationResponse,
   requestType,
+  groupConversationResponse,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
@@ -22,6 +23,7 @@ type Props = {
   )[];
 
   respondToDirectRequest: (response: directConversationResponse) => void;
+  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
@@ -34,6 +36,7 @@ const RequestList: React.FC<Props> = ({
   currentTitleAndDesc,
   requestList,
   respondToDirectRequest,
+  respondToGroupInvitation,
   removeDirectRequest,
   removeGroupRequest,
   resendDirectRequest,
@@ -54,6 +57,7 @@ const RequestList: React.FC<Props> = ({
                 requestType={currentRequestType}
                 request={request}
                 respondToDirectRequest={respondToDirectRequest}
+                respondToGroupInvitation={respondToGroupInvitation}
                 removeDirectRequest={removeDirectRequest}
                 removeGroupRequest={removeGroupRequest}
                 resendDirectRequest={resendDirectRequest}

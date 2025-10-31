@@ -29,10 +29,16 @@
 
   #group-users {
     h2 {
+      text-align: center;
       text-decoration: underline;
       color: c.$secondary;
       font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
         "Lucida Sans", Arial, sans-serif;
+    }
+
+    #user-list {
+      display: flex;
+      justify-content: center;
     }
   }
 }

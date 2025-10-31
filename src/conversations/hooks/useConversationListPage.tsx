@@ -27,6 +27,7 @@ const useConversationListPage = () => {
     id: "",
     title: "",
     recipient: "",
+    isOnline: false,
   };
   const [conversations, setConversations] = useState<conversation[]>([]);
   const [currentConversation, setCurrentConversation] =
@@ -59,6 +60,16 @@ const useConversationListPage = () => {
             let { messages, conversationData } =
               await directConversationsAPI.getMessages(username!, currentID, 0);
             setCurrentConversation(conversationData);
+            socket.emit(
+              "isOnline",
+              conversationData.recipient,
+              (response: boolean) => {
+                setCurrentConversation((prev) => ({
+                  ...prev,
+                  isOnline: response,
+                }));
+              }
+            );
             setCurrentMessages(messages);
             setLoadingMessages(false);
           }
@@ -130,6 +141,20 @@ const useConversationListPage = () => {
     };
   }, [currentConversation]);
 
+  // lets user know when other user in the conversation is online
+  useEffect(() => {
+    socket.on("isOnline", ({ user, isOnline }) => {
+      if (user === currentConversation.recipient) {
+        setCurrentConversation((prev) => ({ ...prev, isOnline: isOnline }));
+      }
+    });
+
+    return () => {
+      socket.off("isOnline");
+    };
+  }, [currentConversation]);
+
+  // adds conversation to list if requested user accepts conversation request
   useEffect(() => {
     socket.on("addConversation", ({ conversation }) => {
       setConversations((prev) => [conversation, ...prev]);
@@ -138,7 +163,7 @@ const useConversationListPage = () => {
     return () => {
       socket.off("addConversation");
     };
-  });
+  }, []);
 
   // handles when a user edits the title of a conversation
   useEffect(() => {
@@ -192,11 +217,16 @@ const useConversationListPage = () => {
         content: convoMessage ? convoMessage : "",
       }));
 
-      setCurrentConversation({
+      socket.emit("isOnline", conversation.otherUser, (response: boolean) => {
+        setCurrentConversation((prev) => ({ ...prev, isOnline: response }));
+      });
+
+      setCurrentConversation((prev) => ({
+        ...prev,
         id: conversation.id,
         title: conversation.title,
         recipient: conversation.otherUser,
-      });
+      }));
       setCurrentMessages(messages);
       setTypingMessage("");
       setLoadingMessages(false);

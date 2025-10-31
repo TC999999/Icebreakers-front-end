@@ -58,9 +58,27 @@ const ConversationListPage = () => {
             ) : (
               <div ref={scrollRef} id="conversation-messages">
                 <header id="messages-header">
-                  {currentConversation.title.length > 0
-                    ? currentConversation.title
-                    : currentConversation.recipient}
+                  <h3>
+                    {currentConversation.title.length > 0
+                      ? currentConversation.title
+                      : currentConversation.recipient}
+                  </h3>
+                  <div>
+                    <span> {currentConversation.recipient}</span>
+                    {currentConversation.recipient.length > 0 && (
+                      <span
+                        id="onlineStatus"
+                        title={
+                          currentConversation.isOnline ? "Online" : "Offline"
+                        }
+                        className={
+                          currentConversation.isOnline
+                            ? "isOnline"
+                            : "isNotOnline"
+                        }
+                      ></span>
+                    )}
+                  </div>
                   {currentConversation.id.length > 0 && (
                     <div id="edit-conversation-button">
                       <button type="button" onClick={(e) => toggleEditForm(e)}>

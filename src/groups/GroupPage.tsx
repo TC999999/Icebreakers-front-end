@@ -44,9 +44,11 @@ const GroupPage = () => {
 
       <div id="group-users">
         <h2>{group.title} users</h2>
-        {group.users.map((u) => {
-          return <GroupUserCard key={`user-${u.username}`} user={u} />;
-        })}
+        <div id="user-list">
+          {group.users.map((u) => {
+            return <GroupUserCard key={`user-${u.username}`} user={u} />;
+          })}
+        </div>
       </div>
     </main>
   );

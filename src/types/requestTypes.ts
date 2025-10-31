@@ -117,3 +117,11 @@ export interface ReceivedGroupCard extends GroupCardTemplate {
 export interface SentGroupCard extends GroupCardTemplate {
   to: string;
 }
+
+export type socketRequest = {
+  requestType: requestType;
+  countType: requestCountSTR;
+  to: string;
+  request?: any;
+  response?: any;
+};

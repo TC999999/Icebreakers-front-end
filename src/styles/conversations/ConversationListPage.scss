@@ -35,7 +35,7 @@
           position: sticky;
           top: 0;
           z-index: 2;
-          padding: 20px;
+          padding: 0;
           font-weight: bold;
 
           #edit-conversation-button {
@@ -48,6 +48,20 @@
               border-radius: s.$borderRadius;
               color: c.$thirdly;
               padding: 10px;
+            }
+          }
+
+          #onlineStatus {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+
+            &.isOnline {
+              background-color: green;
+            }
+            &.isNotOnline {
+              background-color: red;
             }
           }
         }
