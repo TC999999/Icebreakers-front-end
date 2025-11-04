@@ -3,11 +3,21 @@
 
 .group-search-card {
   background-color: c.$thirdly;
+  color: c.$secondary;
   width: 200px;
   padding: 0;
-  margin: 5px;
+  margin: 10px;
   border: s.$borderSettings c.$secondary;
   border-radius: s.$borderRadius;
+  transition: 0.1s ease-in-out;
+  box-shadow: s.$boxShadowSettings;
+
+  &:hover {
+    background-color: c.$primary;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: s.$boxShadowHover;
+  }
 
   @include s.tablet {
     width: 400px;
@@ -15,7 +25,6 @@
 
   header {
     text-align: center;
-    color: c.$secondary;
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   }
 
@@ -31,10 +40,8 @@
       flex-direction: column;
       text-align: center;
       width: 100%;
-      //   padding: 0 20px;
 
       h3 {
-        color: c.$secondary;
         margin: 0;
       }
 

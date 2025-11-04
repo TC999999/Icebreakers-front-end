@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import type { groupSearchCard } from "../types/groupTypes";
 import "../styles/groups/GroupSearchCard.scss";
 import { MdPerson } from "react-icons/md";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 
 type Props = groupSearchCard;
 
@@ -12,8 +13,14 @@ const GroupSearchCard: React.FC<Props> = ({
   interests,
   users,
 }) => {
+  const navigate: NavigateFunction = useNavigate();
+
   return (
-    <div className="group-search-card" id={`group-${id}`}>
+    <div
+      onClick={() => navigate(`/groups/${id}`)}
+      className="group-search-card"
+      id={`group-${id}`}
+    >
       <header>
         <h2>{title}</h2>
         <h4>Hosted By: {host}</h4>

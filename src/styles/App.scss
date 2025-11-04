@@ -74,6 +74,14 @@ form {
     }
   }
 
+  input[type="checkbox"] {
+    accent-color: c.$secondary;
+  }
+
+  input[type="radio"] {
+    accent-color: c.$secondary;
+  }
+
   .input-bottom-with-results {
     border-radius: s.$borderRadius s.$borderRadius 0px 0px;
   }

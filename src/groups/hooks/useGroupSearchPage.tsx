@@ -18,7 +18,7 @@ const useGroupSearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [groupSearchParams, setGroupSearchParams] = useState<groupSearchParams>(
-    { title: "", host: "", user: "", similarInterests: false }
+    { title: "", host: "", user: "", similarInterests: false, newGroups: false }
   );
   const originalGroups = useRef<groupName[]>([]);
   const [showResults, setShowResults] = useState<showResults>("");
@@ -38,6 +38,7 @@ const useGroupSearchPage = () => {
           ...prev,
           ...params,
           similarInterests: params.similarInterests === "true",
+          newGroups: params.newGroups === "true",
         }));
         const groups = await groupConversationsAPI.searchGroups(params);
         const groupNames = await groupConversationsAPI.getAllGroupNames();

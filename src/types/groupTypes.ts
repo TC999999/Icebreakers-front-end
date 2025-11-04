@@ -21,6 +21,7 @@ export type groupSearchParams = {
   host: string;
   user: string;
   similarInterests: boolean;
+  newGroups: boolean;
 };
 
 export type simpleGroup = {

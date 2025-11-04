@@ -33,7 +33,7 @@ const GroupSearchPage = () => {
                 onBlur={handleDivBlur}
                 tabIndex={0}
               >
-                <label htmlFor="title">Search For Group Names</label>
+                <label htmlFor="title">Search By Group Names</label>
                 <input
                   className={
                     showResults === "title" && groupSearchResults.length > 0
@@ -76,7 +76,7 @@ const GroupSearchPage = () => {
                 onBlur={handleDivBlur}
                 tabIndex={0}
               >
-                <label htmlFor="host">Search For Group Hosts</label>
+                <label htmlFor="host">Search By Group Hosts</label>
                 <input
                   className={
                     showResults === "host" && hostSearchResults.length > 0
@@ -119,7 +119,7 @@ const GroupSearchPage = () => {
                 onBlur={handleDivBlur}
                 tabIndex={0}
               >
-                <label htmlFor="user">Search For Group Names</label>
+                <label htmlFor="user">Search By Group Members</label>
                 <input
                   className={
                     showResults === "user" && userSearchResults.length > 0
@@ -159,13 +159,29 @@ const GroupSearchPage = () => {
             <div id="search-footer">
               <div>
                 <label htmlFor="similarInterests">
-                  Only search for groups with similar interests to your own
+                  Only include groups with similar interests to your own
                 </label>
                 <input
                   name="similarInterests"
                   id="similarInterests"
                   type="checkbox"
                   checked={groupSearchParams.similarInterests}
+                  onChange={handleChange}
+                />
+                <div
+                  className="search-bar-results"
+                  id="user-search-results"
+                ></div>
+              </div>
+              <div>
+                <label htmlFor="newGroups">
+                  Only include groups that you are not a member of
+                </label>
+                <input
+                  name="newGroups"
+                  id="newGroups"
+                  type="checkbox"
+                  checked={groupSearchParams.newGroups}
                   onChange={handleChange}
                 />
                 <div
