@@ -8,6 +8,8 @@ const selectNav = (
       return "conversations";
     case "/groups":
       return "groups";
+    case "/groups/search":
+      return "searchGroups";
     case "/user/search":
       return "searchUsers";
     case "/request":

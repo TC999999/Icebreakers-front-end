@@ -63,7 +63,16 @@ const NavBar = (): JSX.Element => {
                 </button>
               </div>
               <div className="navlink">
-                <button>Search For Groups</button>
+                <button
+                  name="searchGroups"
+                  value={"/groups/search"}
+                  onClick={move}
+                  className={
+                    selectedNav === "searchGroups" ? "selectedNav" : ""
+                  }
+                >
+                  Search For Groups
+                </button>
               </div>
               <div className="navlink">
                 {user.unansweredRequests > 0 && (

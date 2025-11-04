@@ -16,9 +16,10 @@ const UserSearch = (): JSX.Element => {
     searchedUsers,
     showResults,
     searchQuery,
-    handleSearch,
-    handleCheckbox,
+    handleFocus,
+    handleBlur,
     handleResults,
+    handleChange,
     handleSubmit,
   } = useUserSearch();
   return (
@@ -26,31 +27,33 @@ const UserSearch = (): JSX.Element => {
       <h1>Search For Friends!</h1>
       <div id="user-search-bar">
         <form onSubmit={handleSubmit}>
-          <div>
+          <div onFocus={handleFocus} onBlur={handleBlur} tabIndex={0}>
             <div id="user-search-bar-input">
               <input
                 type="search"
                 id="username"
                 className={
-                  searchResults.length
+                  searchResults.length > 0 && showResults
                     ? "input-bottom-with-results"
                     : "input-bottom-without-results"
                 }
                 name="username"
                 placeholder="Search via username here"
                 value={searchQuery.username}
-                onChange={handleSearch}
+                onChange={handleChange}
               />
             </div>
             <div
-              id="user-search-bar-results"
-              className={showResults ? "show-results" : ""}
+              className={`search-bar-results ${
+                searchResults.length > 0 && showResults ? "show-results" : ""
+              }`}
+              hidden={!showResults}
             >
               {searchResults.map((username, i) => {
                 return (
                   <div
                     onClick={handleResults}
-                    className={`user-search-result ${
+                    className={`search-result ${
                       i === searchResults.length - 1 ? "list-bottom" : ""
                     }`}
                     key={`search-res-${username}`}
@@ -70,14 +73,14 @@ const UserSearch = (): JSX.Element => {
               id="findSimilarInterests"
               name="findSimilarInterests"
               checked={searchQuery.findSimilarInterests}
-              onChange={handleCheckbox}
+              onChange={handleChange}
             />
             <button>Search</button>
           </div>
         </form>
       </div>
 
-      <div id="user-search-results">
+      <div id="search-results">
         {formLoading && <UserSearchSkeleton cards={10} />}
         {!formLoading && searchedUsers.length === 0 && (
           <div>

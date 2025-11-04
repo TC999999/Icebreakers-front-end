@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useAppSelector } from "../features/hooks";
 import type { conversationMessage } from "../types/conversationTypes";
 import "../styles/conversations/ConversationMessageBubble.scss";
@@ -29,4 +30,4 @@ const ConversationMessageBubble: React.FC<Props> = ({
   );
 };
 
-export default ConversationMessageBubble;
+export default memo(ConversationMessageBubble);

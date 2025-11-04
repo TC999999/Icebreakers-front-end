@@ -1,0 +1,60 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+.group-search-card {
+  background-color: c.$thirdly;
+  width: 200px;
+  padding: 0;
+  margin: 5px;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+
+  @include s.tablet {
+    width: 400px;
+  }
+
+  header {
+    text-align: center;
+    color: c.$secondary;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  }
+
+  .group-info {
+    @include s.tablet {
+      display: flex;
+      justify-content: center;
+    }
+
+    .data-list {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      width: 100%;
+      //   padding: 0 20px;
+
+      h3 {
+        color: c.$secondary;
+        margin: 0;
+      }
+
+      ul {
+        text-align: center;
+        padding: 0 10px;
+        background-color: c.$secondary;
+        color: white;
+        border: s.$borderSettings;
+        border-radius: s.$borderRadius;
+        margin: auto;
+        height: 60px;
+        width: 80%;
+        overflow: scroll;
+        li {
+          list-style-type: none;
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

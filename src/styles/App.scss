@@ -3,8 +3,6 @@
 
 .form-div {
   text-align: center;
-  // display: flex;
-  // justify-content: center;
 
   label {
     color: c.$secondary;
@@ -59,6 +57,59 @@
 }
 
 form {
+  input[type="search"] {
+    width: 310px;
+    height: 50px;
+    font-size: 20px;
+    border: s.$borderSettings;
+    background-color: c.$fourthly;
+    border-color: c.$secondary;
+
+    &:hover {
+      background-color: c.$inputHover;
+    }
+
+    &:focus {
+      background-color: c.$inputFocus;
+    }
+  }
+
+  .input-bottom-with-results {
+    border-radius: s.$borderRadius s.$borderRadius 0px 0px;
+  }
+
+  .input-bottom-without-results {
+    border-radius: s.$borderRadius;
+  }
+
+  .show-results {
+    max-height: 150px;
+    height: auto;
+    overflow: scroll;
+  }
+
+  .search-bar-results {
+    position: absolute;
+    width: 310px;
+    z-index: 1;
+  }
+
+  .search-result {
+    background-color: rgb(240, 173, 240);
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: solid 1px;
+
+    &:hover {
+      background-color: rgb(240, 135, 240);
+      color: c.$secondary;
+    }
+  }
+
+  .list-bottom {
+    border-radius: 0px 0px s.$borderRadius s.$borderRadius;
+  }
+
   .submit-button {
     background-color: c.$secondary;
     color: white;
@@ -79,4 +130,10 @@ form {
   #error-message {
     color: c.$error;
   }
+}
+
+#search-results {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }

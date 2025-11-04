@@ -39,6 +39,7 @@ const useUserSearch = () => {
       }
       const allUsernames = await userAPI.getUserNames();
       initialUsers.current = allUsernames;
+      setSearchResults(allUsernames);
 
       const users = await userAPI.searchForUsers(params);
       setSearchedUsers(users);
@@ -48,30 +49,37 @@ const useUserSearch = () => {
     getUsernames();
   }, [dispatch, searchParams]);
 
-  const handleSearch = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setSearchQuery((prev) => ({ ...prev, [name]: value }));
-      filterUsernames(
-        value,
-        initialUsers.current,
-        setSearchResults,
-        setShowResults
-      );
-    },
-    [searchQuery.username]
-  );
+  const handleFocus = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setShowResults(true);
+  }, []);
 
-  const handleCheckbox = useCallback(
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setShowResults(false);
+  }, []);
+
+  const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name } = e.target;
-      setSearchQuery((prev) => ({ ...prev, [name]: e.target.checked }));
+      const { name, value, checked, type } = e.target;
+      setSearchQuery((prev) => ({
+        ...prev,
+        [name]: type === "search" ? value : checked,
+      }));
+      if (type === "search")
+        filterUsernames(
+          value,
+          initialUsers.current,
+          setSearchResults,
+          setShowResults
+        );
     },
-    [searchQuery.findSimilarInterests]
+    [searchQuery]
   );
 
   const handleResults = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
       let s = e.currentTarget.innerText;
       setSearchQuery((prev) => ({
         ...prev,
@@ -88,17 +96,12 @@ const useUserSearch = () => {
       e.preventDefault();
       dispatch(setFormLoading(true));
       try {
-        let params = {};
-        if (searchQuery.username) {
-          params = { ...params, username: searchQuery.username };
-        }
-        if (searchQuery.findSimilarInterests) {
-          params = {
-            ...params,
-            findSimilarInterests: searchQuery.findSimilarInterests,
-          };
-        }
-        setSearchParams(params);
+        let params = Object.fromEntries(
+          Object.entries(searchQuery).filter((q) => {
+            return q[1];
+          })
+        );
+        setSearchParams((prev) => ({ ...prev, ...params }));
         let users = await userAPI.searchForUsers(params);
         setSearchedUsers(users);
       } catch (err) {
@@ -115,9 +118,10 @@ const useUserSearch = () => {
     showResults,
     searchedUsers,
     searchQuery,
-    handleSearch,
-    handleCheckbox,
+    handleFocus,
+    handleBlur,
     handleResults,
+    handleChange,
     handleSubmit,
   };
 };

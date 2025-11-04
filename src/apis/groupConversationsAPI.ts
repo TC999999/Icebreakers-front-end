@@ -5,6 +5,8 @@ import type {
   GroupPage,
   simpleGroup,
   GroupInvitation,
+  groupSearchCard,
+  groupName,
 } from "../types/groupTypes";
 
 type returnGroup = {
@@ -28,6 +30,11 @@ class groupConversationsAPI extends API {
     return res.groups;
   }
 
+  public static async getAllGroupNames(): Promise<groupName[]> {
+    const res = await this.getRequest("getNames");
+    return res.groups;
+  }
+
   public static async getGroup(id: string): Promise<returnGroup> {
     const res = await this.getRequest(`id/${id}`);
     return res;
@@ -36,6 +43,11 @@ class groupConversationsAPI extends API {
   public static async sendInvitation(group: GroupInvitation): Promise<any> {
     const res = await this.postRequest(`invitation/${group.from}`, group);
     return res.invitation;
+  }
+
+  public static async searchGroups(params: any): Promise<groupSearchCard[]> {
+    const res = await this.getRequest("search", params);
+    return res.groups;
   }
 }
 

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { hostedGroupCard, nonHostedGroupCard } from "../types/groupTypes";
 import createDate from "../helpers/createDate";
 import "../styles/groups/GroupCard.scss";
@@ -24,4 +25,4 @@ const GroupCard: React.FC<Props> = ({ group, goToGroup }) => {
   );
 };
 
-export default GroupCard;
+export default memo(GroupCard);

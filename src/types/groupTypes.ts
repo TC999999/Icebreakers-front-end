@@ -8,10 +8,27 @@ export type newGroup = {
   interests: interestMap;
 };
 
+export type groupSearchCard = {
+  id: string;
+  title: string;
+  host: string;
+  interests: string[];
+  users: groupUser[];
+};
+
+export type groupSearchParams = {
+  title: string;
+  host: string;
+  user: string;
+  similarInterests: boolean;
+};
+
 export type simpleGroup = {
   id: string;
   title: string;
 };
+
+export type groupName = { title: string; host: string };
 
 export type hostedGroupCard = {
   id: string;

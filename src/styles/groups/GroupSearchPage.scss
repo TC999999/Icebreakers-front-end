@@ -1,0 +1,55 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+#group-search-page {
+  h1 {
+    text-align: center;
+    color: c.$secondary;
+  }
+
+  #group-search-box {
+    display: flex;
+    justify-content: center;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      #inputs {
+        display: flex;
+        flex-direction: column;
+
+        @include s.tablet {
+          flex-direction: row;
+        }
+
+        div.input-div {
+          height: auto;
+          position: relative;
+        }
+      }
+
+      #search-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  #group-search-list {
+    h1 {
+      text-align: center;
+      color: c.$secondary;
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    }
+  }
+
+  #empty-list {
+    text-align: center;
+    font-style: italic;
+    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  }
+}
