@@ -157,38 +157,32 @@ const GroupSearchPage = () => {
             </div>
 
             <div id="search-footer">
-              <div>
-                <label htmlFor="similarInterests">
-                  Only include groups with similar interests to your own
-                </label>
-                <input
-                  name="similarInterests"
-                  id="similarInterests"
-                  type="checkbox"
-                  checked={groupSearchParams.similarInterests}
-                  onChange={handleChange}
-                />
-                <div
-                  className="search-bar-results"
-                  id="user-search-results"
-                ></div>
-              </div>
-              <div>
-                <label htmlFor="newGroups">
-                  Only include groups that you are not a member of
-                </label>
-                <input
-                  name="newGroups"
-                  id="newGroups"
-                  type="checkbox"
-                  checked={groupSearchParams.newGroups}
-                  onChange={handleChange}
-                />
-                <div
-                  className="search-bar-results"
-                  id="user-search-results"
-                ></div>
-              </div>
+              <fieldset>
+                <legend>Only Include Groups That: </legend>
+                <div>
+                  <label htmlFor="similarInterests">
+                    Have Similar Interests To Your Own
+                  </label>
+                  <input
+                    name="similarInterests"
+                    id="similarInterests"
+                    type="checkbox"
+                    checked={groupSearchParams.similarInterests}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="newGroups">You Are Not a Member Of</label>
+                  <input
+                    name="newGroups"
+                    id="newGroups"
+                    type="checkbox"
+                    checked={groupSearchParams.newGroups}
+                    onChange={handleChange}
+                  />
+                </div>
+              </fieldset>
+
               <div className="form-div">
                 <button type="submit" className="submit-button">
                   Search

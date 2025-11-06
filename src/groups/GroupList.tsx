@@ -26,7 +26,7 @@ const GroupList = () => {
             {hostedGroups.map((g) => {
               return (
                 <GroupCard
-                  key={`group-${g.id}`}
+                  key={`hosted-group-${g.id}`}
                   group={g}
                   goToGroup={goToGroup}
                 />
@@ -45,7 +45,13 @@ const GroupList = () => {
         {nonHostedGroups.length > 0 ? (
           <div className="group-list" id="non-hosted-group-list">
             {nonHostedGroups.map((g) => {
-              return <GroupCard group={g} goToGroup={goToGroup} />;
+              return (
+                <GroupCard
+                  key={`group-${g.id}`}
+                  group={g}
+                  goToGroup={goToGroup}
+                />
+              );
             })}
           </div>
         ) : (
