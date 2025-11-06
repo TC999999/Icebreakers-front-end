@@ -13,21 +13,23 @@ const GroupPage = () => {
       </header>
 
       <div id="group-info">
-        <p>
+        <h2>
           <b>Hosted By: </b>
           {group.host}
-        </p>
-        <div id="about-group">
-          <h4>About</h4>
-          <p>{group.description}</p>
-        </div>
-        <div>
-          <ul id="group-interests">
-            <h4>Interests</h4>
-            {group.interests.map((i) => {
-              return <li key={`interest-${i}`}>{i}</li>;
-            })}
-          </ul>
+        </h2>
+        <div id="group-about">
+          <section id="about-group">
+            <h4>About</h4>
+            <p>{group.description}</p>
+          </section>
+          <section id="group-interests">
+            <ul>
+              <h4>Interests</h4>
+              {group.interests.map((i) => {
+                return <li key={`interest-${i}`}>{i}</li>;
+              })}
+            </ul>
+          </section>
         </div>
         <p>
           <b>Created At: </b> {createDate(group.createdAt, "long")}

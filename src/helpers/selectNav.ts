@@ -1,8 +1,4 @@
-const selectNav = (
-  pathName: string,
-  prev: string,
-  username?: string
-): string => {
+const selectNav = (pathName: string, username?: string): string => {
   switch (pathName) {
     case "/conversations":
       return "conversations";
@@ -17,7 +13,7 @@ const selectNav = (
     case `/user/${username}`:
       return "userProfile";
     default:
-      return prev;
+      return "none";
   }
 };
 

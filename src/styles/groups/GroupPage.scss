@@ -9,6 +9,10 @@
       "Lucida Sans", Arial, sans-serif;
   }
 
+  h2 {
+    text-align: center;
+  }
+
   div#group-info {
     background-color: c.$primary;
     padding: 10px;
@@ -18,18 +22,33 @@
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
       "Lucida Sans", Arial, sans-serif;
 
-    div {
-      background-color: c.$secondary;
-      color: c.$primary;
-      padding: 5px;
-      border: s.$borderSettings;
-      border-radius: s.$borderRadius;
+    #group-about {
+      display: flex;
+      justify-content: center;
+      section {
+        background-color: c.$secondary;
+        color: c.$primary;
+        padding: 5px;
+        border: s.$borderSettings;
+        border-radius: s.$borderRadius;
+        h4 {
+          font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+          font-size: larger;
+        }
+
+        &#about-group {
+          width: 70%;
+        }
+
+        &#group-interests {
+          width: 50%;
+        }
+      }
     }
   }
 
   #group-users {
     h2 {
-      text-align: center;
       text-decoration: underline;
       color: c.$secondary;
       font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",

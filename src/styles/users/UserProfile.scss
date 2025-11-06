@@ -9,7 +9,7 @@
     border: s.$borderSettings rgb(227, 20, 192);
 
     .profile-section {
-      margin-bottom: 10px;
+      margin: 10px;
     }
 
     #user-header {
@@ -37,24 +37,31 @@
       }
     }
 
-    #user-biography {
-      h3 {
-        text-decoration: underline;
-      }
-      background-color: c.$thirdly;
-      padding: 5px;
-      border: s.$borderSettings c.$secondary;
-      border-radius: s.$borderRadius;
-      font-family: "Times New Roman", Times, serif;
-    }
+    #about-user {
+      display: flex;
+      justify-content: center;
 
-    #interests-list {
-      background-color: c.$thirdly;
-      padding: 5px;
-      border: s.$borderSettings c.$secondary;
-      border-radius: s.$borderRadius;
-      li {
-        font-family: Arial, Helvetica, sans-serif;
+      #user-biography {
+        h3 {
+          text-decoration: underline;
+        }
+        background-color: c.$thirdly;
+        padding: 5px;
+        border: s.$borderSettings c.$secondary;
+        border-radius: s.$borderRadius;
+        font-family: "Times New Roman", Times, serif;
+        width: 80%;
+      }
+
+      #interests-list {
+        background-color: c.$thirdly;
+        padding: 5px;
+        border: s.$borderSettings c.$secondary;
+        border-radius: s.$borderRadius;
+        li {
+          font-family: Arial, Helvetica, sans-serif;
+        }
+        width: 40%;
       }
     }
 

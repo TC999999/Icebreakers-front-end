@@ -21,11 +21,11 @@ const useNavbar = () => {
 
   const [selectedNav, setSelectedNav] = useState<string>("none");
 
-  //highlights current navbar link on initial render
+  //highlights current navbar link on initial render and when path name changes
   useEffect(() => {
-    const nav = selectNav(location.pathname, selectedNav, username);
+    const nav = selectNav(location.pathname, username);
     setSelectedNav(nav);
-  }, []);
+  }, [location.pathname]);
 
   const logOutAndNavigate = async () => {
     await dispatch(LogOutUser({}));
@@ -33,19 +33,15 @@ const useNavbar = () => {
   };
 
   //moves to linked page and highlights link in the navbar
-  const move = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const { name, value } = e.currentTarget;
-      navigate(value);
-      setSelectedNav(name);
-    },
-    [selectedNav]
-  );
+  const move = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const { value } = e.currentTarget;
+    navigate(value);
+  }, []);
 
   // unselects all navbar links
   const resetNav = useCallback(() => {
     setSelectedNav("none");
-  }, [selectedNav]);
+  }, []);
 
   return {
     selectedNav,

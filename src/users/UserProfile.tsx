@@ -24,17 +24,19 @@ const UserProfile = () => {
           </div>
           <h2>{userState.username}</h2>
         </div>
-        <article id="user-biography" className="profile-section">
-          <h3>About {userState.username}</h3>
-          <p>{userState.biography}</p>
-        </article>
-        <div id="interests-list" className="profile-section">
-          <h4>Interests Include:</h4>
-          <ul>
-            {userState.interests.map((i, index) => {
-              return <li key={`interest-${index}`}>{i}</li>;
-            })}
-          </ul>
+        <div id="about-user">
+          <section id="user-biography" className="profile-section">
+            <h3>About {userState.username}</h3>
+            <p>{userState.biography}</p>
+          </section>
+          <section id="interests-list" className="profile-section">
+            <h4>Interests Include:</h4>
+            <ul>
+              {userState.interests.map((i, index) => {
+                return <li key={`interest-${index}`}>{i}</li>;
+              })}
+            </ul>
+          </section>
         </div>
         <div id="additional-info">
           <small>
