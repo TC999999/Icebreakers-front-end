@@ -19,10 +19,12 @@ type input = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
-  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
+
   removeGroupRequest: (request: SentGroupCard) => void;
+  resendGroupRequest: (request: SentGroupCard) => void;
+  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
   resendGroupInvitation: (request: SentGroupCard) => void;
 };
@@ -31,10 +33,11 @@ const useRequestCard = ({
   requestType,
   request,
   respondToDirectRequest,
-  respondToGroupInvitation,
   removeDirectRequest,
   resendDirectRequest,
   removeGroupRequest,
+  resendGroupRequest,
+  respondToGroupInvitation,
   removeGroupInvitation,
   resendGroupInvitation,
 }: input) => {
@@ -98,8 +101,13 @@ const useRequestCard = ({
       requestType === "direct-requests-removed"
     ) {
       resendDirectRequest(request);
-    }
-    if (
+    } else if (
+      "to" in request &&
+      "groupID" in request &&
+      requestType === "group-requests-removed"
+    ) {
+      resendGroupRequest(request);
+    } else if (
       "to" in request &&
       "groupID" in request &&
       requestType === "group-invites-removed"

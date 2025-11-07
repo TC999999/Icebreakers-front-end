@@ -10,13 +10,14 @@ const RequestListPage = () => {
     requestCount,
     currentTitleAndDesc,
     changeViewedRequests,
-    removeDirectRequest,
-    removeGroupRequest,
-    resendDirectRequest,
     respondToDirectRequest,
+    removeDirectRequest,
+    resendDirectRequest,
+    removeGroupRequest,
+    resendGroupRequest,
+    respondToGroupInvitation,
     removeGroupInvitation,
     resendGroupInvitation,
-    respondToGroupInvitation,
   } = useRequestListPage();
 
   return (
@@ -143,10 +144,11 @@ const RequestListPage = () => {
           currentTitleAndDesc={currentTitleAndDesc}
           requestList={currentRequests}
           respondToDirectRequest={respondToDirectRequest}
-          respondToGroupInvitation={respondToGroupInvitation}
           removeDirectRequest={removeDirectRequest}
-          removeGroupRequest={removeGroupRequest}
           resendDirectRequest={resendDirectRequest}
+          removeGroupRequest={removeGroupRequest}
+          resendGroupRequest={resendGroupRequest}
+          respondToGroupInvitation={respondToGroupInvitation}
           removeGroupInvitation={removeGroupInvitation}
           resendGroupInvitation={resendGroupInvitation}
         />

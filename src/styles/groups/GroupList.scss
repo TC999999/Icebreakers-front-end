@@ -1,39 +1,73 @@
 @use "../colors" as c;
 @use "../settings" as s;
 
-.groups-list-div {
-  header {
-    text-align: center;
-    color: c.$secondary;
-  }
-  .group-list {
-    padding: 10px;
+header#page-header {
+  color: c.$secondary;
+  text-align: center;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+#group-tab-window {
+  background-color: c.$primary;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+
+  #group-tabs {
+    background-color: c.$thirdly;
     display: flex;
     justify-content: center;
-  }
+    border-radius: s.$borderRadius s.$borderRadius 0 0;
+    border-bottom: s.$borderSettings c.$secondary;
 
-  &#hosted-groups-list-div {
-    #make-group-button {
+    .group-tab {
+      padding: 20px;
+
+      font-weight: bolder;
+      transition: 0.2s ease-in-out;
+
+      &.selected-group {
+        background-color: rgba(246, 143, 214, 0.7);
+        color: c.$fourthly;
+        text-decoration: underline;
+      }
+    }
+  }
+  .groups-list-div {
+    header {
+      text-align: center;
+      color: c.$secondary;
+    }
+    .group-list {
+      padding: 10px;
       display: flex;
       justify-content: center;
-      button {
-        background-color: c.$secondary;
-        color: c.$thirdly;
-        padding: 10px;
-        border: s.$borderSettings c.$thirdly;
-        border-radius: s.$borderRadius;
+      height: 500px;
+      overflow: scroll;
+    }
 
-        &:hover {
-          cursor: pointer;
-          background-color: c.$thirdly;
-          color: c.$secondary;
-          border-color: c.$secondary;
-        }
+    &#hosted-groups-list-div {
+      #make-group-button {
+        display: flex;
+        justify-content: center;
+        button {
+          background-color: c.$secondary;
+          color: c.$thirdly;
+          padding: 10px;
+          border: s.$borderSettings c.$thirdly;
+          border-radius: s.$borderRadius;
 
-        &:active {
-          background-color: c.$fourthly;
-          color: c.$primary;
-          border-color: c.$primary;
+          &:hover {
+            cursor: pointer;
+            background-color: c.$thirdly;
+            color: c.$secondary;
+            border-color: c.$secondary;
+          }
+
+          &:active {
+            background-color: c.$fourthly;
+            color: c.$primary;
+            border-color: c.$primary;
+          }
         }
       }
     }

@@ -4,7 +4,7 @@ import GroupUserCard from "./GroupUserCard";
 import "../styles/groups/GroupPage.scss";
 
 const GroupPage = () => {
-  const { group, isInGroup } = useGroupPage();
+  const { group, isInGroup, handleNavigate } = useGroupPage();
 
   return (
     <main id="group-page">
@@ -39,13 +39,13 @@ const GroupPage = () => {
           {isInGroup ? (
             <button>Go To Messages</button>
           ) : (
-            <button>Request To Join</button>
+            <button onClick={handleNavigate}>Request To Join</button>
           )}
         </div>
       </div>
 
       <div id="group-users">
-        <h2>{group.title} users</h2>
+        <h2>{group.title} members</h2>
         <div id="user-list">
           {group.users.map((u) => {
             return <GroupUserCard key={`user-${u.username}`} user={u} />;

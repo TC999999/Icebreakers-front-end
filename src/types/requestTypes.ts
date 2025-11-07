@@ -125,3 +125,7 @@ export type socketRequest = {
   request?: any;
   response?: any;
 };
+
+export type groupRequestFormData = {
+  content: string;
+};

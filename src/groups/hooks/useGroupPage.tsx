@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import type { GroupPage } from "../../types/groupTypes";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
@@ -10,6 +10,7 @@ import socket from "../../helpers/socket";
 const useGroupPage = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const initialGroup: GroupPage = {
     id: "",
@@ -55,7 +56,15 @@ const useGroupPage = () => {
     };
   }, [group.users]);
 
-  return { group, isInGroup };
+  const handleNavigate = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      navigate(`/groups/${id}/request`);
+    },
+    []
+  );
+
+  return { group, isInGroup, handleNavigate };
 };
 
 export default useGroupPage;

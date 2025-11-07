@@ -253,10 +253,57 @@ const useRequestListPage = () => {
   );
 
   // UPDATE GROUP REQUESTS (SENDER'S SIDE ONLY)
-  const removeGroupRequest = useCallback(async (request: SentGroupCard) => {
-    console.log("group request");
-    console.log(request);
-  }, []);
+  const removeGroupRequest = useCallback(
+    async (request: SentGroupCard) => {
+      const removedRequest = await groupRequestsAPI.removeRequest(
+        request.id,
+        true
+      );
+
+      handleRequests(
+        request,
+        "remove",
+        {
+          addRequest: "removedGroupRequestCount",
+          subtractRequest: "sentGroupRequestCount",
+        },
+        "removeRequest",
+        {
+          requestType: "group-requests-received",
+          countType: "receivedGroupRequestCount",
+          to: request.to,
+          request: removedRequest,
+        }
+      );
+    },
+    [currentRequests, requestCount]
+  );
+
+  const resendGroupRequest = useCallback(
+    async (request: SentGroupCard) => {
+      const resentRequest = await groupRequestsAPI.removeRequest(
+        request.id,
+        false
+      );
+
+      handleRequests(
+        request,
+        "remove",
+        {
+          addRequest: "sentGroupRequestCount",
+          subtractRequest: "removedGroupRequestCount",
+        },
+        "addRequest",
+        {
+          requestType: "group-requests-received",
+          countType: "receivedGroupRequestCount",
+          to: request.to,
+          request: resentRequest,
+        }
+      );
+    },
+    [currentRequests, requestCount]
+  );
 
   // UPDATE GROUP INVITATIONS (SENDER'S SIDE ONLY)
   // remove group invitation from recipient's inbox
@@ -308,19 +355,6 @@ const useRequestListPage = () => {
           request: invitation,
         }
       );
-
-      // setNewRequests(request, "remove");
-      // setNewRequestCount({
-      //   addRequest: "sentGroupInvitationCount",
-      //   subtractRequest: "removedGroupInvitationCount",
-      // });
-
-      // socket.emit("addRequest", {
-      //   requestType: "group-invites-received",
-      //   countType: "receivedGroupInvitationCount",
-      //   to: request.to,
-      //   request: invitation,
-      // });
     },
     [currentRequests, requestCount]
   );
@@ -408,13 +442,14 @@ const useRequestListPage = () => {
     currentRequests,
     requestCount,
     changeViewedRequests,
+    respondToDirectRequest,
     removeDirectRequest,
-    removeGroupRequest,
     resendDirectRequest,
+    removeGroupRequest,
+    resendGroupRequest,
+    respondToGroupInvitation,
     removeGroupInvitation,
     resendGroupInvitation,
-    respondToDirectRequest,
-    respondToGroupInvitation,
   };
 };
 

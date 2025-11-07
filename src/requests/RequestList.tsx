@@ -23,10 +23,11 @@ type Props = {
   )[];
 
   respondToDirectRequest: (response: directConversationResponse) => void;
-  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
+  resendGroupRequest: (request: SentGroupCard) => void;
+  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
   resendGroupInvitation: (request: SentGroupCard) => void;
 };
@@ -36,10 +37,13 @@ const RequestList: React.FC<Props> = ({
   currentTitleAndDesc,
   requestList,
   respondToDirectRequest,
-  respondToGroupInvitation,
+
   removeDirectRequest,
-  removeGroupRequest,
   resendDirectRequest,
+  removeGroupRequest,
+  resendGroupRequest,
+
+  respondToGroupInvitation,
   removeGroupInvitation,
   resendGroupInvitation,
 }): JSX.Element => {
@@ -57,10 +61,11 @@ const RequestList: React.FC<Props> = ({
                 requestType={currentRequestType}
                 request={request}
                 respondToDirectRequest={respondToDirectRequest}
-                respondToGroupInvitation={respondToGroupInvitation}
                 removeDirectRequest={removeDirectRequest}
-                removeGroupRequest={removeGroupRequest}
                 resendDirectRequest={resendDirectRequest}
+                removeGroupRequest={removeGroupRequest}
+                resendGroupRequest={resendGroupRequest}
+                respondToGroupInvitation={respondToGroupInvitation}
                 removeGroupInvitation={removeGroupInvitation}
                 resendGroupInvitation={resendGroupInvitation}
               />

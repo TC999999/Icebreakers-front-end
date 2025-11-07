@@ -20,10 +20,13 @@ type Props = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
-  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
+
   removeGroupRequest: (request: SentGroupCard) => void;
+  resendGroupRequest: (request: SentGroupCard) => void;
+
+  respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
   resendGroupInvitation: (request: SentGroupCard) => void;
 };
@@ -32,10 +35,12 @@ const RequestCard: React.FC<Props> = ({
   requestType,
   request,
   respondToDirectRequest,
-  respondToGroupInvitation,
   removeDirectRequest,
-  removeGroupRequest,
   resendDirectRequest,
+
+  removeGroupRequest,
+  resendGroupRequest,
+  respondToGroupInvitation,
   removeGroupInvitation,
   resendGroupInvitation,
 }) => {
@@ -43,10 +48,11 @@ const RequestCard: React.FC<Props> = ({
     requestType,
     request,
     respondToDirectRequest,
-    respondToGroupInvitation,
     removeDirectRequest,
-    removeGroupRequest,
     resendDirectRequest,
+    removeGroupRequest,
+    resendGroupRequest,
+    respondToGroupInvitation,
     removeGroupInvitation,
     resendGroupInvitation,
   });
@@ -100,7 +106,8 @@ const RequestCard: React.FC<Props> = ({
         )}
 
         {(requestType === "direct-requests-removed" ||
-          requestType === "group-invites-removed") && (
+          requestType === "group-invites-removed" ||
+          requestType === "group-requests-removed") && (
           <div className="response-buttons" id="removed-response">
             <button className="resend-button" onClick={() => resend()}>
               Resend
