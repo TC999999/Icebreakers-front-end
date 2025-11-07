@@ -34,7 +34,6 @@ const useGroupList = () => {
       if (username) {
         dispatch(setFormLoading(true));
         const currentType = searchParams.get("type");
-        console.log(currentType);
         if (
           currentType &&
           (currentType === "hostedGroups" || currentType === "nonHostedGroups")

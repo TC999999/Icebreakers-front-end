@@ -10,8 +10,9 @@ import type {
 } from "../types/groupTypes";
 
 type returnGroup = {
-  group: GroupPage;
-  isInGroup: boolean;
+  group: GroupPage | groupName;
+  isInGroup?: boolean;
+  requestPending?: boolean;
 };
 
 class groupConversationsAPI extends API {
@@ -35,8 +36,11 @@ class groupConversationsAPI extends API {
     return res.groups;
   }
 
-  public static async getGroup(id: string): Promise<returnGroup> {
-    const res = await this.getRequest(`id/${id}`);
+  public static async getGroup(
+    id: string,
+    getSimple: boolean = false
+  ): Promise<returnGroup> {
+    const res = await this.getRequest(`id/${id}`, { getSimple });
     return res;
   }
 

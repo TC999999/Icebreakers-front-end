@@ -4,7 +4,8 @@ import GroupUserCard from "./GroupUserCard";
 import "../styles/groups/GroupPage.scss";
 
 const GroupPage = () => {
-  const { group, isInGroup, handleNavigate } = useGroupPage();
+  const { group, isInGroupState, requestPendingState, handleNavigate } =
+    useGroupPage();
 
   return (
     <main id="group-page">
@@ -36,9 +37,14 @@ const GroupPage = () => {
         </p>
 
         <div id="button-row">
-          {isInGroup ? (
+          {isInGroupState && !requestPendingState && (
             <button>Go To Messages</button>
-          ) : (
+          )}
+
+          {!isInGroupState && requestPendingState && (
+            <p>Your request has already been made</p>
+          )}
+          {!isInGroupState && !requestPendingState && (
             <button onClick={handleNavigate}>Request To Join</button>
           )}
         </div>

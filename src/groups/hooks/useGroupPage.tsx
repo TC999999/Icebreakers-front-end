@@ -23,16 +23,22 @@ const useGroupPage = () => {
   };
 
   const [group, setGroup] = useState<GroupPage>(initialGroup);
-  const [isInGroup, setIsInGroup] = useState<boolean>(false);
+  const [isInGroupState, setIsInGroupState] = useState<boolean>(false);
+  const [requestPendingState, setRequestPendingState] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const getGroup = async () => {
       try {
         dispatch(setFormLoading(true));
         if (id) {
-          const { group, isInGroup } = await groupConversationsAPI.getGroup(id);
-          setGroup(group);
-          setIsInGroup(isInGroup);
+          const { group, isInGroup, requestPending } =
+            await groupConversationsAPI.getGroup(id);
+          if ("id" in group) setGroup(group);
+          if (isInGroup !== undefined && requestPending !== undefined) {
+            setIsInGroupState(isInGroup);
+            setRequestPendingState(requestPending);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -64,7 +70,7 @@ const useGroupPage = () => {
     []
   );
 
-  return { group, isInGroup, handleNavigate };
+  return { group, isInGroupState, requestPendingState, handleNavigate };
 };
 
 export default useGroupPage;

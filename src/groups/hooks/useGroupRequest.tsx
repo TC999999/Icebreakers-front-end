@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { groupRequestFormData } from "../../types/requestTypes";
+import type { groupName } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import {
   useParams,
@@ -9,6 +10,7 @@ import {
 import { useAppDispatch } from "../../features/hooks";
 import { setFormLoading } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
+import groupConversationsAPI from "../../apis/groupConversationsAPI";
 
 const useGroupRequest = () => {
   const { id } = useParams();
@@ -17,15 +19,36 @@ const useGroupRequest = () => {
 
   const initialData: groupRequestFormData = { content: "" };
   const [formData, setFormData] = useState<groupRequestFormData>(initialData);
+  const [groupData, setGroupData] = useState<groupName>({
+    title: "",
+    host: "",
+  });
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
     [formData]
   );
+
+  useEffect(() => {
+    const getGroup = async () => {
+      try {
+        dispatch(setFormLoading(true));
+        if (id) {
+          const { group } = await groupConversationsAPI.getGroup(id, true);
+          if (!("id" in group)) setGroupData(group);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
+      }
+    };
+
+    getGroup();
+  }, []);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -51,7 +74,7 @@ const useGroupRequest = () => {
     [formData]
   );
 
-  return { formData, handleChange, handleSubmit };
+  return { formData, groupData, handleChange, handleSubmit };
 };
 
 export default useGroupRequest;

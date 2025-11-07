@@ -1,0 +1,37 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+#group-request-form-page {
+  header {
+    color: c.$secondary;
+    text-align: center;
+
+    h1 {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    h2 {
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      font-style: italic;
+    }
+  }
+
+  #group-request-form-window {
+    background-color: c.$thirdly;
+    padding: 10px;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+
+    form {
+      textarea {
+        border: s.$borderSettings c.$secondary;
+        border-radius: s.$borderRadius;
+        padding: 10px;
+      }
+    }
+
+    #button-div {
+      text-align: center;
+    }
+  }
+}
