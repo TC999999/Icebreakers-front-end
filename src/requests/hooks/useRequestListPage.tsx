@@ -20,6 +20,7 @@ import type {
   requestCountChange,
   socketRequest,
   groupConversationResponse,
+  groupRequestResponse,
 } from "../../types/requestTypes";
 
 import requestDesc from "../../helpers/maps/requestList";
@@ -129,7 +130,9 @@ const useRequestListPage = () => {
       | ReceivedGroupCard
       | sentRequestCard
       | receivedRequestCard
-      | directConversationResponse,
+      | directConversationResponse
+      | groupConversationResponse
+      | groupRequestResponse,
     addOrRemove: addOrRemove
   ) => {
     updateSentRequests(request, addOrRemove, setCurrentRequests);
@@ -143,7 +146,8 @@ const useRequestListPage = () => {
       | SentGroupCard
       | ReceivedGroupCard
       | directConversationResponse
-      | groupConversationResponse,
+      | groupConversationResponse
+      | groupRequestResponse,
 
     addOrRemove: addOrRemove,
     requestChange: requestCountChange,
@@ -253,6 +257,7 @@ const useRequestListPage = () => {
   );
 
   // UPDATE GROUP REQUESTS (SENDER'S SIDE ONLY)
+  // remove sent group requests
   const removeGroupRequest = useCallback(
     async (request: SentGroupCard) => {
       const removedRequest = await groupRequestsAPI.removeRequest(
@@ -279,6 +284,7 @@ const useRequestListPage = () => {
     [currentRequests, requestCount]
   );
 
+  // resend removed group requests
   const resendGroupRequest = useCallback(
     async (request: SentGroupCard) => {
       const resentRequest = await groupRequestsAPI.removeRequest(
@@ -436,6 +442,46 @@ const useRequestListPage = () => {
     []
   );
 
+  const respondToGroupRequest = useCallback(
+    async (response: groupRequestResponse) => {
+      let res = await groupRequestsAPI.respondToGroupRequest(response);
+      console.log(res);
+      if (res.user) {
+        socket.emit("addUserToGroup", {
+          user: res.user,
+          groupID: response.groupID,
+        });
+      }
+      handleRequests(
+        response,
+        "remove",
+        {
+          subtractRequest: "receivedGroupRequestCount",
+        },
+        "response",
+        {
+          to: response.from,
+          requestType: "group-requests-sent",
+          countType: "sentGroupRequestCount",
+          response,
+        }
+      );
+
+      dispatch(setUnansweredRequests(-1));
+      socket.emit("updateUnansweredRequests", {
+        change: -1,
+      });
+
+      if (res.user) {
+        socket.emit("bringIntoGroup", {
+          to: response.from,
+          group: { id: response.groupID },
+        });
+      }
+    },
+    []
+  );
+
   return {
     viewedRequests,
     currentTitleAndDesc,
@@ -445,6 +491,7 @@ const useRequestListPage = () => {
     respondToDirectRequest,
     removeDirectRequest,
     resendDirectRequest,
+    respondToGroupRequest,
     removeGroupRequest,
     resendGroupRequest,
     respondToGroupInvitation,

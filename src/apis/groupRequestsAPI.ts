@@ -2,6 +2,7 @@ import requestsAPI from "./requestsAPI";
 import type {
   groupConversationResponse,
   groupRequestFormData,
+  groupRequestResponse,
 } from "../types/requestTypes";
 
 class groupRequestsAPI extends requestsAPI {
@@ -18,6 +19,11 @@ class groupRequestsAPI extends requestsAPI {
   public static async removeRequest(id: string, remove: boolean): Promise<any> {
     let res = await this.patchRequest(`update/${id}`, { remove });
     return res.request;
+  }
+
+  public static async respondToGroupRequest(response: groupRequestResponse) {
+    let res = await this.postRequest("new/response", response);
+    return res;
   }
 
   public static async removeGroupConversationInvitation(

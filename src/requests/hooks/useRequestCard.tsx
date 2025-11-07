@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import type {
   directConversationResponse,
   groupConversationResponse,
+  groupRequestResponse,
   receivedRequestCard,
   sentRequestCard,
   requestType,
@@ -21,7 +22,7 @@ type input = {
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
-
+  respondToGroupRequest: (response: groupRequestResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   resendGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
@@ -35,6 +36,7 @@ const useRequestCard = ({
   respondToDirectRequest,
   removeDirectRequest,
   resendDirectRequest,
+  respondToGroupRequest,
   removeGroupRequest,
   resendGroupRequest,
   respondToGroupInvitation,
@@ -66,6 +68,17 @@ const useRequestCard = ({
         id: request.id,
         from: request.from,
         to: username!,
+        groupID: request.groupID,
+        accepted,
+      });
+    } else if (
+      "from" in request &&
+      "groupID" in request &&
+      requestType === "group-requests-received"
+    ) {
+      respondToGroupRequest({
+        id: request.id,
+        from: request.from,
         groupID: request.groupID,
         accepted,
       });

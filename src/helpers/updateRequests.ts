@@ -5,7 +5,9 @@ import type {
   ReceivedGroupCard,
   requestCount,
   directConversationResponse,
+  groupRequestResponse,
   requestCountChange,
+  groupConversationResponse,
 } from "../types/requestTypes";
 
 export type addOrRemove = "add" | "remove";
@@ -52,7 +54,9 @@ export const updateSentRequests = (
     | receivedRequestCard
     | SentGroupCard
     | ReceivedGroupCard
-    | directConversationResponse,
+    | directConversationResponse
+    | groupConversationResponse
+    | groupRequestResponse,
   addOrRemove: addOrRemove,
   requestListSetter: (
     value: React.SetStateAction<

@@ -69,6 +69,13 @@ export type groupConversationResponse = {
   accepted: boolean;
 };
 
+export type groupRequestResponse = {
+  id: string;
+  from: string;
+  groupID: string;
+  accepted: boolean;
+};
+
 export type requestsList = {
   sentRequestList: sentRequestCard[];
   receivedRequestList: receivedRequestCard[];

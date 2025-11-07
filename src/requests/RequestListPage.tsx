@@ -13,6 +13,7 @@ const RequestListPage = () => {
     respondToDirectRequest,
     removeDirectRequest,
     resendDirectRequest,
+    respondToGroupRequest,
     removeGroupRequest,
     resendGroupRequest,
     respondToGroupInvitation,
@@ -146,6 +147,7 @@ const RequestListPage = () => {
           respondToDirectRequest={respondToDirectRequest}
           removeDirectRequest={removeDirectRequest}
           resendDirectRequest={resendDirectRequest}
+          respondToGroupRequest={respondToGroupRequest}
           removeGroupRequest={removeGroupRequest}
           resendGroupRequest={resendGroupRequest}
           respondToGroupInvitation={respondToGroupInvitation}
