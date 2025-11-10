@@ -50,20 +50,6 @@
               padding: 10px;
             }
           }
-
-          #onlineStatus {
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-
-            &.isOnline {
-              background-color: green;
-            }
-            &.isNotOnline {
-              background-color: red;
-            }
-          }
         }
 
         #typing-message {

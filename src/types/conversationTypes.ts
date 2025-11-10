@@ -21,7 +21,6 @@ export type currentConversation = {
   id: string;
   title: string;
   recipient: string;
-  isOnline: boolean;
 };
 
 export type updateConversation = { title: string };

@@ -28,12 +28,10 @@ const useApp = () => {
     if (user) {
       socket.on("updateUnansweredRequests", ({ change }) => {
         dispatch(setUnansweredRequests(change));
-        socket.emit("updateUnansweredRequests", { change });
       });
 
       socket.on("increaseUnreadMessages", () => {
         dispatch(setUnreadMessages(1));
-        socket.emit("increaseUnreadMessages");
       });
 
       return () => {

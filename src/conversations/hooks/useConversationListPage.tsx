@@ -27,7 +27,6 @@ const useConversationListPage = () => {
     id: "",
     title: "",
     recipient: "",
-    isOnline: false,
   };
   const [conversations, setConversations] = useState<conversation[]>([]);
   const [currentConversation, setCurrentConversation] =
@@ -60,16 +59,6 @@ const useConversationListPage = () => {
             let { messages, conversationData } =
               await directConversationsAPI.getMessages(username!, currentID, 0);
             setCurrentConversation(conversationData);
-            socket.emit(
-              "isOnline",
-              conversationData.recipient,
-              (response: boolean) => {
-                setCurrentConversation((prev) => ({
-                  ...prev,
-                  isOnline: response,
-                }));
-              }
-            );
             setCurrentMessages(messages);
             setLoadingMessages(false);
           }
@@ -141,19 +130,6 @@ const useConversationListPage = () => {
     };
   }, [currentConversation]);
 
-  // lets user know when other user in the conversation is online
-  useEffect(() => {
-    socket.on("isOnline", ({ user, isOnline }) => {
-      if (user === currentConversation.recipient) {
-        setCurrentConversation((prev) => ({ ...prev, isOnline: isOnline }));
-      }
-    });
-
-    return () => {
-      socket.off("isOnline");
-    };
-  }, [currentConversation]);
-
   // adds conversation to list if requested user accepts conversation request
   useEffect(() => {
     socket.on("addConversation", ({ conversation }) => {
@@ -216,10 +192,6 @@ const useConversationListPage = () => {
         ...prev,
         content: convoMessage ? convoMessage : "",
       }));
-
-      socket.emit("isOnline", conversation.otherUser, (response: boolean) => {
-        setCurrentConversation((prev) => ({ ...prev, isOnline: response }));
-      });
 
       setCurrentConversation((prev) => ({
         ...prev,
