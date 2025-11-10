@@ -66,7 +66,16 @@ const ConversationListPage = () => {
                   <div>
                     {currentConversation.recipient.length > 0 && (
                       <span>
-                        <b>With:</b> {currentConversation.recipient}
+                        <b>With:</b> {currentConversation.recipient}{" "}
+                        <div
+                          id="online-status"
+                          title={`${currentConversation.recipient} is ${
+                            currentConversation.isOnline ? `online` : `offline`
+                          }`}
+                          className={
+                            currentConversation.isOnline ? "online" : "offline"
+                          }
+                        ></div>
                       </span>
                     )}
                   </div>

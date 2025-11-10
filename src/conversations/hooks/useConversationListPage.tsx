@@ -27,6 +27,7 @@ const useConversationListPage = () => {
     id: "",
     title: "",
     recipient: "",
+    isOnline: false,
   };
   const [conversations, setConversations] = useState<conversation[]>([]);
   const [currentConversation, setCurrentConversation] =
@@ -59,6 +60,16 @@ const useConversationListPage = () => {
             let { messages, conversationData } =
               await directConversationsAPI.getMessages(username!, currentID, 0);
             setCurrentConversation(conversationData);
+            socket.emit(
+              "isOnline",
+              conversationData.recipient,
+              (response: boolean) => {
+                setCurrentConversation((prev) => ({
+                  ...prev,
+                  isOnline: response,
+                }));
+              }
+            );
             setCurrentMessages(messages);
             setLoadingMessages(false);
           }
@@ -71,6 +82,19 @@ const useConversationListPage = () => {
       dispatch(setFormLoading(false));
     }
   }, [dispatch]);
+
+  // // lets user know when other user in the conversation is online
+  useEffect(() => {
+    socket.on("isOnline", ({ user, isOnline }) => {
+      if (user === currentConversation.recipient) {
+        setCurrentConversation((prev) => ({ ...prev, isOnline: isOnline }));
+      }
+    });
+
+    return () => {
+      socket.off("isOnline");
+    };
+  }, [currentConversation]);
 
   // auto scrolls to the bottom of the messages list div whenever a new message is added
   useEffect(() => {
@@ -160,7 +184,8 @@ const useConversationListPage = () => {
     };
   }, [conversations, currentConversation]);
 
-  // handles when a user changes conversation tabs
+  // handles when a user changes conversation tabs: if conversation has unread messages, clears unread message number and subtracts
+  // that amount from total number of unread messages, also changes online status of other user
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
       setLoadingMessages(true);
@@ -175,6 +200,7 @@ const useConversationListPage = () => {
           convo.id === conversation.id ? { ...convo, unreadMessages: 0 } : convo
         );
         setConversations(newConversations);
+
         dispatch(setUnreadMessages(conversation.unreadMessages * -1));
         socket.emit("clearTotalUnreadMessages", {
           unreadMessages: conversation.unreadMessages,
@@ -193,12 +219,15 @@ const useConversationListPage = () => {
         content: convoMessage ? convoMessage : "",
       }));
 
-      setCurrentConversation((prev) => ({
-        ...prev,
-        id: conversation.id,
-        title: conversation.title,
-        recipient: conversation.otherUser,
-      }));
+      socket.emit("isOnline", conversation.otherUser, (response: boolean) => {
+        setCurrentConversation((prev) => ({
+          ...prev,
+          id: conversation.id,
+          title: conversation.title,
+          recipient: conversation.otherUser,
+          isOnline: response,
+        }));
+      });
       setCurrentMessages(messages);
       setTypingMessage("");
       setLoadingMessages(false);
