@@ -6,14 +6,7 @@ import { RegisterUser } from "../../features/actions/auth";
 import { type AppDispatch } from "../../features/store";
 import { useAppDispatch } from "../../features/hooks";
 import interestsAPI from "../../apis/interestsAPI";
-import type {
-  registerErrorFlash,
-  registerValidityTypes,
-} from "../../types/errorsTypes";
-import {
-  registerValidityHandler,
-  submitRegisterErrorHandler,
-} from "../../errorHandlers/auth/registerErrorHandler";
+import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
 const useSignUp = () => {
   const dispatch: AppDispatch = useAppDispatch();
@@ -27,29 +20,19 @@ const useSignUp = () => {
     interests: [],
   };
 
-  const initialValidity: registerValidityTypes = {
-    username: { lengthValid: false, characterValid: false },
-    password: { lengthValid: false, characterValid: false },
-    emailAddress: { addressValid: false },
-    biography: { lengthValid: false, characterValid: false },
-    interests: { lengthValid: false },
-  };
-
-  const initialErrorFlash: registerErrorFlash = {
-    username: false,
-    password: false,
-    emailAddress: false,
-    biography: false,
-    interests: false,
-  };
+  const {
+    validInputs,
+    currentErrorFlash,
+    showDirections,
+    handleMouseEnter,
+    handleMouseExit,
+    handleInputValidity,
+    handleClientFlashError,
+    handleServerFlashError,
+    handleSubmitValidity,
+  } = useValidInputHandler();
 
   const [initialInterests, setInitialInterests] = useState<interests>([]);
-  const [validInputs, setValidInputs] =
-    useState<registerValidityTypes>(initialValidity);
-  const [currentRegisterErrorFlash, setCurrentRegisterErrorFlash] =
-    useState<registerErrorFlash>(initialErrorFlash);
-
-  const [showDirections, setShowDirections] = useState<string>("");
   const [serverError, setServerError] = useState<string>("");
 
   useEffect(() => {
@@ -74,36 +57,11 @@ const useSignUp = () => {
         | React.ChangeEvent<HTMLTextAreaElement>
     ): void => {
       const { name, value } = e.target;
-      registerValidityHandler({ name, value, setter: setValidInputs });
+      handleInputValidity(name, value);
       setFormData((data) => ({ ...data, [name]: value }));
       if (serverError) setServerError("");
     },
     [formData]
-  );
-
-  const handleMouseEnter = useCallback(
-    (
-      e:
-        | React.MouseEvent<HTMLInputElement>
-        | React.MouseEvent<HTMLTextAreaElement>
-        | React.MouseEvent<HTMLDivElement>
-    ) => {
-      setShowDirections(e.currentTarget.id);
-    },
-    []
-  );
-
-  const handleMouseExit = useCallback(
-    (
-      e:
-        | React.MouseEvent<HTMLInputElement>
-        | React.MouseEvent<HTMLTextAreaElement>
-        | React.MouseEvent<HTMLDivElement>
-    ) => {
-      e.preventDefault();
-      setShowDirections("");
-    },
-    []
   );
 
   const handleCheckbox = useCallback(
@@ -119,12 +77,7 @@ const useSignUp = () => {
         });
       }
 
-      registerValidityHandler({
-        name: "interests",
-        value: newInterests,
-        setter: setValidInputs,
-      });
-
+      handleInputValidity("interests", newInterests);
       setFormData((d) => ({ ...d, interests: newInterests }));
     },
     [formData]
@@ -134,32 +87,19 @@ const useSignUp = () => {
     async (e: React.FormEvent): Promise<void> => {
       e.preventDefault();
       try {
-        if (
-          submitRegisterErrorHandler(validInputs, setCurrentRegisterErrorFlash)
-        ) {
+        if (handleSubmitValidity()) {
           await dispatch(RegisterUser(formData)).unwrap();
           navigate("/");
         } else {
-          setTimeout(() => {
-            setCurrentRegisterErrorFlash(initialErrorFlash);
-          }, 500);
+          handleClientFlashError();
         }
       } catch (err) {
         if (typeof err === "string") setServerError(err);
 
         if (err === "Username already taken!") {
-          setCurrentRegisterErrorFlash((prev) => ({ ...prev, username: true }));
-          setTimeout(() => {
-            setCurrentRegisterErrorFlash(initialErrorFlash);
-          }, 500);
+          handleServerFlashError("username");
         } else if (err === "Email Address already taken!") {
-          setCurrentRegisterErrorFlash((prev) => ({
-            ...prev,
-            emailAddress: true,
-          }));
-          setTimeout(() => {
-            setCurrentRegisterErrorFlash(initialErrorFlash);
-          }, 500);
+          handleServerFlashError("emailAddress");
         }
       }
     },
@@ -171,7 +111,7 @@ const useSignUp = () => {
     initialInterests,
     showDirections,
     validInputs,
-    currentRegisterErrorFlash,
+    currentErrorFlash,
     serverError,
     handleChange,
     handleCheckbox,

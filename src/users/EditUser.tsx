@@ -32,20 +32,6 @@ const EditUser = (): JSX.Element => {
               />
             </label>
           </div>
-          <div id="biography-div" className="form-div">
-            <label htmlFor="biography">
-              Write a short paragraph about yourself
-              <textarea
-                name="biography"
-                id="biography"
-                maxLength={200}
-                cols={40}
-                rows={10}
-                value={userData.biography}
-                onChange={handleChange}
-              ></textarea>
-            </label>
-          </div>
           <div id="favorite-color-div" className="form-div">
             <label htmlFor="favoriteColor">Favorite Color:</label>
             <input
@@ -56,6 +42,22 @@ const EditUser = (): JSX.Element => {
               onChange={handleChange}
             />
           </div>
+          <div id="biography-div" className="form-div">
+            <label htmlFor="biography">
+              Write a short paragraph about yourself
+              <textarea
+                name="biography"
+                id="biography"
+                className="form-textarea"
+                maxLength={200}
+                cols={40}
+                rows={10}
+                value={userData.biography}
+                onChange={handleChange}
+              ></textarea>
+            </label>
+          </div>
+
           <fieldset id="interests-checklist">
             <legend id="interests-header">Select Your Interests</legend>
 

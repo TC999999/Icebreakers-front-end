@@ -8,7 +8,7 @@ const SignUp = (): JSX.Element => {
   const {
     formData,
     initialInterests,
-    currentRegisterErrorFlash,
+    currentErrorFlash,
     showDirections,
     validInputs,
     serverError,
@@ -38,7 +38,7 @@ const SignUp = (): JSX.Element => {
                   name="username"
                   type="text"
                   className={`form-input ${
-                    currentRegisterErrorFlash.username ? "error-flash" : ""
+                    currentErrorFlash.username ? "error-flash" : ""
                   }`}
                   placeholder="Enter your username here"
                   value={formData.username}
@@ -83,7 +83,7 @@ const SignUp = (): JSX.Element => {
                   name="password"
                   type="password"
                   className={`form-input ${
-                    currentRegisterErrorFlash.password ? "error-flash" : ""
+                    currentErrorFlash.password ? "error-flash" : ""
                   }`}
                   placeholder="Enter your password here"
                   value={formData.password}
@@ -130,7 +130,7 @@ const SignUp = (): JSX.Element => {
                   name="emailAddress"
                   type="text"
                   className={`form-input ${
-                    currentRegisterErrorFlash.emailAddress ? "error-flash" : ""
+                    currentErrorFlash.emailAddress ? "error-flash" : ""
                   }`}
                   placeholder="Enter your email address here"
                   value={formData.emailAddress}
@@ -179,7 +179,7 @@ const SignUp = (): JSX.Element => {
                   id="biography"
                   name="biography"
                   className={`form-textarea ${
-                    currentRegisterErrorFlash.biography ? "error-flash" : ""
+                    currentErrorFlash.biography ? "error-flash" : ""
                   }`}
                   placeholder="Tell us about yourself (Maximum 200 characters)."
                   value={formData.biography}
@@ -226,9 +226,7 @@ const SignUp = (): JSX.Element => {
               >
                 <fieldset
                   id="interests-div"
-                  className={
-                    currentRegisterErrorFlash.interests ? "error-flash" : ""
-                  }
+                  className={currentErrorFlash.interests ? "error-flash" : ""}
                 >
                   <legend>
                     Interests
