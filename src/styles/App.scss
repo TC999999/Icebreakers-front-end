@@ -3,6 +3,11 @@
 
 .form-div {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  position: relative;
 
   label {
     color: c.$secondary;
@@ -17,6 +22,11 @@
     font-size: large;
     text-align: center;
     border-radius: s.$borderRadius;
+
+    @include s.tablet {
+      font-size: medium;
+    }
+
     background-color: #f2eaed;
     border: s.$borderSettings rgb(79, 0, 37);
     outline: none;
@@ -34,7 +44,6 @@
   }
 
   .form-textarea {
-    width: auto;
     font-size: large;
     text-align: center;
     border-radius: s.$borderRadius;
@@ -54,6 +63,14 @@
       background-color: c.$inputFocus;
     }
   }
+
+  .form-input,
+  .form-textarea,
+  #interests-div {
+    &.error-flash {
+      animation: errorFlash 0.15s infinite;
+    }
+  }
 }
 
 form {
@@ -71,6 +88,19 @@ form {
 
     &:focus {
       background-color: c.$inputFocus;
+    }
+  }
+
+  legend {
+    color: c.$secondary;
+    font-size: large;
+    font-weight: bold;
+  }
+
+  legend,
+  label {
+    .required {
+      color: rgb(182, 33, 33);
     }
   }
 
@@ -135,8 +165,78 @@ form {
     }
   }
 
-  #error-message {
-    color: c.$error;
+  .input-directions {
+    background-color: white;
+    position: absolute;
+    z-index: 2;
+    width: 70%;
+    bottom: 100%;
+    animation: notificationPopUp 0.2s;
+    padding: 5px;
+    border: s.$borderSettings c.$secondary;
+
+    @include s.tablet {
+      left: 105%;
+      bottom: 0;
+
+      &.onBottom {
+        bottom: 100%;
+        left: 15%;
+
+        &::before {
+          content: " ";
+          position: absolute;
+          top: 100%;
+          left: 45%;
+          width: 0;
+          height: 0;
+          border-right: 20px solid transparent;
+          border-left: 20px solid transparent;
+          border-bottom: 20px solid transparent;
+          border-top: 20px solid c.$secondary;
+        }
+      }
+    }
+
+    ul {
+      padding: 0;
+      li {
+        font-size: small;
+        list-style-type: none;
+
+        .directions-check {
+          color: c.$success;
+        }
+
+        .directions-x {
+          color: c.$error;
+        }
+      }
+    }
+
+    &::before {
+      content: " ";
+      position: absolute;
+      border-right: 20px solid transparent;
+      border-left: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-top: 20px solid c.$secondary;
+
+      @include s.desktop {
+        top: 100%;
+      }
+
+      @include s.tablet {
+        right: 100%;
+        bottom: 10%;
+        height: 0;
+        width: 0;
+        border-right: 10px solid c.$secondary;
+        border-bottom: 10px solid transparent;
+        border-top: 10px solid c.$secondary;
+        border-left: 10px solid transparent;
+      }
+    }
   }
 }
 
@@ -144,4 +244,10 @@ form {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+#error-message {
+  h2 {
+    color: c.$error;
+  }
 }

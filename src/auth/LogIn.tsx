@@ -40,7 +40,7 @@ const LogIn = (): JSX.Element => {
             </label>
           </div>
           <div id="error-message">
-            <h3>{error}</h3>
+            <h2>{error}</h2>
           </div>
           <div id="button-div">
             <button className="submit-button">Log In!</button>

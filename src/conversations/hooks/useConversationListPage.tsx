@@ -173,10 +173,12 @@ const useConversationListPage = () => {
       });
 
       setConversations(newConversations);
-      setCurrentConversation((prev) => ({
-        ...prev,
-        title: conversation.title,
-      }));
+      if (currentConversation.id === conversation.id) {
+        setCurrentConversation((prev) => ({
+          ...prev,
+          title: conversation.title,
+        }));
+      }
     });
 
     return () => {

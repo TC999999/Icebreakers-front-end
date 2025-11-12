@@ -1,3 +1,5 @@
+@use "colors" as c;
+
 // borders
 $borderRadius: 20px;
 $borderSettings: 2px solid;
@@ -8,7 +10,13 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 
 // mixins
 @mixin tablet {
-  @media (min-width: 915px) {
+  @media (min-width: 1000px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (max-width: 1000px) {
     @content;
   }
 }
@@ -58,5 +66,15 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes errorFlash {
+  0% {
+    background-color: c.$error;
+  }
+
+  100% {
+    background-color: white;
   }
 }
