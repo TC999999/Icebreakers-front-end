@@ -1,16 +1,22 @@
 import type { JSX } from "react";
 import useEditUser from "./hooks/useEditUser";
 import "../styles/users/EditUser.scss";
+import InputDirections from "../InputDirections";
 
 const EditUser = (): JSX.Element => {
   const {
     userData,
     interestsList,
+    validInputs,
+    showDirections,
+    currentErrorFlash,
     checkUserInterests,
     handleChange,
     handleSubmit,
     handleReset,
     handleCheckBox,
+    handleMouseEnter,
+    handleMouseExit,
   } = useEditUser();
   return (
     <main id="edit-user-page">
@@ -23,14 +29,25 @@ const EditUser = (): JSX.Element => {
             <label htmlFor="emailAddress">
               Email Address:
               <input
-                className="form-input"
+                className={`form-input ${
+                  currentErrorFlash.emailAddress ? "error-flash" : ""
+                }`}
                 type="text"
                 name="emailAddress"
                 id="emailAddress"
                 value={userData.emailAddress}
                 onChange={handleChange}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseExit}
               />
             </label>
+
+            <InputDirections
+              type="emailAddress"
+              showDirections={showDirections}
+              validInputs={validInputs.emailAddress}
+              onBottom={true}
+            />
           </div>
           <div id="favorite-color-div" className="form-div">
             <label htmlFor="favoriteColor">Favorite Color:</label>
@@ -48,35 +65,63 @@ const EditUser = (): JSX.Element => {
               <textarea
                 name="biography"
                 id="biography"
-                className="form-textarea"
+                className={`form-textarea ${
+                  currentErrorFlash.biography ? "error-flash" : ""
+                }`}
                 maxLength={200}
                 cols={40}
                 rows={10}
                 value={userData.biography}
                 onChange={handleChange}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseExit}
               ></textarea>
             </label>
+
+            <InputDirections
+              type="biography"
+              showDirections={showDirections}
+              validInputs={validInputs.biography}
+              onBottom={true}
+            />
           </div>
 
-          <fieldset id="interests-checklist">
-            <legend id="interests-header">Select Your Interests</legend>
+          <div
+            id="interests"
+            className="form-div"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseExit}
+          >
+            <fieldset
+              id="interests-div"
+              className={currentErrorFlash.interests ? "error-flash" : ""}
+            >
+              <legend id="interests-header">Select Your Interests</legend>
 
-            {Object.values(interestsList.current).map((i) => (
-              <div className="interest-check" key={`interest-${i.id}`}>
-                <label htmlFor={`interest-${i.id}`}>
-                  {i.topic}
-                  <input
-                    type="checkbox"
-                    name={`interest-${i.id}`}
-                    id={`interest-${i.id}`}
-                    value={i.id}
-                    checked={checkUserInterests(i.id)}
-                    onChange={handleCheckBox}
-                  />
-                </label>
-              </div>
-            ))}
-          </fieldset>
+              {Object.values(interestsList.current).map((i) => (
+                <div className="interest-check" key={`interest-${i.id}`}>
+                  <label htmlFor={`interest-${i.id}`}>
+                    {i.topic}
+                    <input
+                      type="checkbox"
+                      name={`interest-${i.id}`}
+                      id={`interest-${i.id}`}
+                      value={i.id}
+                      checked={checkUserInterests(i.id)}
+                      onChange={handleCheckBox}
+                    />
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+
+            <InputDirections
+              type="interests"
+              showDirections={showDirections}
+              validInputs={validInputs.interests}
+              onBottom={true}
+            />
+          </div>
           <div id="buttons-row">
             <button
               type="button"

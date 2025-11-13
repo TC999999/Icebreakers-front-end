@@ -10,6 +10,7 @@ import {
 } from "../../features/slices/auth";
 import userAPI from "../../apis/userAPI";
 import socket from "../../helpers/socket";
+import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
 const useEditUser = () => {
   const { username } = useParams();
@@ -17,16 +18,28 @@ const useEditUser = () => {
   const dispatch = useAppDispatch();
 
   const initialData: UserEdit = {
-    username: "",
     emailAddress: "",
     biography: "",
     favoriteColor: "#000000",
-    interests: {},
+    interests: [],
   };
 
   const [userData, setUserData] = useState<UserEdit>(initialData);
   const interestsList = useRef<interestMap>({});
   const originalData = useRef<UserEdit>(initialData);
+
+  const {
+    validInputs,
+    currentErrorFlash,
+    showDirections,
+    handleMouseEnter,
+    handleMouseExit,
+    handleInputValidity,
+    handleClientFlashError,
+    handleServerFlashError,
+    handleSubmitValidity,
+    setValidValues,
+  } = useValidInputHandler(originalData.current);
 
   useEffect(() => {
     const getUserForEdit = async () => {
@@ -53,6 +66,7 @@ const useEditUser = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
+      handleInputValidity(name, value);
       setUserData((prev) => ({ ...prev, [name]: value }));
     },
     [userData]
@@ -61,10 +75,29 @@ const useEditUser = () => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      const { newFavoriteColor } = await userAPI.editUser(userData);
-      dispatch(setFavoriteColor(newFavoriteColor));
-      socket.emit("updateFavoriteColor", { favoriteColor: newFavoriteColor });
-      navigate(`/user/${username}`);
+      try {
+        if (handleSubmitValidity()) {
+          // console.log("NO ERRORS HERE");
+          if (username) {
+            const { newFavoriteColor } = await userAPI.editUser(
+              username,
+              userData
+            );
+            dispatch(setFavoriteColor(newFavoriteColor));
+            socket.emit("updateFavoriteColor", {
+              favoriteColor: newFavoriteColor,
+            });
+            navigate(`/user/${username}`);
+          }
+        } else {
+          // console.log("ERRORS ABOUND");
+          handleClientFlashError();
+        }
+      } catch (err) {
+        if (err === "Email Address already taken!") {
+          handleServerFlashError("emailAddress");
+        }
+      }
     },
     [userData]
   );
@@ -73,6 +106,7 @@ const useEditUser = () => {
     (e: React.MouseEvent) => {
       e.preventDefault();
       setUserData(originalData.current);
+      setValidValues(originalData.current);
     },
     [userData]
   );
@@ -80,33 +114,28 @@ const useEditUser = () => {
   const handleCheckBox = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = e.target;
-      if (checked) {
-        setUserData((prev) => ({
-          ...prev,
-          interests: {
-            ...prev.interests,
-            [value]: {
-              id: parseFloat(value),
-              topic: interestsList.current[value].topic,
-            },
-          },
-        }));
-      } else {
-        const newInterests = { ...userData.interests };
-        delete newInterests[value];
 
-        setUserData((prev) => ({
-          ...prev,
-          interests: newInterests,
-        }));
+      let newInterests = [...userData.interests];
+      if (checked) {
+        newInterests.push(parseFloat(value));
+      } else {
+        newInterests = newInterests.filter((i) => {
+          return i !== parseFloat(value);
+        });
       }
+      handleInputValidity("interests", newInterests);
+
+      setUserData((prev) => ({
+        ...prev,
+        interests: newInterests,
+      }));
     },
     [userData]
   );
 
   const checkUserInterests = useCallback(
     (id: number): boolean => {
-      return userData.interests.hasOwnProperty(id.toString());
+      return userData.interests.includes(id);
     },
     [userData]
   );
@@ -114,11 +143,16 @@ const useEditUser = () => {
   return {
     userData,
     interestsList,
+    validInputs,
+    showDirections,
+    currentErrorFlash,
     checkUserInterests,
     handleChange,
     handleSubmit,
     handleReset,
     handleCheckBox,
+    handleMouseEnter,
+    handleMouseExit,
   };
 };
 

@@ -25,7 +25,7 @@ const useNavbar = () => {
   useEffect(() => {
     const nav = selectNav(location.pathname, username);
     setSelectedNav(nav);
-  }, [location.pathname]);
+  }, [location.pathname, username]);
 
   const logOutAndNavigate = async () => {
     await dispatch(LogOutUser({}));

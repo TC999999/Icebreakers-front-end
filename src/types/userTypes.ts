@@ -1,5 +1,3 @@
-import type { interestMap } from "./interestTypes";
-
 export type UserProfile = {
   username: string;
   biography: string;
@@ -24,9 +22,8 @@ export type UserSearch = {
 export type groupUser = { favoriteColor: string; username: string };
 
 export type UserEdit = {
-  username: string;
   emailAddress: string;
   favoriteColor: string;
   biography: string;
-  interests: interestMap;
+  interests: number[];
 };

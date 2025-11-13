@@ -1,35 +1,37 @@
-import { useState, useCallback } from "react";
-import type {
-  registerErrorFlash,
-  registerValidityTypes,
-} from "../types/errorsTypes";
+import { useState, useCallback, useEffect } from "react";
+import type { validityTypes, validity } from "../types/errorsTypes";
 import {
-  registerValidityHandler,
-  submitRegisterErrorHandler,
-} from "../errorHandlers/auth/registerErrorHandler";
+  inputValidityHandler,
+  submitErrorHandler,
+} from "../errorHandlers/validityHandler";
+import { constructErrorMap } from "../helpers/constructErrorMap";
+import type { FormData } from "../types/miscTypes";
 
-const useValidInputHandler = () => {
-  const initialValidity: registerValidityTypes = {
-    username: { lengthValid: false, characterValid: false },
-    password: { lengthValid: false, characterValid: false },
-    emailAddress: { addressValid: false },
-    biography: { lengthValid: false, characterValid: false },
-    interests: { lengthValid: false },
-  };
+const useValidInputHandler = (inputs: FormData = {}) => {
+  const [validInputs, setValidInputs] = useState<validityTypes>({});
+  const [currentErrorFlash, setCurrentErrorFlash] = useState<validity>({});
 
-  const initialErrorFlash: registerErrorFlash = {
-    username: false,
-    password: false,
-    emailAddress: false,
-    biography: false,
-    interests: false,
-  };
-
-  const [validInputs, setValidInputs] =
-    useState<registerValidityTypes>(initialValidity);
-  const [currentErrorFlash, setCurrentErrorFlash] =
-    useState<registerErrorFlash>(initialErrorFlash);
+  const [initialErrorFlash, setInitialErrorFlash] = useState<validity>({});
   const [showDirections, setShowDirections] = useState<string>("");
+
+  const setValidValues = useCallback((inputs: FormData) => {
+    let { ErrorMap, ErrorFlash } = constructErrorMap(inputs);
+    setValidInputs(ErrorMap);
+    setCurrentErrorFlash(ErrorFlash);
+    setInitialErrorFlash(ErrorFlash);
+  }, []);
+
+  // handles validity on initial render if input value is passed in
+  useEffect(() => {
+    setValidValues(inputs);
+  }, [inputs]);
+
+  const handleInputValidity = useCallback(
+    (name: string, value: string | number[]) => {
+      inputValidityHandler({ name, value, setter: setValidInputs });
+    },
+    [validInputs]
+  );
 
   const handleMouseEnter = useCallback(
     (
@@ -56,15 +58,8 @@ const useValidInputHandler = () => {
     []
   );
 
-  const handleInputValidity = useCallback(
-    (name: string, value: string | number[]) => {
-      registerValidityHandler({ name, value, setter: setValidInputs });
-    },
-    [validInputs]
-  );
-
   const handleSubmitValidity = useCallback(() => {
-    return submitRegisterErrorHandler(validInputs, setCurrentErrorFlash);
+    return submitErrorHandler(validInputs, setCurrentErrorFlash);
   }, [validInputs]);
 
   const handleClientFlashError = useCallback(() => {
@@ -90,6 +85,7 @@ const useValidInputHandler = () => {
     handleSubmitValidity,
     handleClientFlashError,
     handleServerFlashError,
+    setValidValues,
   };
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { type Register } from "../../types/authTypes";
 import { type interests } from "../../types/interestTypes";
@@ -11,14 +11,16 @@ import useValidInputHandler from "../../appHooks/useValidInputHandler";
 const useSignUp = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
-  const initialState: Register = {
+  const initialState = useRef<Register>({
     username: "",
     password: "",
     emailAddress: "",
     biography: "",
     favoriteColor: "#ffffff",
     interests: [],
-  };
+  });
+
+  const [formData, setFormData] = useState<Register>(initialState.current);
 
   const {
     validInputs,
@@ -30,7 +32,7 @@ const useSignUp = () => {
     handleClientFlashError,
     handleServerFlashError,
     handleSubmitValidity,
-  } = useValidInputHandler();
+  } = useValidInputHandler(initialState.current);
 
   const [initialInterests, setInitialInterests] = useState<interests>([]);
   const [serverError, setServerError] = useState<string>("");
@@ -47,8 +49,6 @@ const useSignUp = () => {
 
     getInitialInterests();
   }, []);
-
-  const [formData, setFormData] = useState<Register>(initialState);
 
   const handleChange = useCallback(
     (

@@ -1,9 +1,9 @@
 import { isEmail } from "validator";
-import type { registerValidityTypes } from "../types/errorsTypes";
+import type { validityTypes } from "../types/errorsTypes";
 
 export const setUsernameValidity = (
   value: string,
-  setter: React.Dispatch<React.SetStateAction<registerValidityTypes>>
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
 ): void => {
   setter((prev) => ({
     ...prev,
@@ -17,7 +17,7 @@ export const setUsernameValidity = (
 
 export const setPasswordValidity = (
   value: string,
-  setter: React.Dispatch<React.SetStateAction<registerValidityTypes>>
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
 ): void => {
   setter((prev) => ({
     ...prev,
@@ -31,7 +31,7 @@ export const setPasswordValidity = (
 
 export const setEmailValidity = (
   value: string,
-  setter: React.Dispatch<React.SetStateAction<registerValidityTypes>>
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
 ): void => {
   setter((prev) => ({
     ...prev,
@@ -44,7 +44,7 @@ export const setEmailValidity = (
 
 export const setBiographyValidity = (
   value: string,
-  setter: React.Dispatch<React.SetStateAction<registerValidityTypes>>
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
 ): void => {
   setter((prev) => ({
     ...prev,
@@ -58,7 +58,7 @@ export const setBiographyValidity = (
 
 export const setInterestsValidity = (
   value: number[],
-  setter: React.Dispatch<React.SetStateAction<registerValidityTypes>>
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
 ): void => {
   setter((prev) => ({
     ...prev,

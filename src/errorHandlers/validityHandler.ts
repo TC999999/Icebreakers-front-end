@@ -1,26 +1,19 @@
-import type {
-  registerValidityTypes,
-  registerErrorFlash,
-} from "../../types/errorsTypes";
+import type { validityTypes, errorFlash } from "../types/errorsTypes";
 import {
   setUsernameValidity,
   setPasswordValidity,
   setEmailValidity,
   setBiographyValidity,
   setInterestsValidity,
-} from "../generalErrors";
+} from "./generalErrors";
 
 type errorInput = {
   name: string;
   value: string | number[];
-  setter: React.Dispatch<React.SetStateAction<registerValidityTypes>>;
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>;
 };
 
-export const registerValidityHandler = ({
-  name,
-  value,
-  setter,
-}: errorInput) => {
+export const inputValidityHandler = ({ name, value, setter }: errorInput) => {
   switch (name) {
     case "username":
       if (typeof value === "string") setUsernameValidity(value, setter);
@@ -46,19 +39,19 @@ export const registerValidityHandler = ({
   }
 };
 
-export const submitRegisterErrorHandler = (
-  input: registerValidityTypes,
-  setter: React.Dispatch<React.SetStateAction<registerErrorFlash>>
+export const submitErrorHandler = (
+  input: validityTypes,
+  setter: React.Dispatch<React.SetStateAction<errorFlash>>
 ) => {
   let allValid: boolean[] = [];
 
   for (let key in input) {
     if (Object.prototype.hasOwnProperty.call(input, key)) {
-      let valid = Object.values(
-        input[key as keyof registerValidityTypes]
-      ).every((v) => {
-        return v === true;
-      });
+      let valid = Object.values(input[key as keyof validityTypes]).every(
+        (v) => {
+          return v === true;
+        }
+      );
       allValid.push(valid);
       setter((prev) => ({ ...prev, [key]: !valid }));
     }

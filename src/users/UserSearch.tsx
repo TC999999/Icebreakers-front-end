@@ -41,6 +41,7 @@ const UserSearch = (): JSX.Element => {
                 placeholder="Search via username here"
                 value={searchQuery.username}
                 onChange={handleChange}
+                autoComplete="off"
               />
             </div>
             <div

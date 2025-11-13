@@ -1,8 +1,7 @@
 import { type JSX } from "react";
 import useSignUp from "./hooks/useSignUp";
 import "../styles/auth/SignUp.scss";
-import { IoMdCheckmarkCircle } from "react-icons/io";
-import { FaCircleXmark } from "react-icons/fa6";
+import InputDirections from "../InputDirections";
 
 const SignUp = (): JSX.Element => {
   const {
@@ -47,29 +46,12 @@ const SignUp = (): JSX.Element => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseExit}
                 />
-                {showDirections === "username" && (
-                  <div className="input-directions">
-                    <ul>
-                      <li>
-                        {validInputs.username.lengthValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Username must be between 5-30 characters.
-                      </li>
-                      <li>
-                        {" "}
-                        {validInputs.username.characterValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Username may only contain letters or numbers.
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                <InputDirections
+                  type="username"
+                  showDirections={showDirections}
+                  validInputs={validInputs.username}
+                  onBottom={false}
+                />
               </div>
               <div id="password-div" className="form-div">
                 <label htmlFor="password">
@@ -92,31 +74,12 @@ const SignUp = (): JSX.Element => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseExit}
                 />
-                {showDirections === "password" && (
-                  <div className="input-directions">
-                    <ul>
-                      <li>
-                        {" "}
-                        {validInputs.password.lengthValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Password must be between 15-30 characters.
-                      </li>
-                      <li>
-                        {validInputs.password.characterValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Password may only contain letters, numbers, and the
-                        special characters below.
-                      </li>
-                      <li>(!, ?)</li>
-                    </ul>
-                  </div>
-                )}
+                <InputDirections
+                  type="password"
+                  showDirections={showDirections}
+                  validInputs={validInputs.password}
+                  onBottom={false}
+                />
               </div>
               <div id="email-address-div" className="form-div">
                 <label htmlFor="emailAddress">
@@ -139,20 +102,13 @@ const SignUp = (): JSX.Element => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseExit}
                 />
-                {showDirections === "emailAddress" && (
-                  <div className="input-directions">
-                    <ul>
-                      <li>
-                        {validInputs.emailAddress.addressValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Must be a valid email address.
-                      </li>
-                    </ul>
-                  </div>
-                )}
+
+                <InputDirections
+                  type="emailAddress"
+                  showDirections={showDirections}
+                  validInputs={validInputs.emailAddress}
+                  onBottom={false}
+                />
               </div>
               <div id="favorite-color-div" className="form-div">
                 <label htmlFor="favoriteColor">Favorite Color:</label>
@@ -191,32 +147,12 @@ const SignUp = (): JSX.Element => {
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseExit}
                 />
-
-                {showDirections === "biography" && (
-                  <div className="input-directions onBottom">
-                    <ul>
-                      <li>
-                        {" "}
-                        {validInputs.biography.lengthValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Biography must be between 20-200 characters.
-                      </li>
-                      <li>
-                        {validInputs.biography.characterValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Biography may only contain letters, numbers, spaces, and
-                        the special characters below
-                      </li>
-                      <li>((periods: .), (commas: ,), ?, !, /, &)</li>
-                    </ul>
-                  </div>
-                )}
+                <InputDirections
+                  type="biography"
+                  showDirections={showDirections}
+                  validInputs={validInputs.biography}
+                  onBottom={true}
+                />
               </div>
               <div
                 className="form-div"
@@ -255,21 +191,12 @@ const SignUp = (): JSX.Element => {
                     );
                   })}
                 </fieldset>
-                {showDirections === "interests" && (
-                  <div className="input-directions onBottom">
-                    <ul>
-                      <li>
-                        {validInputs.interests.lengthValid ? (
-                          <IoMdCheckmarkCircle className="directions-check" />
-                        ) : (
-                          <FaCircleXmark className="directions-x" />
-                        )}
-                        Please select at least one of the following interests on
-                        the list.
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                <InputDirections
+                  type="interests"
+                  showDirections={showDirections}
+                  validInputs={validInputs.interests}
+                  onBottom={true}
+                />
               </div>
             </div>
           </div>

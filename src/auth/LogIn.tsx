@@ -21,6 +21,7 @@ const LogIn = (): JSX.Element => {
                 value={formData.username}
                 onChange={handleChange}
                 maxLength={30}
+                autoComplete="off"
               />
             </label>
           </div>
@@ -36,6 +37,7 @@ const LogIn = (): JSX.Element => {
                 value={formData.password}
                 onChange={handleChange}
                 maxLength={30}
+                autoComplete="off"
               />
             </label>
           </div>

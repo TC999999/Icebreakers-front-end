@@ -35,8 +35,8 @@ class userAPI extends API {
     return res;
   }
 
-  public static async editUser(user: UserEdit): Promise<any> {
-    let res = await this.patchRequest(`${user.username}/edit`, user);
+  public static async editUser(username: string, user: UserEdit): Promise<any> {
+    let res = await this.patchRequest(`${username}/edit`, user);
     return res;
   }
 }
