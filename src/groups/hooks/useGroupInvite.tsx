@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import type { simpleGroup, GroupInvitation } from "../../types/groupTypes";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
@@ -7,6 +7,7 @@ import { setFormLoading } from "../../features/slices/auth";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import socket from "../../helpers/socket";
+import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
 const useGroupInvite = () => {
   const from = useAppSelector((store) => {
@@ -24,11 +25,24 @@ const useGroupInvite = () => {
   };
 
   const [formData, setFormData] = useState<GroupInvitation>(initialData);
+  const originalData = useRef<GroupInvitation>(initialData);
   const [groupList, setGroupList] = useState<simpleGroup[]>([]);
+
+  const {
+    validInputs,
+    currentErrorFlash,
+    showDirections,
+    handleInputValidity,
+    handleMouseEnter,
+    handleMouseExit,
+    handleSubmitValidity,
+    handleClientFlashError,
+  } = useValidInputHandler(originalData.current);
 
   useEffect(() => {
     if (from && to) {
       setFormData((prev) => ({ ...prev, from, to }));
+      originalData.current = { ...initialData, from, to };
       const getGroups = async () => {
         const groups = await groupConversationsAPI.getAllGroups(from, {
           getSingle: true,
@@ -43,6 +57,7 @@ const useGroupInvite = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
+      handleInputValidity(name, value);
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
     [formData]
@@ -53,16 +68,22 @@ const useGroupInvite = () => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       try {
-        dispatch(setFormLoading(true));
+        if (handleSubmitValidity()) {
+          dispatch(setFormLoading(true));
 
-        const invitation = await groupConversationsAPI.sendInvitation(formData);
-        socket.emit("addRequest", {
-          requestType: "group-invites-received",
-          countType: "receivedGroupInvitationCount",
-          to: formData.to,
-          request: invitation,
-        });
-        navigate(`/user/${to}`);
+          const invitation = await groupConversationsAPI.sendInvitation(
+            formData
+          );
+          socket.emit("addRequest", {
+            requestType: "group-invites-received",
+            countType: "receivedGroupInvitationCount",
+            to: formData.to,
+            request: invitation,
+          });
+          navigate(`/user/${to}`);
+        } else {
+          handleClientFlashError();
+        }
       } catch (err) {
         console.log(err);
       } finally {
@@ -72,7 +93,17 @@ const useGroupInvite = () => {
     [formData]
   );
 
-  return { formData, groupList, handleChange, handleSubmit };
+  return {
+    formData,
+    groupList,
+    validInputs,
+    currentErrorFlash,
+    showDirections,
+    handleChange,
+    handleSubmit,
+    handleMouseEnter,
+    handleMouseExit,
+  };
 };
 
 export default useGroupInvite;

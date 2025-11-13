@@ -110,3 +110,16 @@ export const setDescriptionValidity = (
     },
   }));
 };
+
+export const setGroupValidity = (
+  value: string,
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
+): void => {
+  setter((prev) => ({
+    ...prev,
+    group: {
+      ...prev.group,
+      lengthValid: value.length > 0,
+    },
+  }));
+};

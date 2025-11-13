@@ -13,7 +13,8 @@ type Props = {
     | "interests"
     | "content"
     | "title"
-    | "description";
+    | "description"
+    | "group";
   showDirections: string;
   validInputs: validity;
   onBottom: boolean;

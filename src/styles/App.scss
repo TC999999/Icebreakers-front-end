@@ -91,7 +91,8 @@
 
   .form-input,
   .form-textarea,
-  #interests-div {
+  #interests-div,
+  #group-radio-div {
     &.error-flash {
       animation: errorFlash 0.15s infinite;
     }

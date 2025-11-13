@@ -39,6 +39,10 @@ export const validMessages: validMessageMap = {
     characterValid:
       "Group description may only contain letters, numbers, spaces, and the following special characters (?, !, ., ,, &, /)",
   },
+
+  group: {
+    lengthValid: "Please choose one of the below groups!",
+  },
 };
 
 let generalValidityFalse: validity = {
@@ -58,6 +62,7 @@ export const validityCheckersFalse: validityTypes = {
   from: generalValidityFalse,
   title: generalValidityFalse,
   description: generalValidityFalse,
+  group: { lengthValid: false },
 };
 
 let generalValidityTrue: validity = { lengthValid: true, characterValid: true };
@@ -74,4 +79,5 @@ export const validityCheckersTrue: validityTypes = {
   from: generalValidityTrue,
   title: generalValidityTrue,
   description: generalValidityTrue,
+  group: { lengthValid: true },
 };

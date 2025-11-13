@@ -19,13 +19,7 @@
       border: s.$borderSettings c.$secondary;
       border-radius: s.$borderRadius;
 
-      textarea {
-        border: s.$borderSettings c.$secondary;
-        border-radius: s.$borderRadius;
-        padding: 10px;
-      }
-
-      #group-radio-wrapper {
+      #group {
         display: flex;
         justify-content: center;
         align-items: center;
