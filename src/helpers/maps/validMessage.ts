@@ -30,6 +30,15 @@ export const validMessages: validMessageMap = {
     characterValid:
       "Message may only contain letters, numbers, spaces, and the following special characters (?, !, ., ,, &, /)",
   },
+  title: {
+    lengthValid: "Group Title must be between 5-30 characters.",
+    characterValid: "Group Title may only contain letters, numbers, or spaces.",
+  },
+  description: {
+    lengthValid: "Group description must be between 20-200 characters.",
+    characterValid:
+      "Group description may only contain letters, numbers, spaces, and the following special characters (?, !, ., ,, &, /)",
+  },
 };
 
 let generalValidityFalse: validity = {
@@ -47,6 +56,8 @@ export const validityCheckersFalse: validityTypes = {
   content: generalValidityFalse,
   to: generalValidityFalse,
   from: generalValidityFalse,
+  title: generalValidityFalse,
+  description: generalValidityFalse,
 };
 
 let generalValidityTrue: validity = { lengthValid: true, characterValid: true };
@@ -61,4 +72,6 @@ export const validityCheckersTrue: validityTypes = {
   content: generalValidityTrue,
   to: generalValidityTrue,
   from: generalValidityTrue,
+  title: generalValidityTrue,
+  description: generalValidityTrue,
 };

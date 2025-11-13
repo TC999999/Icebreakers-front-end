@@ -1,11 +1,9 @@
-import type { interestMap } from "./interestTypes";
 import type { groupUser } from "./userTypes";
 
 export type newGroup = {
   title: string;
   description: string;
-  host: string;
-  interests: interestMap;
+  interests: number[];
 };
 
 export type groupSearchCard = {

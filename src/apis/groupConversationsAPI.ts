@@ -18,8 +18,8 @@ type returnGroup = {
 class groupConversationsAPI extends API {
   public static route = "groupMessage";
 
-  public static async createConversation(group: newGroup) {
-    const res = await this.postRequest("new", group);
+  public static async createConversation(username: string, group: newGroup) {
+    const res = await this.postRequest("new", { ...group, host: username });
     return res;
   }
 

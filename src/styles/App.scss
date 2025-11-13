@@ -65,6 +65,30 @@
     }
   }
 
+  #interests-div {
+    background-color: c.$fourthly;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+    height: 200px;
+    width: auto;
+    overflow: scroll;
+
+    label {
+      display: block;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+      margin-bottom: 5px;
+
+      &:hover {
+        color: c.$secondary;
+      }
+
+      &:active {
+        color: c.$primary;
+      }
+    }
+  }
+
   .form-input,
   .form-textarea,
   #interests-div {

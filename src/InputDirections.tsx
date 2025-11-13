@@ -11,7 +11,9 @@ type Props = {
     | "emailAddress"
     | "biography"
     | "interests"
-    | "content";
+    | "content"
+    | "title"
+    | "description";
   showDirections: string;
   validInputs: validity;
   onBottom: boolean;

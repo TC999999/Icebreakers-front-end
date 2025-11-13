@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
@@ -8,6 +8,7 @@ import interestsAPI from "../../apis/interestsAPI";
 import type { interestMap } from "../../types/interestTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import { setFormLoading } from "../../features/slices/auth";
+import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
 const useCreateGroupForm = () => {
   const username = useAppSelector(
@@ -20,13 +21,25 @@ const useCreateGroupForm = () => {
 
   const initialData: newGroup = {
     title: "",
-    host: username!,
     description: "",
-    interests: {},
+    interests: [],
   };
 
   const [formData, setFormData] = useState<newGroup>(initialData);
   const [interestList, setInterestList] = useState<interestMap>({});
+
+  const originalData = useRef<newGroup>(initialData);
+
+  const {
+    validInputs,
+    showDirections,
+    currentErrorFlash,
+    handleInputValidity,
+    handleSubmitValidity,
+    handleMouseEnter,
+    handleMouseExit,
+    handleClientFlashError,
+  } = useValidInputHandler(originalData.current);
 
   useEffect(() => {
     const getInterests = async () => {
@@ -39,6 +52,7 @@ const useCreateGroupForm = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
+      handleInputValidity(name, value);
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
     [formData]
@@ -46,11 +60,16 @@ const useCreateGroupForm = () => {
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
+      e.preventDefault();
       try {
-        e.preventDefault();
-        dispatch(setFormLoading(true));
-        await groupConversationsAPI.createConversation(formData);
-        navigate("/groups");
+        if (handleSubmitValidity()) {
+          dispatch(setFormLoading(true));
+          if (username)
+            await groupConversationsAPI.createConversation(username, formData);
+          navigate("/groups");
+        } else {
+          handleClientFlashError();
+        }
       } catch (err) {
         console.log(err);
       } finally {
@@ -63,19 +82,18 @@ const useCreateGroupForm = () => {
   const handleCheckBox = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = e.target;
+
+      let newInterests = [...formData.interests];
       if (checked) {
-        setFormData((prev) => ({
-          ...prev,
-          interests: {
-            ...prev.interests,
-            [value]: interestList[value],
-          },
-        }));
+        newInterests.push(parseFloat(value));
       } else {
-        let newInterestList = { ...formData.interests };
-        delete newInterestList[value];
-        setFormData((prev) => ({ ...prev, interests: newInterestList }));
+        newInterests = newInterests.filter((i) => {
+          return i !== parseFloat(value);
+        });
       }
+      handleInputValidity("interests", newInterests);
+
+      setFormData((prev) => ({ ...prev, interests: newInterests }));
     },
     [formData]
   );
@@ -83,9 +101,14 @@ const useCreateGroupForm = () => {
   return {
     formData,
     interestList,
+    validInputs,
+    showDirections,
+    currentErrorFlash,
     handleChange,
     handleCheckBox,
     handleSubmit,
+    handleMouseEnter,
+    handleMouseExit,
   };
 };
 

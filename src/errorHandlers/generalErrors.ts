@@ -82,3 +82,31 @@ export const setContentValidity = (
     },
   }));
 };
+
+export const setTitleValidity = (
+  value: string,
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
+): void => {
+  setter((prev) => ({
+    ...prev,
+    title: {
+      ...prev.title,
+      lengthValid: value.length > 5 && value.length < 30,
+      characterValid: /^[\w ]+$/i.test(value),
+    },
+  }));
+};
+
+export const setDescriptionValidity = (
+  value: string,
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
+): void => {
+  setter((prev) => ({
+    ...prev,
+    description: {
+      ...prev.description,
+      lengthValid: value.length > 20 && value.length < 200,
+      characterValid: /^[\w.,?!/& ]+$/i.test(value),
+    },
+  }));
+};

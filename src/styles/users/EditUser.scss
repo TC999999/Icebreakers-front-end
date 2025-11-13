@@ -20,20 +20,6 @@
     padding: 20px;
     background-color: c.$thirdly;
 
-    #interests-div {
-      text-align: center;
-      background-color: white;
-      border: s.$borderSettings c.$secondary;
-      border-radius: s.$borderRadius;
-      height: 150px;
-      overflow: scroll;
-
-      div.interest-check {
-        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-          "Lucida Sans", Arial, sans-serif;
-      }
-    }
-
     #buttons-row {
       display: flex;
       justify-content: space-evenly;

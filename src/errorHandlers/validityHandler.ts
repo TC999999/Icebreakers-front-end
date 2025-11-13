@@ -6,6 +6,8 @@ import {
   setBiographyValidity,
   setInterestsValidity,
   setContentValidity,
+  setTitleValidity,
+  setDescriptionValidity,
 } from "./generalErrors";
 
 type errorInput = {
@@ -37,6 +39,12 @@ export const inputValidityHandler = ({ name, value, setter }: errorInput) => {
       break;
     case "content":
       if (typeof value === "string") setContentValidity(value, setter);
+      break;
+    case "title":
+      if (typeof value === "string") setTitleValidity(value, setter);
+      break;
+    case "description":
+      if (typeof value === "string") setDescriptionValidity(value, setter);
       break;
     default:
       break;

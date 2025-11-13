@@ -18,25 +18,5 @@
     padding: 20px;
     border: s.$borderSettings c.$secondary;
     border-radius: s.$borderRadius;
-
-    textarea {
-      padding: 10px;
-      border: s.$borderSettings c.$secondary;
-      border-radius: s.$borderRadius;
-    }
-
-    #interests-checklist {
-      background-color: white;
-      border: s.$borderSettings c.$secondary;
-      border-radius: s.$borderRadius;
-      height: 200px;
-      overflow: scroll;
-
-      div.interest-check {
-        list-style-type: none;
-        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-          "Lucida Sans", Arial, sans-serif;
-      }
-    }
   }
 }
