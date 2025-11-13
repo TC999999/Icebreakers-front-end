@@ -68,3 +68,17 @@ export const setInterestsValidity = (
     },
   }));
 };
+
+export const setContentValidity = (
+  value: string,
+  setter: React.Dispatch<React.SetStateAction<validityTypes>>
+): void => {
+  setter((prev) => ({
+    ...prev,
+    content: {
+      ...prev.content,
+      lengthValid: value.length > 20 && value.length < 200,
+      characterValid: /^[\w.,?!/& ]+$/i.test(value),
+    },
+  }));
+};

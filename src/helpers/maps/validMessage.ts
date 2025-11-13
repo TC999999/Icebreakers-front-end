@@ -23,7 +23,12 @@ export const validMessages: validMessageMap = {
       "Biography may only contain letters, numbers, spaces, and the following special characters (?, !, ., ,, &, /)",
   },
   interests: {
-    lengthValid: " Please select at least one of the interests on the list.",
+    lengthValid: "Please select at least one of the interests on the list.",
+  },
+  content: {
+    lengthValid: "Message must be between 20-200 characters.",
+    characterValid:
+      "Message may only contain letters, numbers, spaces, and the following special characters (?, !, ., ,, &, /)",
   },
 };
 
@@ -39,6 +44,9 @@ export const validityCheckersFalse: validityTypes = {
   biography: generalValidityFalse,
   interests: { lengthValid: false },
   favoriteColor: { lengthValid: false },
+  content: generalValidityFalse,
+  to: generalValidityFalse,
+  from: generalValidityFalse,
 };
 
 let generalValidityTrue: validity = { lengthValid: true, characterValid: true };
@@ -50,4 +58,7 @@ export const validityCheckersTrue: validityTypes = {
   biography: generalValidityTrue,
   interests: { lengthValid: true },
   favoriteColor: { lengthValid: true },
+  content: generalValidityTrue,
+  to: generalValidityTrue,
+  from: generalValidityTrue,
 };

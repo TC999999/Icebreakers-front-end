@@ -2,12 +2,22 @@ import { type JSX } from "react";
 import { type directConversationRequestPair } from "../types/requestTypes";
 import useRequestForm from "./hooks/useRequestForm";
 import "../styles/requests/RequestForm.scss";
+import InputDirections from "../InputDirections";
 
 const RequestForm: React.FC<directConversationRequestPair> = ({
   to,
   from,
 }): JSX.Element => {
-  const { requestData, handleChange, handleSubmit } = useRequestForm(to, from);
+  const {
+    requestData,
+    validInputs,
+    showDirections,
+    currentErrorFlash,
+    handleChange,
+    handleSubmit,
+    handleMouseEnter,
+    handleMouseExit,
+  } = useRequestForm(to, from);
   return (
     <div id="direct-conversation-request-form">
       <form onSubmit={handleSubmit}>
@@ -19,14 +29,24 @@ const RequestForm: React.FC<directConversationRequestPair> = ({
           <textarea
             name="content"
             id="content"
-            className="form-textarea"
+            className={`form-textarea ${
+              currentErrorFlash.content ? "error-flash" : ""
+            }`}
             onChange={handleChange}
             value={requestData.content}
-            required
             placeholder="Type a friendly message here"
             maxLength={100}
             rows={10}
             cols={40}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseExit}
+          />
+
+          <InputDirections
+            type="content"
+            validInputs={validInputs.content}
+            showDirections={showDirections}
+            onBottom={true}
           />
         </div>
         <button className="submit-button">Make Request!</button>

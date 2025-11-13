@@ -10,7 +10,6 @@ import type { FormData } from "../types/miscTypes";
 const useValidInputHandler = (inputs: FormData = {}) => {
   const [validInputs, setValidInputs] = useState<validityTypes>({});
   const [currentErrorFlash, setCurrentErrorFlash] = useState<validity>({});
-
   const [initialErrorFlash, setInitialErrorFlash] = useState<validity>({});
   const [showDirections, setShowDirections] = useState<string>("");
 

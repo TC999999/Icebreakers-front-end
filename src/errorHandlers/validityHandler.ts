@@ -5,6 +5,7 @@ import {
   setEmailValidity,
   setBiographyValidity,
   setInterestsValidity,
+  setContentValidity,
 } from "./generalErrors";
 
 type errorInput = {
@@ -33,6 +34,9 @@ export const inputValidityHandler = ({ name, value, setter }: errorInput) => {
 
     case "interests":
       if (typeof value !== "string") setInterestsValidity(value, setter);
+      break;
+    case "content":
+      if (typeof value === "string") setContentValidity(value, setter);
       break;
     default:
       break;

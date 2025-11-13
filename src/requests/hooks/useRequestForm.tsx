@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { type directConversationRequest } from "../../types/requestTypes";
 import { useAppDispatch } from "../../features/hooks";
@@ -6,6 +6,7 @@ import { type AppDispatch } from "../../features/store";
 import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 import directRequestsAPI from "../../apis/directRequestsAPI";
+import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
 const useRequestForm = (
   requestedUserInput: string,
@@ -22,6 +23,19 @@ const useRequestForm = (
   const [requestData, setRequestData] =
     useState<directConversationRequest>(initialData);
 
+  const originalData = useRef<directConversationRequest>(initialData);
+
+  const {
+    validInputs,
+    showDirections,
+    currentErrorFlash,
+    handleMouseEnter,
+    handleMouseExit,
+    handleInputValidity,
+    handleSubmitValidity,
+    handleClientFlashError,
+  } = useValidInputHandler(originalData.current);
+
   useEffect(() => {
     const setUsers = () => {
       setRequestData((prev) => ({
@@ -37,6 +51,7 @@ const useRequestForm = (
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
       const { name, value } = e.target;
+      handleInputValidity(name, value);
       setRequestData((prev) => ({ ...prev, [name]: value }));
     },
     [requestData]
@@ -46,17 +61,21 @@ const useRequestForm = (
     async (e: React.FormEvent): Promise<void> => {
       e.preventDefault();
       try {
-        dispatch(setFormLoading(true));
-        const { request } =
-          await directRequestsAPI.makeDirectConversationRequest(requestData);
+        if (handleSubmitValidity()) {
+          dispatch(setFormLoading(true));
+          const { request } =
+            await directRequestsAPI.makeDirectConversationRequest(requestData);
 
-        socket.emit("addRequest", {
-          requestType: "direct-requests-received",
-          countType: "receivedDirectRequestCount",
-          to: requestData.to,
-          request,
-        });
-        navigate(`/user/${requestData.to}`);
+          socket.emit("addRequest", {
+            requestType: "direct-requests-received",
+            countType: "receivedDirectRequestCount",
+            to: requestData.to,
+            request,
+          });
+          navigate(`/user/${requestData.to}`);
+        } else {
+          handleClientFlashError();
+        }
       } catch (err: any) {
         dispatch(setLoadError(JSON.parse(err)));
       } finally {
@@ -66,7 +85,16 @@ const useRequestForm = (
     [requestData]
   );
 
-  return { requestData, handleChange, handleSubmit };
+  return {
+    validInputs,
+    showDirections,
+    requestData,
+    currentErrorFlash,
+    handleChange,
+    handleSubmit,
+    handleMouseEnter,
+    handleMouseExit,
+  };
 };
 
 export default useRequestForm;

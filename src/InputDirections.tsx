@@ -5,7 +5,13 @@ import type { validity } from "./types/errorsTypes";
 import { validMessages } from "./helpers/maps/validMessage";
 
 type Props = {
-  type: "username" | "password" | "emailAddress" | "biography" | "interests";
+  type:
+    | "username"
+    | "password"
+    | "emailAddress"
+    | "biography"
+    | "interests"
+    | "content";
   showDirections: string;
   validInputs: validity;
   onBottom: boolean;
