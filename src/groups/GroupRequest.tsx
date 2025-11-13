@@ -1,8 +1,19 @@
 import useGroupRequest from "./hooks/useGroupRequest";
 import "../styles/groups/GroupRequest.scss";
+import InputDirections from "../InputDirections";
 
 const GroupRequest = () => {
-  const { formData, groupData, handleChange, handleSubmit } = useGroupRequest();
+  const {
+    formData,
+    groupData,
+    validInputs,
+    showDirections,
+    currentErrorFlash,
+    handleChange,
+    handleSubmit,
+    handleMouseEnter,
+    handleMouseExit,
+  } = useGroupRequest();
   return (
     <main id="group-request-form-page">
       <header>
@@ -23,13 +34,23 @@ const GroupRequest = () => {
             <textarea
               name="content"
               id="content"
+              className={`form-textarea ${
+                currentErrorFlash.content ? "error-flash" : ""
+              }`}
               cols={50}
               rows={10}
               placeholder={`What do you want ${groupData.host} to know about yourself?`}
               value={formData.content}
               onChange={handleChange}
-              required
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseExit}
             ></textarea>
+            <InputDirections
+              type="content"
+              validInputs={validInputs.content}
+              showDirections={showDirections}
+              onBottom={true}
+            />
           </div>
           <div id="button-div">
             <button className="submit-button">Send Request</button>

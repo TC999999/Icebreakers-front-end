@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { groupRequestFormData } from "../../types/requestTypes";
 import type { groupName } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../features/hooks";
 import { setFormLoading } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
+import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
 const useGroupRequest = () => {
   const { id } = useParams();
@@ -23,10 +24,23 @@ const useGroupRequest = () => {
     title: "",
     host: "",
   });
+  const originalData = useRef<groupRequestFormData>(initialData);
+
+  const {
+    validInputs,
+    showDirections,
+    currentErrorFlash,
+    handleInputValidity,
+    handleSubmitValidity,
+    handleMouseEnter,
+    handleMouseExit,
+    handleClientFlashError,
+  } = useValidInputHandler(originalData.current);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const { name, value } = e.target;
+      handleInputValidity(name, value);
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
     [formData]
@@ -54,16 +68,20 @@ const useGroupRequest = () => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       try {
-        dispatch(setFormLoading(true));
-        if (id) {
-          const request = await groupRequestsAPI.sendRequest(id, formData);
-          socket.emit("addRequest", {
-            requestType: "group-requests-received",
-            countType: "receivedGroupRequestCount",
-            request,
-            to: request.to,
-          });
-          navigate(`/groups/${id}`);
+        if (handleSubmitValidity()) {
+          dispatch(setFormLoading(true));
+          if (id) {
+            const request = await groupRequestsAPI.sendRequest(id, formData);
+            socket.emit("addRequest", {
+              requestType: "group-requests-received",
+              countType: "receivedGroupRequestCount",
+              request,
+              to: request.to,
+            });
+            navigate(`/groups/${id}`);
+          }
+        } else {
+          handleClientFlashError();
         }
       } catch (err) {
         console.log(err);
@@ -74,7 +92,17 @@ const useGroupRequest = () => {
     [formData]
   );
 
-  return { formData, groupData, handleChange, handleSubmit };
+  return {
+    formData,
+    groupData,
+    validInputs,
+    showDirections,
+    currentErrorFlash,
+    handleChange,
+    handleSubmit,
+    handleMouseEnter,
+    handleMouseExit,
+  };
 };
 
 export default useGroupRequest;
