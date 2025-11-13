@@ -28,12 +28,11 @@ const GroupSearchPage = () => {
               <div
                 title="title"
                 id="group-search-title-div"
-                className="input-div form-div"
+                className="input-div"
                 onFocus={handleDivFocus}
                 onBlur={handleDivBlur}
                 tabIndex={0}
               >
-                <label htmlFor="title">Search By Group Names</label>
                 <input
                   className={
                     showResults === "title" && groupSearchResults.length > 0
@@ -71,12 +70,11 @@ const GroupSearchPage = () => {
               <div
                 title="host"
                 id="group-host-title-div"
-                className="input-div form-div"
+                className="input-div"
                 onFocus={handleDivFocus}
                 onBlur={handleDivBlur}
                 tabIndex={0}
               >
-                <label htmlFor="host">Search By Group Hosts</label>
                 <input
                   className={
                     showResults === "host" && hostSearchResults.length > 0
@@ -114,12 +112,11 @@ const GroupSearchPage = () => {
               <div
                 title="user"
                 id="user-search-title-div"
-                className="input-div form-div"
+                className="input-div"
                 onFocus={handleDivFocus}
                 onBlur={handleDivBlur}
                 tabIndex={0}
               >
-                <label htmlFor="user">Search By Group Members</label>
                 <input
                   className={
                     showResults === "user" && userSearchResults.length > 0
