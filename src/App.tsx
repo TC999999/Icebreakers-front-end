@@ -5,6 +5,8 @@ import LoadingSmall from "./LoadingSmall";
 import useApp from "./appHooks/useApp";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import "react-toastify/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "./styles/App.scss";
 
 function App() {
@@ -21,6 +23,13 @@ function App() {
         <NavBar />
         <LoadingLarge />
         <LoadingSmall />
+        <ToastContainer
+          position="top-right"
+          newestOnTop={true}
+          closeOnClick={true}
+          hideProgressBar
+          pauseOnFocusLoss
+        />
         <RouteList />
       </SkeletonTheme>
     </div>

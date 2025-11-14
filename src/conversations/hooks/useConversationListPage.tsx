@@ -14,9 +14,11 @@ import directConversationsAPI from "../../apis/directConversationsAPI";
 import socket from "../../helpers/socket";
 import savedMessages from "../../helpers/maps/savedMessages";
 import { shallowEqual } from "react-redux";
+import { toast } from "react-toastify";
 
 const useConversationListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const notify = (message: string) => toast.error(message);
   const username = useAppSelector((store) => {
     return store.user.user?.username;
   }, shallowEqual);
@@ -379,8 +381,8 @@ const useConversationListPage = () => {
           to: currentConversation.recipient,
           isTyping: false,
         });
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        notify(err.message);
       }
     },
     [messageInput]

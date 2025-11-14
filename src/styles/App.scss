@@ -1,6 +1,10 @@
 @use "colors" as c;
 @use "settings" as s;
 
+.toast-content {
+  background-color: red;
+}
+
 .form-div {
   text-align: center;
   display: flex;

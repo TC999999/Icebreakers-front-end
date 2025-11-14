@@ -398,9 +398,6 @@ const useRequestListPage = () => {
       );
 
       dispatch(setUnansweredRequests(-1));
-      socket.emit("updateUnansweredRequests", {
-        change: -1,
-      });
     },
     [currentRequests, dispatch]
   );
@@ -431,9 +428,6 @@ const useRequestListPage = () => {
       );
 
       dispatch(setUnansweredRequests(-1));
-      socket.emit("updateUnansweredRequests", {
-        change: -1,
-      });
 
       if (res.user) {
         socket.emit("joinGroup", { group: { id: response.groupID } });
@@ -468,9 +462,6 @@ const useRequestListPage = () => {
       );
 
       dispatch(setUnansweredRequests(-1));
-      socket.emit("updateUnansweredRequests", {
-        change: -1,
-      });
 
       if (res.user) {
         socket.emit("bringIntoGroup", {

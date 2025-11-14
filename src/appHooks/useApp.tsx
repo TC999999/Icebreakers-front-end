@@ -10,9 +10,15 @@ import {
   setUnreadMessages,
 } from "../features/slices/auth";
 import { shallowEqual } from "react-redux";
+import { toast } from "react-toastify";
+import CustomToastContent from "../ToastContent";
+import type { ToastProps } from "../types/miscTypes";
 
 const useApp = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const notify = ({ message, from }: ToastProps) => {
+    toast(<CustomToastContent message={message} from={from} />);
+  };
   const user: UserState | null = useAppSelector((store) => {
     return store.user.user;
   }, shallowEqual);
@@ -34,9 +40,14 @@ const useApp = () => {
         dispatch(setUnreadMessages(1));
       });
 
+      socket.on("notify", ({ message, from }) => {
+        notify({ message, from });
+      });
+
       return () => {
         socket.off("updateUnansweredRequests");
         socket.off("increaseUnreadMessages");
+        socket.off("notify");
       };
     }
   }, [user]);

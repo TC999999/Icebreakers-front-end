@@ -69,6 +69,7 @@ const useRequestCard = ({
         from: request.from,
         to: username!,
         groupID: request.groupID,
+        groupTitle: request.groupTitle,
         accepted,
       });
     } else if (
@@ -80,6 +81,7 @@ const useRequestCard = ({
         id: request.id,
         from: request.from,
         groupID: request.groupID,
+        groupTitle: request.groupTitle,
         accepted,
       });
     }

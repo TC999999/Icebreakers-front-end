@@ -66,6 +66,7 @@ export type groupConversationResponse = {
   from: string;
   groupID: string;
   to: string;
+  groupTitle: string;
   accepted: boolean;
 };
 
@@ -73,6 +74,7 @@ export type groupRequestResponse = {
   id: string;
   from: string;
   groupID: string;
+  groupTitle: string;
   accepted: boolean;
 };
 

@@ -40,6 +40,7 @@ const RequestForm: React.FC<directConversationRequestPair> = ({
             cols={40}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseExit}
+            autoComplete="off"
           />
 
           <InputDirections
