@@ -10,7 +10,7 @@
   }
 
   #conversation-list {
-    height: 600px;
+    height: 800px;
     border: s.$borderSettings c.$primary;
     #conversation-list-window {
       width: 100%;
@@ -23,12 +23,6 @@
         width: 80%;
         height: 100%;
         position: relative;
-        #conversation-messages {
-          height: 94%;
-          overflow-y: scroll;
-          display: flex;
-          flex-direction: column;
-        }
 
         #messages-header {
           background-color: c.$primary;
@@ -37,6 +31,7 @@
           z-index: 2;
           padding: 0;
           font-weight: bold;
+          height: auto;
 
           #online-status {
             display: inline-block;
@@ -67,11 +62,19 @@
           }
         }
 
+        #conversation-messages {
+          height: 90%;
+          overflow-y: scroll;
+          display: flex;
+          flex-direction: column;
+        }
+
         #typing-message {
           background-color: c.$primary;
           border: s.$borderSettings;
           border-radius: s.$borderRadius;
           width: 30%;
+          margin: 0;
           position: absolute;
           padding: 2px;
           left: 1px;
@@ -99,15 +102,27 @@
         }
 
         #conversation-message-input {
-          height: 5.5%;
-          padding-top: 5px;
+          height: 10%;
           background-color: c.$primary;
+          display: flex;
+          align-items: center;
 
-          input {
-            width: 80%;
-            padding: 5px;
-            border: s.$borderSettings c.$secondary;
-            border-radius: s.$borderRadius;
+          form#send-message-form {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            #message-div {
+              width: 100%;
+
+              input {
+                width: 80%;
+                padding: 5px;
+                border: s.$borderSettings c.$secondary;
+                border-radius: s.$borderRadius;
+              }
+            }
           }
         }
       }

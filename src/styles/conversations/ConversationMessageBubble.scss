@@ -1,17 +1,6 @@
 @use "../colors" as c;
 @use "../settings" as s;
 
-// @keyframes bubbleEntrance {
-//   0% {
-//     opacity: 0;
-//     transform: translateX(-100%);
-//   }
-//   100% {
-//     opacity: 1;
-//     transform: translateX(0%);
-//   }
-// }
-
 @keyframes otherBubbleEntrance {
   0% {
     opacity: 0;
@@ -37,7 +26,7 @@
 .direct-message-bubble {
   width: 30%;
   padding: 10px;
-  margin: 12px;
+  margin: 15px;
   position: relative;
 
   &.self-bubble {
@@ -60,9 +49,9 @@
   width: 0;
   height: 0;
   position: absolute;
-  top: 77%;
-  left: 70%;
-  border-top: 20px solid transparent;
+  bottom: -30px;
+  right: 10%;
+  border-top: 20px solid blue;
   border-bottom: 20px solid transparent;
   border-left: 20px solid transparent;
   border-right: 20px solid blue;
@@ -74,8 +63,8 @@
   width: 0;
   height: 0;
   position: absolute;
-  top: 77%;
-  right: 70%;
+  bottom: -30px;
+  left: 10%;
   border-top: 20px solid white;
   border-bottom: 20px solid transparent;
   border-left: 20px solid white;

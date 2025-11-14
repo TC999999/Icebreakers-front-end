@@ -4,6 +4,7 @@ import ConversationTab from "./ConversationTab";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
 import EditConversation from "./EditConversation";
+import { FaArrowUp } from "react-icons/fa";
 
 const ConversationListPage = () => {
   const {
@@ -116,21 +117,32 @@ const ConversationListPage = () => {
             )}
 
             <div id="conversation-message-input">
-              <form onSubmit={handleSend}>
-                <input
-                  type="text"
-                  id="content"
-                  name="content"
-                  value={messageInput.content}
-                  onChange={handleChangeInput}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  placeholder="Type a message here"
-                  disabled={currentConversation.id.length === 0}
-                />
-                <button disabled={currentConversation.id.length === 0}>
-                  Send
-                </button>
+              <form id="send-message-form" onSubmit={handleSend}>
+                <div id="message-div" className="form-div">
+                  <textarea
+                    id="content"
+                    name="content"
+                    className="form-input"
+                    value={messageInput.content}
+                    onChange={handleChangeInput}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    rows={5}
+                    cols={40}
+                    placeholder="Type a message here"
+                    disabled={currentConversation.id.length === 0}
+                    autoComplete="off"
+                  ></textarea>
+                </div>
+                <div>
+                  <button
+                    title="Send Message"
+                    className="send-button"
+                    disabled={currentConversation.id.length === 0}
+                  >
+                    <FaArrowUp />
+                  </button>
+                </div>
               </form>
             </div>
           </div>

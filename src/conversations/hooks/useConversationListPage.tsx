@@ -260,7 +260,7 @@ const useConversationListPage = () => {
   // handles change event on message input, also lets other user know
   // if user is typing something
   const handleChangeInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
+    (e: React.FocusEvent<HTMLTextAreaElement>): void => {
       let { name, value } = e.target;
       setMessageInput((prev) => ({ ...prev, [name]: value }));
       if (currentConversation.id.length > 0 && value.length > 0) {
@@ -283,7 +283,11 @@ const useConversationListPage = () => {
   );
 
   const handleFocus = useCallback(
-    (e: React.FocusEvent<HTMLInputElement>) => {
+    (
+      e:
+        | React.FocusEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLTextAreaElement>
+    ) => {
       e.preventDefault();
       if (
         currentConversation.id.length > 0 &&
@@ -301,7 +305,11 @@ const useConversationListPage = () => {
   );
 
   const handleBlur = useCallback(
-    (e: React.FocusEvent<HTMLInputElement>) => {
+    (
+      e:
+        | React.FocusEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLTextAreaElement>
+    ) => {
       e.preventDefault();
       if (currentConversation.id.length > 0) {
         socket.emit("isTyping", {
