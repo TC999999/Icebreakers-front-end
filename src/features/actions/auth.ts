@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import socket, { setUpSocket } from "../../helpers/socket";
 
+// redux thunk function to create a new account
 export const RegisterUser = createAsyncThunk<UserState, Register>(
   "auth/login",
   async (
@@ -29,6 +30,8 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
         withCredentials: true,
       });
 
+      setUpSocket(socket);
+
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
@@ -36,6 +39,7 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
   }
 );
 
+// redux thunk function to create a new account
 export const LogInUser = createAsyncThunk<UserState, LogIn>(
   "auth/login",
   async (userInfo: LogIn = { username: "", password: "" }, thunkAPI) => {

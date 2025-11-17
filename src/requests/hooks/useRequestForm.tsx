@@ -29,8 +29,8 @@ const useRequestForm = (
     validInputs,
     showDirections,
     currentErrorFlash,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsBlur,
+    handleDirectionsFocus,
     handleInputValidity,
     handleSubmitValidity,
     handleClientFlashError,
@@ -92,8 +92,8 @@ const useRequestForm = (
     currentErrorFlash,
     handleChange,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsBlur,
   };
 };
 

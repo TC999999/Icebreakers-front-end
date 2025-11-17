@@ -15,8 +15,8 @@ const RequestForm: React.FC<directConversationRequestPair> = ({
     currentErrorFlash,
     handleChange,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsBlur,
   } = useRequestForm(to, from);
   return (
     <div id="direct-conversation-request-form">
@@ -38,8 +38,8 @@ const RequestForm: React.FC<directConversationRequestPair> = ({
             maxLength={100}
             rows={10}
             cols={40}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseExit}
+            onFocus={handleDirectionsFocus}
+            onBlur={handleDirectionsBlur}
             autoComplete="off"
           />
 

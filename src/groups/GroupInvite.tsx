@@ -11,8 +11,10 @@ const GroupInvite = () => {
     currentErrorFlash,
     handleChange,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
   } = useGroupInvite();
 
   return (
@@ -25,6 +27,9 @@ const GroupInvite = () => {
           <div className="form-div">
             <label htmlFor="content">
               Type a friendly message to {formData.to}:
+              <span title="required field" className="required">
+                *
+              </span>
             </label>
             <textarea
               name="content"
@@ -38,8 +43,8 @@ const GroupInvite = () => {
               placeholder={`Type what you want ${formData.to} to know`}
               value={formData.content}
               onChange={handleChange}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseExit}
+              onFocus={handleDirectionsFocus}
+              onBlur={handleDirectionsBlur}
             ></textarea>
             <InputDirections
               type="content"
@@ -51,18 +56,23 @@ const GroupInvite = () => {
           <div
             id="group"
             className="form-div"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseExit}
+            onMouseEnter={handleDirectionsEnter}
+            onMouseLeave={handleDirectionsExit}
           >
             <fieldset
               id="group-radio-div"
               className={currentErrorFlash.group ? "error-flash" : ""}
             >
-              <legend>Which Group Are You Inviting Them Into?</legend>
+              <legend>
+                Which Group Are You Inviting Them Into?{" "}
+                <span title="required field" className="required">
+                  *
+                </span>
+              </legend>
               {groupList.map((g) => {
                 return (
                   <div key={g.id} className="radio-div">
-                    <label htmlFor="group">
+                    <label htmlFor={`group-radio-${g.id}`}>
                       {g.title}
                       <input
                         type="radio"

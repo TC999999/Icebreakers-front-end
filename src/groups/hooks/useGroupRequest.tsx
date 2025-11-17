@@ -32,8 +32,8 @@ const useGroupRequest = () => {
     currentErrorFlash,
     handleInputValidity,
     handleSubmitValidity,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsBlur,
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
@@ -100,8 +100,8 @@ const useGroupRequest = () => {
     currentErrorFlash,
     handleChange,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsBlur,
   };
 };
 

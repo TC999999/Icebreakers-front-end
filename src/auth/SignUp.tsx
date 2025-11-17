@@ -3,6 +3,7 @@ import useSignUp from "./hooks/useSignUp";
 import "../styles/auth/SignUp.scss";
 import InputDirections from "../InputDirections";
 
+// Sign up page form component
 const SignUp = (): JSX.Element => {
   const {
     formData,
@@ -13,8 +14,10 @@ const SignUp = (): JSX.Element => {
     serverError,
     handleChange,
     handleCheckbox,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
     handleSubmit,
   } = useSignUp();
   return (
@@ -43,8 +46,8 @@ const SignUp = (): JSX.Element => {
                   value={formData.username}
                   onChange={handleChange}
                   autoComplete="off"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseExit}
+                  onFocus={handleDirectionsFocus}
+                  onBlur={handleDirectionsBlur}
                 />
                 <InputDirections
                   type="username"
@@ -71,8 +74,8 @@ const SignUp = (): JSX.Element => {
                   value={formData.password}
                   onChange={handleChange}
                   autoComplete="off"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseExit}
+                  onFocus={handleDirectionsFocus}
+                  onBlur={handleDirectionsBlur}
                 />
                 <InputDirections
                   type="password"
@@ -99,8 +102,8 @@ const SignUp = (): JSX.Element => {
                   value={formData.emailAddress}
                   onChange={handleChange}
                   autoComplete="off"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseExit}
+                  onFocus={handleDirectionsFocus}
+                  onBlur={handleDirectionsBlur}
                 />
 
                 <InputDirections
@@ -118,8 +121,8 @@ const SignUp = (): JSX.Element => {
                   type="color"
                   value={formData.favoriteColor}
                   onChange={handleChange}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseExit}
+                  onFocus={handleDirectionsFocus}
+                  onBlur={handleDirectionsBlur}
                 />
               </div>
             </div>
@@ -144,8 +147,8 @@ const SignUp = (): JSX.Element => {
                   rows={10}
                   cols={40}
                   autoComplete="off"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseExit}
+                  onFocus={handleDirectionsFocus}
+                  onBlur={handleDirectionsBlur}
                 />
                 <InputDirections
                   type="biography"
@@ -157,8 +160,8 @@ const SignUp = (): JSX.Element => {
               <div
                 className="form-div"
                 id="interests"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseExit}
+                onMouseEnter={handleDirectionsEnter}
+                onMouseLeave={handleDirectionsExit}
               >
                 <fieldset
                   id="interests-div"

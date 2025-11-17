@@ -1,6 +1,7 @@
 import "../styles/conversations/ConversationLoading.scss";
 import { FaHourglass } from "react-icons/fa6";
 
+// window to show for loading messages for a conversation
 const ConversationLoading = () => {
   return (
     <div id="conversation-messages-loading-window">

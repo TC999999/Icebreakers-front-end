@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 import CustomToastContent from "../ToastContent";
 import type { ToastProps } from "../types/miscTypes";
 
+// basic app hook that handles basic notifications, user info retrieval and redux state setting, and
+// unanswered message/request count on initial rendering of app
 const useApp = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const notify = ({ message, from }: ToastProps) => {

@@ -16,6 +16,7 @@ import savedMessages from "../../helpers/maps/savedMessages";
 import { shallowEqual } from "react-redux";
 import { toast } from "react-toastify";
 
+// hook for direct conversation page
 const useConversationListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const notify = (message: string) => toast.error(message);
@@ -85,7 +86,7 @@ const useConversationListPage = () => {
     }
   }, [dispatch]);
 
-  // // lets user know when other user in the conversation is online
+  // lets user know when other user in the conversation is online
   useEffect(() => {
     socket.on("isOnline", ({ user, isOnline }) => {
       if (user === currentConversation.recipient) {
@@ -167,7 +168,8 @@ const useConversationListPage = () => {
     };
   }, []);
 
-  // handles when a user edits the title of a conversation
+  // handles when a user edits the title of a conversation: when one user updates title,
+  // sends socket signal to other user that also updates title
   useEffect(() => {
     socket.on("editConversation", ({ conversation }) => {
       const newConversations = conversations.map((c) => {
@@ -188,7 +190,8 @@ const useConversationListPage = () => {
     };
   }, [conversations, currentConversation]);
 
-  // handles when a user changes conversation tabs: if conversation has unread messages, clears unread message number and subtracts
+  // handles when a user changes conversation tabs: if conversation has unread messages,
+  // clears unread message number and subtracts
   // that amount from total number of unread messages, also changes online status of other user
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
@@ -247,6 +250,9 @@ const useConversationListPage = () => {
     ]
   );
 
+  // toggles showing form to edit current conversation title (document.activeElement.blur() is
+  // to prevent user from accidentally closing the form by any enter key misclicks on keyboard
+  // before changing input value)
   const toggleEditForm = useCallback(
     (
       e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent
@@ -284,6 +290,8 @@ const useConversationListPage = () => {
     [messageInput, currentConversation]
   );
 
+  // when user types at least one character into message input, sends socket signal to other user
+  // in conversation to let them know you are preparing a message for them
   const handleFocus = useCallback(
     (
       e:
@@ -306,6 +314,8 @@ const useConversationListPage = () => {
     [messageInput]
   );
 
+  // when user clicks off of message input, sends socket signal to other user
+  // in conversation to let them know you are not typing anymore
   const handleBlur = useCallback(
     (
       e:
@@ -325,6 +335,8 @@ const useConversationListPage = () => {
     [messageInput]
   );
 
+  // when user updates conversation title, updates conversation tab list to show new title and
+  // updates title in header as well
   const updateConversations = useCallback(
     (newConversation: returnUpdateConversation) => {
       const newConversations = conversations.map((c) => {
@@ -352,12 +364,11 @@ const useConversationListPage = () => {
         if (!messageInput.content) {
           throw new Error("message cannot be empty");
         }
-        const { message, otherUser } =
-          await directConversationsAPI.createMessage(
-            messageInput,
-            username!,
-            currentConversation.id
-          );
+        const { message } = await directConversationsAPI.createMessage(
+          messageInput,
+          username!,
+          currentConversation.id
+        );
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
@@ -373,7 +384,7 @@ const useConversationListPage = () => {
         socket.emit("directMessage", {
           message,
           id: currentConversation.id,
-          to: otherUser.username,
+          to: currentConversation.recipient,
         });
         socket.emit("isTyping", {
           otherUser: username,

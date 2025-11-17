@@ -25,6 +25,7 @@ const ConversationListPage = () => {
     updateConversations,
   } = useConversationListPage();
 
+  // component for conversation page: including tab list, message window, and message input
   return (
     <main id="conversations-list-page">
       <EditConversation

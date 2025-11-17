@@ -1,3 +1,5 @@
+// helper function for nav bar to switch which navbar link should be highlighted based on current
+// location path name
 const selectNav = (pathName: string, username?: string): string => {
   switch (pathName) {
     case "/conversations":

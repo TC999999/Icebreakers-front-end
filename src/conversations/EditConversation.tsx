@@ -15,6 +15,7 @@ type Props = {
   updateConversations: (newConversation: returnUpdateConversation) => void;
 };
 
+// form component for editing a single conversation's title
 const EditConversation: React.FC<Props> = ({
   show,
   currentConversation,

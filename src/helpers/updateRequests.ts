@@ -12,6 +12,8 @@ import type {
 
 export type addOrRemove = "add" | "remove";
 
+// updates request count state in request inbox component based on add and sub paramters in request
+// change input
 export const updateRequestCount = (
   requestChange: requestCountChange,
   requestCountSetter: React.Dispatch<React.SetStateAction<requestCount>>
@@ -48,6 +50,8 @@ export const updateRequestCount = (
   }
 };
 
+// updates request list state in currently selected inbox to either add, remove, or both add and
+// remove requests from inbox
 export const updateSentRequests = (
   request:
     | sentRequestCard

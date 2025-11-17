@@ -3,7 +3,8 @@ import { API_URL } from "../config";
 
 export type method = "get" | "post" | "patch" | "delete";
 
-// used for requests that don't require changes to redux state
+// universal function for making axios CRUD requests: used only for requests that don't
+// require changes to redux state (not used for registration, login, or logout)
 async function request(
   route: string,
   endpoint: string = "",

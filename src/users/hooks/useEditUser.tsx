@@ -32,8 +32,10 @@ const useEditUser = () => {
     validInputs,
     currentErrorFlash,
     showDirections,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
     handleInputValidity,
     handleClientFlashError,
     handleServerFlashError,
@@ -77,7 +79,6 @@ const useEditUser = () => {
       e.preventDefault();
       try {
         if (handleSubmitValidity()) {
-          // console.log("NO ERRORS HERE");
           if (username) {
             const { newFavoriteColor } = await userAPI.editUser(
               username,
@@ -90,7 +91,6 @@ const useEditUser = () => {
             navigate(`/user/${username}`);
           }
         } else {
-          // console.log("ERRORS ABOUND");
           handleClientFlashError();
         }
       } catch (err) {
@@ -151,8 +151,10 @@ const useEditUser = () => {
     handleSubmit,
     handleReset,
     handleCheckBox,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
   };
 };
 

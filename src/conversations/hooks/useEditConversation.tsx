@@ -18,6 +18,7 @@ type input = {
   updateConversations: (newConversation: returnUpdateConversation) => void;
 };
 
+// hook for form page to edit conversation title
 const useEditConversation = ({
   currentConversation,
   hideForm,
@@ -33,6 +34,7 @@ const useEditConversation = ({
 
   const [formData, setFormData] = useState<updateConversation>(initialData);
 
+  // on initial render, updates form data to initially have the current conversation title in state
   useEffect(() => {
     const initialSet = () => {
       setFormData((prev) => ({ ...prev, title: currentConversation.title }));
@@ -40,6 +42,7 @@ const useEditConversation = ({
     initialSet();
   }, [currentConversation, show]);
 
+  // updates form data state on input value change
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { name, value } = e.target;
@@ -48,6 +51,8 @@ const useEditConversation = ({
     [formData]
   );
 
+  // updates current conversation data in the database and returns data to update current
+  // conversation title in the header and tab list
   const handleSubmit = useCallback(
     async (e: React.FormEvent): Promise<void> => {
       try {
@@ -74,6 +79,7 @@ const useEditConversation = ({
     [formData, show]
   );
 
+  // hides form if user clicks cancel button
   const handleCancel = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>): void => {
       e.preventDefault();

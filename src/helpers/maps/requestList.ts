@@ -1,5 +1,7 @@
 import { type titleAndDesc } from "../../types/miscTypes";
 
+// hash map for request inbox that sets the title and description for each category for easy
+// retrieval
 const requestDesc = new Map<string, titleAndDesc>([
   [
     "direct-requests-received",

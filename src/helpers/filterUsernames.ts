@@ -1,3 +1,4 @@
+// helper function for user search bar to filter out users based on current search query
 const filterUsernames = (
   username: string,
   usernameList: string[],

@@ -7,6 +7,7 @@ import { shallowEqual } from "react-redux";
 
 type Props = { conversationMessage: conversationMessage };
 
+// component for conversation message bubbles, both for current and other user
 const ConversationMessageBubble: React.FC<Props> = ({
   conversationMessage,
 }) => {

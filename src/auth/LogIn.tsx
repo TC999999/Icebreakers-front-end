@@ -2,6 +2,7 @@ import { type JSX } from "react";
 import useLogIn from "./hooks/useLogin";
 import "../styles/auth/LogIn.scss";
 
+// login form page component
 const LogIn = (): JSX.Element => {
   const { formData, error, handleChange, handleSubmit } = useLogIn();
   return (

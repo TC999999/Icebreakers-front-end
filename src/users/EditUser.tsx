@@ -15,8 +15,10 @@ const EditUser = (): JSX.Element => {
     handleSubmit,
     handleReset,
     handleCheckBox,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
   } = useEditUser();
   return (
     <main id="edit-user-page">
@@ -27,20 +29,23 @@ const EditUser = (): JSX.Element => {
         <form onSubmit={handleSubmit}>
           <div id="email-div" className="form-div">
             <label htmlFor="emailAddress">
-              Email Address:
-              <input
-                className={`form-input ${
-                  currentErrorFlash.emailAddress ? "error-flash" : ""
-                }`}
-                type="text"
-                name="emailAddress"
-                id="emailAddress"
-                value={userData.emailAddress}
-                onChange={handleChange}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseExit}
-              />
+              Email Address:{" "}
+              <span title="required field" className="required">
+                *
+              </span>
             </label>
+            <input
+              className={`form-input ${
+                currentErrorFlash.emailAddress ? "error-flash" : ""
+              }`}
+              type="text"
+              name="emailAddress"
+              id="emailAddress"
+              value={userData.emailAddress}
+              onChange={handleChange}
+              onFocus={handleDirectionsFocus}
+              onBlur={handleDirectionsBlur}
+            />
 
             <InputDirections
               type="emailAddress"
@@ -61,22 +66,25 @@ const EditUser = (): JSX.Element => {
           </div>
           <div id="biography-div" className="form-div">
             <label htmlFor="biography">
-              Write a short paragraph about yourself
-              <textarea
-                name="biography"
-                id="biography"
-                className={`form-textarea ${
-                  currentErrorFlash.biography ? "error-flash" : ""
-                }`}
-                maxLength={200}
-                cols={40}
-                rows={10}
-                value={userData.biography}
-                onChange={handleChange}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseExit}
-              ></textarea>
+              Write a short paragraph about yourself{" "}
+              <span title="required field" className="required">
+                *
+              </span>
             </label>
+            <textarea
+              name="biography"
+              id="biography"
+              className={`form-textarea ${
+                currentErrorFlash.biography ? "error-flash" : ""
+              }`}
+              maxLength={200}
+              cols={40}
+              rows={10}
+              value={userData.biography}
+              onChange={handleChange}
+              onFocus={handleDirectionsFocus}
+              onBlur={handleDirectionsBlur}
+            ></textarea>
 
             <InputDirections
               type="biography"
@@ -89,14 +97,19 @@ const EditUser = (): JSX.Element => {
           <div
             id="interests"
             className="form-div"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseExit}
+            onMouseEnter={handleDirectionsEnter}
+            onMouseLeave={handleDirectionsExit}
           >
             <fieldset
               id="interests-div"
               className={currentErrorFlash.interests ? "error-flash" : ""}
             >
-              <legend id="interests-header">Select Your Interests</legend>
+              <legend id="interests-header">
+                Select Your Interests{" "}
+                <span title="required field" className="required">
+                  *
+                </span>
+              </legend>
 
               {Object.values(interestsList.current).map((i) => (
                 <div className="interest-check" key={`interest-${i.id}`}>

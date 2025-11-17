@@ -12,8 +12,10 @@ const CreateGroupForm = () => {
     handleChange,
     handleCheckBox,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
   } = useCreateGroupForm();
   return (
     <main id="create-group-form-page">
@@ -25,20 +27,24 @@ const CreateGroupForm = () => {
           <div className="form-div">
             <label htmlFor="title">
               Group Title:
-              <input
-                className={`form-input ${
-                  currentErrorFlash.title ? "error-flash" : ""
-                }`}
-                type="text"
-                name="title"
-                id="title"
-                placeholder="Type the title of your group"
-                value={formData.title}
-                onChange={handleChange}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseExit}
-              />
+              <span title="required field" className="required">
+                *
+              </span>
             </label>
+            <input
+              className={`form-input ${
+                currentErrorFlash.title ? "error-flash" : ""
+              }`}
+              type="text"
+              name="title"
+              id="title"
+              placeholder="Type the title of your group"
+              value={formData.title}
+              onChange={handleChange}
+              onFocus={handleDirectionsFocus}
+              onBlur={handleDirectionsBlur}
+            />
+
             <InputDirections
               type="title"
               validInputs={validInputs.title}
@@ -47,7 +53,12 @@ const CreateGroupForm = () => {
             />
           </div>
           <div className="form-div">
-            <label htmlFor="description">Group Description: </label>
+            <label htmlFor="description">
+              Group Description:{" "}
+              <span title="required field" className="required">
+                *
+              </span>
+            </label>
             <textarea
               name="description"
               id="description"
@@ -60,8 +71,8 @@ const CreateGroupForm = () => {
               placeholder="Type a short description about what you want this group to be about."
               value={formData.description}
               onChange={handleChange}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseExit}
+              onFocus={handleDirectionsFocus}
+              onBlur={handleDirectionsBlur}
             ></textarea>
 
             <InputDirections
@@ -74,14 +85,19 @@ const CreateGroupForm = () => {
           <div
             id="interests"
             className="form-div"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseExit}
+            onMouseEnter={handleDirectionsEnter}
+            onMouseLeave={handleDirectionsExit}
           >
             <fieldset
               id="interests-div"
               className={currentErrorFlash.title ? "error-flash" : ""}
             >
-              <legend>Interests:</legend>
+              <legend>
+                Interests:{" "}
+                <span title="required field" className="required">
+                  *
+                </span>{" "}
+              </legend>
 
               {Object.values(interestList).map((i) => {
                 return (

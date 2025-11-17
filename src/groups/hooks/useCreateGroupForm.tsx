@@ -36,8 +36,10 @@ const useCreateGroupForm = () => {
     currentErrorFlash,
     handleInputValidity,
     handleSubmitValidity,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
@@ -107,8 +109,10 @@ const useCreateGroupForm = () => {
     handleChange,
     handleCheckBox,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
   };
 };
 

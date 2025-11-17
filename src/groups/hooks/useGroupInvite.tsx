@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
+import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
@@ -33,8 +34,10 @@ const useGroupInvite = () => {
     currentErrorFlash,
     showDirections,
     handleInputValidity,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
     handleSubmitValidity,
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
@@ -71,7 +74,7 @@ const useGroupInvite = () => {
         if (handleSubmitValidity()) {
           dispatch(setFormLoading(true));
 
-          const invitation = await groupConversationsAPI.sendInvitation(
+          const invitation = await groupRequestsAPI.sendGroupInvitation(
             formData
           );
           socket.emit("addRequest", {
@@ -101,8 +104,10 @@ const useGroupInvite = () => {
     showDirections,
     handleChange,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsEnter,
+    handleDirectionsBlur,
+    handleDirectionsExit,
   };
 };
 

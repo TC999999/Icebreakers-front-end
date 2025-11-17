@@ -8,6 +8,7 @@ type Props = {
   handleCurrentConversation: (conversation: conversation) => void;
 };
 
+// component for conversation tab seen of the left side on conversation list page
 const ConversationTab: React.FC<Props> = ({
   conversation,
   selected,

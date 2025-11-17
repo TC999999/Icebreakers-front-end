@@ -17,6 +17,8 @@ type errorInput = {
   setter: React.Dispatch<React.SetStateAction<validityTypes>>;
 };
 
+// when input field value changes, updates validity parameters based on the name and current value
+// of the input
 export const inputValidityHandler = ({ name, value, setter }: errorInput) => {
   switch (name) {
     case "username":
@@ -55,6 +57,8 @@ export const inputValidityHandler = ({ name, value, setter }: errorInput) => {
   }
 };
 
+// when a form is submitted, this function checks if all validity parameters in the valid inputs
+// state are true, then returns that boolean; if not, changes boolean of flash error state to true
 export const submitErrorHandler = (
   input: validityTypes,
   setter: React.Dispatch<React.SetStateAction<errorFlash>>

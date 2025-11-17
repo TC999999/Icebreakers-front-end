@@ -11,8 +11,8 @@ const GroupRequest = () => {
     currentErrorFlash,
     handleChange,
     handleSubmit,
-    handleMouseEnter,
-    handleMouseExit,
+    handleDirectionsFocus,
+    handleDirectionsBlur,
   } = useGroupRequest();
   return (
     <main id="group-request-form-page">
@@ -42,8 +42,8 @@ const GroupRequest = () => {
               placeholder={`What do you want ${groupData.host} to know about yourself?`}
               value={formData.content}
               onChange={handleChange}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseExit}
+              onFocus={handleDirectionsFocus}
+              onBlur={handleDirectionsBlur}
             ></textarea>
             <InputDirections
               type="content"
