@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LogInUser, getCurrentUser, LogOutUser } from "../actions/auth";
+import {
+  RegisterUser,
+  LogInUser,
+  getCurrentUser,
+  LogOutUser,
+} from "../actions/auth";
 import { AUTH_INITIAL_STATE } from "../config";
 
 const authSlice = createSlice({
@@ -33,6 +38,19 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(RegisterUser.pending, (state) => {
+        state.loading.loadingInfo.formLoading = true;
+      })
+      .addCase(RegisterUser.fulfilled, (state, action: any) => {
+        state.user = action.payload.user;
+        state.loading.loadingInfo.formLoading = false;
+        state.loading.loadingError.message = "";
+      })
+      .addCase(RegisterUser.rejected, (state, action: any) => {
+        state.user = AUTH_INITIAL_STATE.user;
+        state.loading.loadingInfo.formLoading = false;
+        state.loading.loadingError.message = action.payload;
+      })
       .addCase(LogInUser.pending, (state) => {
         state.loading.loadingInfo.formLoading = true;
       })
