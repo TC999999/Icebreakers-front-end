@@ -22,7 +22,6 @@ import type {
   groupConversationResponse,
   groupRequestResponse,
 } from "../../types/requestTypes";
-
 import requestDesc from "../../helpers/maps/requestList";
 import {
   requestTypeMap,
@@ -41,6 +40,7 @@ import {
   type addOrRemove,
 } from "../../helpers/updateRequests";
 
+// custom hook for request inbox page
 const useRequestListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -82,7 +82,10 @@ const useRequestListPage = () => {
     )[]
   >([]);
 
-  // initial render
+  // on initial render, gets url search query data and sets the initial selected request tab and
+  // the initial header shown based on those params; also retrieves the initial request list to be
+  // shown based on the search query and retrieves the count for each unanswered/sent/removed request
+  // in each category
   useEffect(() => {
     const getAllRequests = async () => {
       try {
@@ -118,12 +121,12 @@ const useRequestListPage = () => {
     getAllRequests();
   }, []);
 
-  //set new request count
+  //callback function to set new request count: to only be used in other functions
   const setNewRequestCount = (requestChange: requestCountChange) => {
     updateRequestCount(requestChange, setRequestCount);
   };
 
-  // sets new requests in state
+  // callback function that sets new requests in the current request list state
   const setNewRequests = (
     request:
       | SentGroupCard
@@ -138,7 +141,8 @@ const useRequestListPage = () => {
     updateSentRequests(request, addOrRemove, setCurrentRequests);
   };
 
-  // reusable logic for updating request lists, setting the new count in state for request numbers, and emitting socket signals
+  // reusable logic for updating request lists, setting the new count in state for request numbers,
+  // and emitting socket signals
   const handleRequests = async (
     request:
       | sentRequestCard
@@ -159,7 +163,7 @@ const useRequestListPage = () => {
     socket.emit(socketType, socketRequest);
   };
 
-  // socket effects
+  // sets up socket listeners on initial render
   useEffect(() => {
     socket.on("addRequest", ({ request, requestType, countType }) => {
       setNewRequestCount({ addRequest: countType });
@@ -181,7 +185,8 @@ const useRequestListPage = () => {
     };
   }, [viewedRequests, requestCount]);
 
-  // change which requests to see when user clicks on respective tab
+  // when user clicks on respective request tab, highlights tab and sets description state to respective
+  // text, and retrieves the correct request list from the backend database
   const changeViewedRequests = useCallback(
     async (requestType: requestType, params: requestParams) => {
       setViewedRequests(requestType);
@@ -200,7 +205,8 @@ const useRequestListPage = () => {
   );
 
   // UPDATE DIRECT REQUESTS (SENDER'S SIDE ONLY)
-  // remove direct request from recipient's inbox
+  // removes request from recipient's inbox and moves it from senders sent request inbox
+  // to their removed request inbox
   const removeDirectRequest = useCallback(
     async (request: sentRequestCard) => {
       let resentRequest =
@@ -257,7 +263,8 @@ const useRequestListPage = () => {
   );
 
   // UPDATE GROUP REQUESTS (SENDER'S SIDE ONLY)
-  // remove sent group requests
+  // removes request from recipient's received group requests inbox and moves it from
+  // senders sent group request inbox to their removed group request inbox
   const removeGroupRequest = useCallback(
     async (request: SentGroupCard) => {
       const removedRequest = await groupRequestsAPI.removeRequest(
@@ -312,7 +319,8 @@ const useRequestListPage = () => {
   );
 
   // UPDATE GROUP INVITATIONS (SENDER'S SIDE ONLY)
-  // remove group invitation from recipient's inbox
+  // removes invitation from recipient's sent group invitation inbox and moves it from
+  // senders sent group invitation inbox to their removed group invitation inbox
   const removeGroupInvitation = useCallback(
     async (request: SentGroupCard) => {
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
@@ -366,7 +374,8 @@ const useRequestListPage = () => {
   );
 
   // RESPONSES (RECIPIENT'S SIDE ONLY)
-  // respond to direct request
+  // if request was accepted, the recipient join the group and
+  // removes request from both users' inboxes
   const respondToDirectRequest = useCallback(
     async (response: directConversationResponse) => {
       let { requestResponse } =
@@ -402,7 +411,8 @@ const useRequestListPage = () => {
     [currentRequests, dispatch]
   );
 
-  // respond to group invitation
+  // if invitation was accepted, the recipient join the group and
+  // removes invitation from both users' inboxes
   const respondToGroupInvitation = useCallback(
     async (response: groupConversationResponse) => {
       let res = await groupRequestsAPI.respondToGroupInvitation(response);
@@ -436,6 +446,8 @@ const useRequestListPage = () => {
     []
   );
 
+  // if request was accepted, the sender join the group and removes
+  // request from both users' inboxes
   const respondToGroupRequest = useCallback(
     async (response: groupRequestResponse) => {
       let res = await groupRequestsAPI.respondToGroupRequest(response);

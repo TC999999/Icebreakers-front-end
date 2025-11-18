@@ -2,6 +2,10 @@ import useGroupSearchPage from "./hooks/useGroupSearchPage";
 import GroupSearchCard from "./GroupSearchCard";
 import "../styles/groups/GroupSearchPage.scss";
 
+// React component that allows user to search for groups: includes search bars for group names,
+// users that host the group, and users who are members of groups; also includes checkboxes to filter
+// out groups that share no similar interests with the user, and groups that the user is already a
+// member of
 const GroupSearchPage = () => {
   const {
     currentGroups,

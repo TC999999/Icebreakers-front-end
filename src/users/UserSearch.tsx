@@ -6,6 +6,9 @@ import UserSearchCard from "./UserSearchCard";
 import "../styles/users/UserSearch.scss";
 import { shallowEqual } from "react-redux";
 
+// React component page that allows users to search for other users: includes user search bar to
+// search via username, or a checkbox to filter out users who don't share similar interests with
+// the current user; shows search results below as cards
 const UserSearch = (): JSX.Element => {
   const { formLoading } = useAppSelector((store) => {
     return store.user.loading.loadingInfo;

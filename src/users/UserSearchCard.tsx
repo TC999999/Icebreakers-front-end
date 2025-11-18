@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { type JSX, memo } from "react";
 import { type UserCard } from "../types/userTypes";
 import { MdPerson } from "react-icons/md";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
@@ -8,7 +8,9 @@ type Props = {
   user: UserCard;
 };
 
-const UserSearchCard: React.FC<Props> = ({ user }): JSX.Element => {
+// reusable React component that contains data on a single user in a filtered list of users
+// in a user search list
+const UserSearchCard: React.FC<Props> = memo(({ user }): JSX.Element => {
   const navigate: NavigateFunction = useNavigate();
   return (
     <div
@@ -36,6 +38,6 @@ const UserSearchCard: React.FC<Props> = ({ user }): JSX.Element => {
       </div>
     </div>
   );
-};
+});
 
 export default UserSearchCard;

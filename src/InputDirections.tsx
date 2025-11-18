@@ -20,6 +20,8 @@ type Props = {
   onBottom: boolean;
 };
 
+// React components that show directions for valid input values when the user focuses on the input
+// or hovers their cursor over a list div
 const InputDirections: React.FC<Props> = ({
   type,
   showDirections,

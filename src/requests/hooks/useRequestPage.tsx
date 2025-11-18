@@ -21,6 +21,8 @@ const useRequestPage = () => {
     return store.user.user?.username;
   }, shallowEqual);
 
+  // on initial render, checks if both users exist and throws an error if both the sender user or
+  // recipient user do not exist or they are the same person
   useEffect(() => {
     const setPairing = async () => {
       try {

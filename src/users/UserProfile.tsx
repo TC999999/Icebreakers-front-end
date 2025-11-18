@@ -5,6 +5,12 @@ import { useAppSelector } from "../features/hooks";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { shallowEqual } from "react-redux";
 
+// React component for user profile page; shows a user's username, description, interest list,
+// and joined date. Shows different buttons and messages if the profile the user if viewing is
+// their own or not (shows edit profile  button if this is their own page, or a request conversation
+// button if not), also shows different messages if the user has requested a conversation with a
+// user on a profile page that is not their own
+
 const UserProfile = () => {
   const { userState } = useUserProfile();
   const navigate: NavigateFunction = useNavigate();

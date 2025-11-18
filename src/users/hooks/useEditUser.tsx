@@ -12,22 +12,23 @@ import userAPI from "../../apis/userAPI";
 import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
+// custom hook for form to update user information
 const useEditUser = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const initialData: UserEdit = {
+  const originalData = useRef<UserEdit>({
     emailAddress: "",
     biography: "",
     favoriteColor: "#000000",
     interests: [],
-  };
+  });
 
-  const [userData, setUserData] = useState<UserEdit>(initialData);
+  const [userData, setUserData] = useState<UserEdit>(originalData.current);
   const interestsList = useRef<interestMap>({});
-  const originalData = useRef<UserEdit>(initialData);
 
+  // reusable custom validator hook for setting and checking input value validity
   const {
     validInputs,
     currentErrorFlash,
@@ -43,6 +44,8 @@ const useEditUser = () => {
     setValidValues,
   } = useValidInputHandler(originalData.current);
 
+  // on initial render, retrieves data that needs to be updated and sets them in state, if user
+  // inserts a username that is not their own, throws and error and redirects user to error page
   useEffect(() => {
     const getUserForEdit = async () => {
       try {
@@ -65,6 +68,8 @@ const useEditUser = () => {
     getUserForEdit();
   }, [dispatch]);
 
+  // updates form data state and input value validity state when user changes a text or textarea
+  // input value
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -74,6 +79,8 @@ const useEditUser = () => {
     [userData]
   );
 
+  // submits data to backend if all inputs are valid, and returns new data to be updated in both
+  // the frontend redux state and the backend express session
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -99,9 +106,10 @@ const useEditUser = () => {
         }
       }
     },
-    [userData]
+    [userData, validInputs]
   );
 
+  // resets all data back to their original state
   const handleReset = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
@@ -111,6 +119,8 @@ const useEditUser = () => {
     [userData]
   );
 
+  // updates form data state and input value validity state when user checks or unchecks a checkbox
+  // input value
   const handleCheckBox = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value, checked } = e.target;
@@ -133,6 +143,7 @@ const useEditUser = () => {
     [userData]
   );
 
+  // returns a boolean if the interests id is found in the form data interest value array
   const checkUserInterests = useCallback(
     (id: number): boolean => {
       return userData.interests.includes(id);

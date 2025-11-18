@@ -32,6 +32,9 @@ type Props = {
   resendGroupInvitation: (request: SentGroupCard) => void;
 };
 
+// reusable React component for request cards that show up in the user's request inbox; can ue used
+// for any type of request (direct requests, group requests, or group invitations), shows different
+// buttons depending on if the request was received, sent out, or removed from the other user's view
 const RequestCard: React.FC<Props> = ({
   requestType,
   request,

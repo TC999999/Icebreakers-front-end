@@ -2,6 +2,8 @@ import useGroupRequest from "./hooks/useGroupRequest";
 import "../styles/groups/GroupRequest.scss";
 import InputDirections from "../InputDirections";
 
+// React component for the form to create a new request to join a group that the user is not yet a
+// member of
 const GroupRequest = () => {
   const {
     formData,

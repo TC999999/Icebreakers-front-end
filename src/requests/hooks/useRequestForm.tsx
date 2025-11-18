@@ -8,6 +8,7 @@ import socket from "../../helpers/socket";
 import directRequestsAPI from "../../apis/directRequestsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
 
+// custom hook for form to create a new request to chat with another user
 const useRequestForm = (
   requestedUserInput: string,
   requesterUserInput: string
@@ -15,16 +16,17 @@ const useRequestForm = (
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
 
-  const initialData: directConversationRequest = {
+  const originalData = useRef<directConversationRequest>({
     to: requestedUserInput,
     from: requesterUserInput,
     content: "",
-  };
-  const [requestData, setRequestData] =
-    useState<directConversationRequest>(initialData);
+  });
 
-  const originalData = useRef<directConversationRequest>(initialData);
+  const [requestData, setRequestData] = useState<directConversationRequest>(
+    originalData.current
+  );
 
+  // reusable custom validator hook for setting and checking input value validity
   const {
     validInputs,
     showDirections,
@@ -36,6 +38,7 @@ const useRequestForm = (
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
+  // on initial render, sets request data state with values passed down from props
   useEffect(() => {
     const setUsers = () => {
       setRequestData((prev) => ({
@@ -48,6 +51,7 @@ const useRequestForm = (
     setUsers();
   }, []);
 
+  // changes form data state and input value validity state when input value is changed by user
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
       const { name, value } = e.target;
@@ -57,6 +61,8 @@ const useRequestForm = (
     [requestData]
   );
 
+  // submits request data to backend to create and return a new direct conversation request; emits
+  // socket signal to requested user to add request to their inbox
   const handleSubmit = useCallback(
     async (e: React.FormEvent): Promise<void> => {
       e.preventDefault();
@@ -82,7 +88,7 @@ const useRequestForm = (
         dispatch(setFormLoading(false));
       }
     },
-    [requestData]
+    [requestData, validInputs]
   );
 
   return {

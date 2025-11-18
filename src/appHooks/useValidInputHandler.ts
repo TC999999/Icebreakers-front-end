@@ -53,7 +53,7 @@ const useValidInputHandler = (inputs: FormData = {}) => {
     ) => {
       setShowDirections(e.currentTarget.id);
     },
-    []
+    [showDirections]
   );
 
   // sets which input directions should be shown when user hovers their cursor on field input
@@ -86,7 +86,7 @@ const useValidInputHandler = (inputs: FormData = {}) => {
       e.preventDefault();
       setShowDirections("");
     },
-    []
+    [showDirections]
   );
 
   // sets which input directions should be shown when user hovers their cursor on field input
@@ -107,7 +107,7 @@ const useValidInputHandler = (inputs: FormData = {}) => {
   // causes fields with invalid inputs to flash red
   const handleSubmitValidity = useCallback(() => {
     return submitErrorHandler(validInputs, setCurrentErrorFlash);
-  }, [validInputs]);
+  }, [validInputs, currentErrorFlash]);
 
   // causes fields with invalid inputs that are flashing red to stop flashing if there is a
   // client side error

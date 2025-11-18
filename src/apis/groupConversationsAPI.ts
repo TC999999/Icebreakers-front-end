@@ -12,6 +12,7 @@ type returnGroup = {
   group: GroupPage | groupName;
   isInGroup?: boolean;
   requestPending?: boolean;
+  invitationPending?: boolean;
 };
 
 // API class for group conversations, including getting all current groups a user is a part of,

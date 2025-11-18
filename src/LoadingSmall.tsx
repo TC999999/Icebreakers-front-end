@@ -3,7 +3,7 @@ import { useAppSelector } from "./features/hooks";
 import { shallowEqual } from "react-redux";
 import "./styles/LoadingSmall.scss";
 
-// loading screen for submitting forms
+// loading screen for submitting forms or getting data on pathname change
 const LoadingSmall = (): JSX.Element | null => {
   const loading: boolean = useAppSelector(
     (store) => store.user.loading.loadingInfo.formLoading,

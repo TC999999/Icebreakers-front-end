@@ -10,6 +10,7 @@ import { LogOutUser } from "../../features/actions/auth";
 import selectNav from "../../helpers/selectNav";
 import { shallowEqual } from "react-redux";
 
+// custom hook for navbar component functionality
 const useNavbar = () => {
   const navigate: NavigateFunction = useNavigate();
   const dispatch: AppDispatch = useAppDispatch();
@@ -21,12 +22,15 @@ const useNavbar = () => {
 
   const [selectedNav, setSelectedNav] = useState<string>("none");
 
-  //highlights current navbar link on initial render and when path name changes
+  // on initial render, highlights current navbar link based on current path name,
+  // and when path name changes
   useEffect(() => {
     const nav = selectNav(location.pathname, username);
     setSelectedNav(nav);
   }, [location.pathname, username]);
 
+  // when user clicks logout link, removes user info from backend express session and
+  // frontend redux state
   const logOutAndNavigate = async () => {
     await dispatch(LogOutUser({}));
     navigate("/");

@@ -8,6 +8,8 @@ type Props = {
   goToGroup: (id: string) => void;
 };
 
+// reusable React component for card with simple group data for groups the user is already a member
+// of
 const GroupCard: React.FC<Props> = ({ group, goToGroup }) => {
   return (
     <div

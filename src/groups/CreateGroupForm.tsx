@@ -2,6 +2,7 @@ import useCreateGroupForm from "./hooks/useCreateGroupForm";
 import "../styles/groups/CreateGroupForm.scss";
 import InputDirections from "../InputDirections";
 
+// React component for form to create a new group
 const CreateGroupForm = () => {
   const {
     formData,

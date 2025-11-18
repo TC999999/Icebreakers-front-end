@@ -12,20 +12,26 @@ import { setFormLoading } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
+import { toast } from "react-toastify";
 
+// custom hook for react component that contains form to join a group
 const useGroupRequest = () => {
   const { id } = useParams();
   const navigate: NavigateFunction = useNavigate();
   const dispatch = useAppDispatch();
+  const notify = (message: string) => toast.error(message);
 
-  const initialData: groupRequestFormData = { content: "" };
-  const [formData, setFormData] = useState<groupRequestFormData>(initialData);
+  const originalData = useRef<groupRequestFormData>({ content: "" });
+
+  const [formData, setFormData] = useState<groupRequestFormData>(
+    originalData.current
+  );
   const [groupData, setGroupData] = useState<groupName>({
     title: "",
     host: "",
   });
-  const originalData = useRef<groupRequestFormData>(initialData);
 
+  // reusable custom validator hook for setting and checking input value validity
   const {
     validInputs,
     showDirections,
@@ -37,15 +43,7 @@ const useGroupRequest = () => {
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      handleInputValidity(name, value);
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    },
-    [formData]
-  );
-
+  // on initial render, retrieves group information needed for clear form instructions
   useEffect(() => {
     const getGroup = async () => {
       try {
@@ -64,6 +62,18 @@ const useGroupRequest = () => {
     getGroup();
   }, []);
 
+  // updates form data state and checks input value validity when any input value changes
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      handleInputValidity(name, value);
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    },
+    [formData]
+  );
+
+  // if all inputs are valid, creates and returns new request to join group, also emits socket signal
+  // to host of the group and adds request to their inbox
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -83,13 +93,13 @@ const useGroupRequest = () => {
         } else {
           handleClientFlashError();
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        notify(JSON.parse(err.message).message);
       } finally {
         dispatch(setFormLoading(false));
       }
     },
-    [formData]
+    [formData, validInputs, dispatch]
   );
 
   return {

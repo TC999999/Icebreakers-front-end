@@ -2,6 +2,8 @@ import useGroupInvite from "./hooks/useGroupInvite";
 import "../styles/groups/GroupInvite.scss";
 import InputDirections from "../InputDirections";
 
+// React component for form to create an invitation to allow another user into a group that you are
+// a member of already
 const GroupInvite = () => {
   const {
     formData,

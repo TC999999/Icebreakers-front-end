@@ -26,18 +26,28 @@ const useGroupPage = () => {
   const [isInGroupState, setIsInGroupState] = useState<boolean>(false);
   const [requestPendingState, setRequestPendingState] =
     useState<boolean>(false);
+  const [invitationPendingState, setInvitationPendingState] =
+    useState<boolean>(false);
 
+  // on initial render, retrieves group information, including list of users in the group; also checks
+  // if the current user has either a request/invitation to join the group made or if they are already
+  // a member of this group
   useEffect(() => {
     const getGroup = async () => {
       try {
         dispatch(setFormLoading(true));
         if (id) {
-          const { group, isInGroup, requestPending } =
+          const { group, isInGroup, requestPending, invitationPending } =
             await groupConversationsAPI.getGroup(id);
           if ("id" in group) setGroup(group);
-          if (isInGroup !== undefined && requestPending !== undefined) {
+          if (
+            isInGroup !== undefined &&
+            requestPending !== undefined &&
+            invitationPending !== undefined
+          ) {
             setIsInGroupState(isInGroup);
             setRequestPendingState(requestPending);
+            setInvitationPendingState(invitationPending);
           }
         }
       } catch (err) {
@@ -50,6 +60,8 @@ const useGroupPage = () => {
     getGroup();
   }, []);
 
+  // when a new member joins the group (either by the host accepting their request or the user
+  // accepting an invitation to join), automatically adds the new member to list of users
   useEffect(() => {
     socket.on("addUserToGroup", ({ groupID, user }) => {
       if (group.id === groupID) {
@@ -62,6 +74,7 @@ const useGroupPage = () => {
     };
   }, [group.users]);
 
+  // reusable callback automatically navigates to the page linked by the url; used for buttons
   const handleNavigate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -70,7 +83,13 @@ const useGroupPage = () => {
     []
   );
 
-  return { group, isInGroupState, requestPendingState, handleNavigate };
+  return {
+    group,
+    isInGroupState,
+    requestPendingState,
+    invitationPendingState,
+    handleNavigate,
+  };
 };
 
 export default useGroupPage;

@@ -9,12 +9,14 @@ $boxShadowSettings: 5px 5px 5px black;
 $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 
 // mixins
+// only allow at larger widths
 @mixin tablet {
   @media (min-width: 1000px) {
     @content;
   }
 }
 
+// only allow at smaller widths
 @mixin desktop {
   @media (max-width: 1000px) {
     @content;
@@ -22,6 +24,7 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 }
 
 // animations
+// spins a component 360 degrees
 @keyframes spinner {
   0% {
     transform: rotate(0turn);
@@ -48,6 +51,7 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
   }
 }
 
+// constantly causes an element to disappear then reappear
 @keyframes ellipses {
   0%,
   100% {
@@ -59,6 +63,7 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
   }
 }
 
+// causes an element to grow to full size on initial render
 @keyframes notificationPopUp {
   0% {
     transform: scale(0);
@@ -69,6 +74,7 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
   }
 }
 
+// causes an element to grow to flash $error color
 @keyframes errorFlash {
   0% {
     background-color: c.$error;

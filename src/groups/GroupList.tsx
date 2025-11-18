@@ -3,6 +3,8 @@ import useGroupList from "./hooks/useGroupList";
 import GroupCard from "./GroupCard";
 import "../styles/groups/GroupList.scss";
 
+// React component for a list of groups that user is a member of; either in which they are hosting
+// and those that they are non hosting; they are separated by a tablist above
 const GroupList = () => {
   const { hostedGroups, nonHostedGroups, currentGroupTab, handleGroupTab } =
     useGroupList();

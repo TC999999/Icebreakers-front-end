@@ -2,6 +2,7 @@ import { type JSX, useEffect } from "react";
 import { useAppSelector } from "./features/hooks";
 import { shallowEqual } from "react-redux";
 
+// error page for server side errors
 const Error = (): JSX.Element => {
   const loadingError = useAppSelector((store) => {
     return store.user.loading.loadingError;

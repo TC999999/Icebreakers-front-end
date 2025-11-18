@@ -30,6 +30,7 @@ type input = {
   resendGroupInvitation: (request: SentGroupCard) => void;
 };
 
+// custom hook for request card in list of requests in any tab in request inbox
 const useRequestCard = ({
   requestType,
   request,
@@ -47,6 +48,8 @@ const useRequestCard = ({
     return store.user.user?.username;
   }, shallowEqual);
 
+  // callback function that allows user to respond to the requests that they have received; works for
+  // both acceptance and denial
   const respond = useCallback((accepted: boolean) => {
     if (
       "from" in request &&
@@ -87,6 +90,7 @@ const useRequestCard = ({
     }
   }, []);
 
+  // callback function that allows user to remove the requests that they have sent to other users
   const remove = useCallback(() => {
     if (
       "to" in request &&
@@ -109,6 +113,8 @@ const useRequestCard = ({
     }
   }, []);
 
+  // callback function that allows user to send back the requests that they have removed from being
+  // seen by other users
   const resend = useCallback(() => {
     if (
       "to" in request &&

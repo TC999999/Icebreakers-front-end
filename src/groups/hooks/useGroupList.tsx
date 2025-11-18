@@ -29,6 +29,8 @@ const useGroupList = () => {
   const [currentGroupTab, setCurrentGroupTab] =
     useState<groupTabs>("hostedGroups");
 
+  // on initial render, checks url params for type and sets the current group tab to be that type;
+  // futhermore, also gets a list of all groups the user is a part of and sets them in state
   useEffect(() => {
     const getAllGroups = async () => {
       if (username) {
@@ -55,6 +57,7 @@ const useGroupList = () => {
     getAllGroups();
   }, []);
 
+  // when clicking on either group tab, switches the type of groups shown on the page
   const handleGroupTab = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const { title } = e.currentTarget;

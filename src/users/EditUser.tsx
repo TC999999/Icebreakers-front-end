@@ -3,6 +3,8 @@ import useEditUser from "./hooks/useEditUser";
 import "../styles/users/EditUser.scss";
 import InputDirections from "../InputDirections";
 
+// React component that contains form for editing the current user; can update a user's current email
+// address, user biography, and their list of interests
 const EditUser = (): JSX.Element => {
   const {
     userData,

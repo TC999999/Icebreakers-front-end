@@ -6,6 +6,9 @@ import useNavbar from "./hooks/useNavbar";
 import "../styles/Navbar.scss";
 import { MdPerson } from "react-icons/md";
 
+// React component for navbar component; includes navigation buttons for when the user is logged out
+// (Log In and Sign Up), and when the user is logged in (conversations, groups, search users, search
+// groups, request inbox, user profile, and log out)
 const NavBar = (): JSX.Element => {
   const { user } = useAppSelector((store) => store.user, shallowEqual);
 

@@ -34,6 +34,7 @@ type Props = {
   resendGroupInvitation: (request: SentGroupCard) => void;
 };
 
+// React Component with a list of Request Cards to be viewed in any of the the request inbox
 const RequestList: React.FC<Props> = ({
   currentRequestType,
   currentTitleAndDesc,

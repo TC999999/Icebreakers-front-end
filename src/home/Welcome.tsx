@@ -4,6 +4,7 @@ import { type ReduxAuthState } from "../types/authTypes";
 import { shallowEqual } from "react-redux";
 import "../styles/Welcome.scss";
 
+// React component for welcome message when the user first arrives on the app
 const Welcome = (): JSX.Element => {
   const { user }: ReduxAuthState = useAppSelector(
     (store) => store.user,

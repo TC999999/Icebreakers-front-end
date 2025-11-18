@@ -3,6 +3,8 @@ import RequestList from "./RequestList";
 import RequestTab from "./RequestTab";
 import "../styles/requests/RequestListPage.scss";
 
+// React Component for Request inbox; contains tabs for all different categories for requests and
+// a single list component that changes when the list in state changes
 const RequestListPage = () => {
   const {
     viewedRequests,

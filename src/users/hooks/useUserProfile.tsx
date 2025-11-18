@@ -8,6 +8,7 @@ import { type UserProfile } from "../../types/userTypes";
 import userAPI from "../../apis/userAPI";
 import createDate from "../../helpers/createDate";
 
+// custom hook for user profile page
 const useUserProfile = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
@@ -20,6 +21,8 @@ const useUserProfile = () => {
     createdAt: "",
   });
 
+  // on initial render, retrieves user information and sets it in state; if user does not exist, throws
+  // an error and redirects user to error page
   useEffect((): void => {
     const getUserProfile = async () => {
       dispatch(setFormLoading(true));

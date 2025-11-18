@@ -3,9 +3,18 @@ import createDate from "../helpers/createDate";
 import GroupUserCard from "./GroupUserCard";
 import "../styles/groups/GroupPage.scss";
 
+// group page react component: shows all group information (title, host, description, interest list),
+// as well as all users in the group. Displays different buttons/messages depnding if user has
+// sent a request to join, received an invitation to join, is a member of the group, or none of
+// the above
 const GroupPage = () => {
-  const { group, isInGroupState, requestPendingState, handleNavigate } =
-    useGroupPage();
+  const {
+    group,
+    isInGroupState,
+    requestPendingState,
+    invitationPendingState,
+    handleNavigate,
+  } = useGroupPage();
 
   return (
     <main id="group-page">
@@ -37,16 +46,28 @@ const GroupPage = () => {
         </p>
 
         <div id="button-row">
-          {isInGroupState && !requestPendingState && (
-            <button>Go To Messages</button>
-          )}
+          {isInGroupState &&
+            !requestPendingState &&
+            !invitationPendingState && <button>Go To Messages</button>}
 
-          {!isInGroupState && requestPendingState && (
-            <p>Your request has already been made</p>
-          )}
-          {!isInGroupState && !requestPendingState && (
-            <button onClick={handleNavigate}>Request To Join</button>
-          )}
+          {!isInGroupState &&
+            requestPendingState &&
+            !invitationPendingState && (
+              <p>Your request has already been made</p>
+            )}
+          {!isInGroupState &&
+            !requestPendingState &&
+            invitationPendingState && (
+              <p>
+                You have already received an invitation to join this group.
+                Please check your request inbox.
+              </p>
+            )}
+          {!isInGroupState &&
+            !requestPendingState &&
+            !invitationPendingState && (
+              <button onClick={handleNavigate}>Request To Join</button>
+            )}
         </div>
       </div>
 

@@ -9,26 +9,32 @@ import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
+import { toast } from "react-toastify";
 
+// hook for page with form to create a group invitation
 const useGroupInvite = () => {
   const from = useAppSelector((store) => {
     return store.user.user?.username;
   });
   const navigate: NavigateFunction = useNavigate();
   const dispatch: AppDispatch = useAppDispatch();
+  const notify = (message: string) => toast.error(message);
 
   const { to } = useParams();
-  const initialData: GroupInvitation = {
+  const originalData = useRef<GroupInvitation>({
     to: "",
     from: "",
     content: "",
     group: "",
-  };
+  });
 
-  const [formData, setFormData] = useState<GroupInvitation>(initialData);
-  const originalData = useRef<GroupInvitation>(initialData);
+  const [formData, setFormData] = useState<GroupInvitation>(
+    originalData.current
+  );
+
   const [groupList, setGroupList] = useState<simpleGroup[]>([]);
 
+  // reusable hook for setting and checking input validity
   const {
     validInputs,
     currentErrorFlash,
@@ -42,10 +48,13 @@ const useGroupInvite = () => {
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
+  // on initial render, updates form data and original form data if both username in redux state
+  // and url params exist, also sets the group list state with a list of groups that the current
+  // user is in
   useEffect(() => {
     if (from && to) {
       setFormData((prev) => ({ ...prev, from, to }));
-      originalData.current = { ...initialData, from, to };
+      originalData.current = { ...originalData.current, from, to };
       const getGroups = async () => {
         const groups = await groupConversationsAPI.getAllGroups(from, {
           getSingle: true,
@@ -56,7 +65,7 @@ const useGroupInvite = () => {
     }
   }, []);
 
-  // handles change in value of form data
+  // updates form data state and input value validity state when input value changes
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
@@ -66,7 +75,9 @@ const useGroupInvite = () => {
     [formData]
   );
 
-  // handles submission of form data
+  // if form data values are all valid, sends form data to backend to create new group invitation
+  // for another user and emits a socket signal to that other user with that new request; otherwise,
+  // causes invalid inputs to flash red form 0.5 seconds
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -87,13 +98,13 @@ const useGroupInvite = () => {
         } else {
           handleClientFlashError();
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        notify(JSON.parse(err.message).message);
       } finally {
         dispatch(setFormLoading(false));
       }
     },
-    [formData]
+    [formData, validInputs]
   );
 
   return {

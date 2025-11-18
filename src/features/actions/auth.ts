@@ -8,7 +8,7 @@ import {
 import axios from "axios";
 import socket, { setUpSocket } from "../../helpers/socket";
 
-// redux thunk function to create a new account and return data
+// redux thunk function to create a new account and return data to set in redux state
 export const RegisterUser = createAsyncThunk<UserState, Register>(
   "auth/register",
   async (
@@ -39,7 +39,7 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
   }
 );
 
-// redux thunk function to create a new account
+// redux thunk function to retrieve user data to set in redux state
 export const LogInUser = createAsyncThunk<UserState, LogIn>(
   "auth/login",
   async (userInfo: LogIn = { username: "", password: "" }, thunkAPI) => {
@@ -83,7 +83,8 @@ export const getCurrentUser = createAsyncThunk<UserState, any>(
   }
 );
 
-// redux thunk function to remove user session from backend and disconnect socket
+// redux thunk function to remove user session from backend, disconnect socket, and return data to
+// remove from user redux state
 export const LogOutUser = createAsyncThunk<UserState, any>(
   "auth/logout",
   async (data = {}, thunkAPI) => {

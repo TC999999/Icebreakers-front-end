@@ -28,6 +28,9 @@ const useGroupSearchPage = () => {
   const [userSearchResults, setUserSearchResults] = useState<string[]>([]);
   const [currentGroups, setCurrentGroups] = useState<groupSearchCard[]>([]);
 
+  // on initial render, grabs search params values from url, sets those parameter values into
+  // the search query boxes, and retrieves filtered list of all groups based on those parameters;
+  // furthermore, retrieves a list of all group names and usernames for search query purposes
   useEffect(() => {
     try {
       dispatch(setFormLoading(true));
@@ -58,6 +61,8 @@ const useGroupSearchPage = () => {
     }
   }, []);
 
+  // when the group name search query value changes, filters list of group names with names that
+  // begins with the query value and sets the filtered list in state
   const handleGroupSearchResults = (value: string) => {
     setGroupSearchResults(
       originalGroups.current.filter((g) => {
@@ -66,6 +71,9 @@ const useGroupSearchPage = () => {
     );
   };
 
+  // when either the host user or member user search query value changes, filters list
+  // of usernames with names that begins with query value and sets the filtered list in
+  // the respective state
   const handleUserSearchResults = (
     setter: React.Dispatch<React.SetStateAction<string[]>>,
     value: string
@@ -77,6 +85,8 @@ const useGroupSearchPage = () => {
     );
   };
 
+  // when user focues their curson on a search query input div, shows dropdown search query
+  // options for that respective input
   const handleDivFocus = useCallback(
     (e: React.FocusEvent<HTMLDivElement>) => {
       let s = e.currentTarget.title;
@@ -87,15 +97,18 @@ const useGroupSearchPage = () => {
     [showResults]
   );
 
+  // when user unfocuses their curson on a search query input div, hides dropdown search
+  // query options for that respective input
   const handleDivBlur = useCallback(
     (e: React.FocusEvent<HTMLDivElement>) => {
       e.preventDefault();
-
       setShowResults("");
     },
     [showResults]
   );
 
+  // when user clicks on one of the group name/username options from dropdown below search input,
+  // sets value in search params state
   const handleResults = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
@@ -122,6 +135,8 @@ const useGroupSearchPage = () => {
     [showResults, groupSearchParams]
   );
 
+  // changes group name/username search query value in group params state when value in any search
+  // query input or checkbox checked attribute changes
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value, checked, type } = e.target;
@@ -148,6 +163,8 @@ const useGroupSearchPage = () => {
     [groupSearchParams]
   );
 
+  // sends params to backend to retrieve filtered group list from database, which is then set in
+  // state; additionally, sets search params in the url search query
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();

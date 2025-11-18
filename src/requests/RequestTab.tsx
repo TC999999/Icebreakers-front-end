@@ -14,6 +14,7 @@ type Props = {
   requestAmount: number;
 };
 
+// reusable React Component for tabs that appear on the left-hand side of the request inbox component
 const RequestTab: React.FC<Props> = ({
   title,
   params,
