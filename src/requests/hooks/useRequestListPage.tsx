@@ -451,7 +451,6 @@ const useRequestListPage = () => {
   const respondToGroupRequest = useCallback(
     async (response: groupRequestResponse) => {
       let res = await groupRequestsAPI.respondToGroupRequest(response);
-      console.log(res);
       if (res.user) {
         socket.emit("addUserToGroup", {
           user: res.user,

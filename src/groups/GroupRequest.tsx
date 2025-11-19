@@ -46,6 +46,7 @@ const GroupRequest = () => {
               onChange={handleChange}
               onFocus={handleDirectionsFocus}
               onBlur={handleDirectionsBlur}
+              autoComplete="off"
             ></textarea>
             <InputDirections
               type="content"

@@ -15,7 +15,7 @@ class directRequestsAPI extends requestsAPI {
   public static async makeDirectConversationRequest(
     request: directConversationRequest
   ): Promise<any> {
-    let res = await this.postRequest("", request);
+    let res = await this.postRequest("new", request);
     return res;
   }
 
@@ -33,7 +33,7 @@ class directRequestsAPI extends requestsAPI {
   public static async respondToDirectConversationRequest(
     response: directConversationResponse
   ): Promise<any> {
-    let res = await this.postRequest("response", response);
+    let res = await this.postRequest(`response/${response.id}`, response);
     return res;
   }
 }

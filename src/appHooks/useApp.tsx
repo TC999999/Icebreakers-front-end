@@ -52,7 +52,7 @@ const useApp = () => {
         socket.off("notify");
       };
     }
-  }, [user]);
+  }, [user, dispatch]);
 };
 
 export default useApp;

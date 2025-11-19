@@ -18,7 +18,7 @@ class groupRequestsAPI extends requestsAPI {
     id: string,
     message: groupRequestFormData
   ): Promise<any> {
-    let res = await this.postRequest(id, message);
+    let res = await this.postRequest(`${id}/new`, message);
     return res.request;
   }
 
@@ -32,7 +32,7 @@ class groupRequestsAPI extends requestsAPI {
   // deletes and returns a request received by the current host user and adds the sender user
   // to the group they requested to join
   public static async respondToGroupRequest(response: groupRequestResponse) {
-    let res = await this.postRequest("new/response", response);
+    let res = await this.postRequest(`response/${response.groupID}`, response);
     return res;
   }
 
@@ -40,7 +40,7 @@ class groupRequestsAPI extends requestsAPI {
   public static async sendGroupInvitation(
     group: GroupInvitation
   ): Promise<any> {
-    const res = await this.postRequest(`invitation/${group.from}`, group);
+    const res = await this.postRequest(`${group.group}/invitation/new`, group);
     return res.invitation;
   }
 
@@ -60,7 +60,10 @@ class groupRequestsAPI extends requestsAPI {
   public static async respondToGroupInvitation(
     response: groupConversationResponse
   ) {
-    let res = await this.postRequest(`invitation/new/response`, response);
+    let res = await this.postRequest(
+      `invitation/response/${response.groupID}`,
+      response
+    );
     return res;
   }
 }
