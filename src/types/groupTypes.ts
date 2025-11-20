@@ -59,7 +59,6 @@ export type GroupPage = {
 
 export type GroupInvitation = {
   to: string;
-  from: string;
   group: string;
   content: string;
 };

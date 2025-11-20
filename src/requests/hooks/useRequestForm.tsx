@@ -17,7 +17,6 @@ const useRequestForm = (to: string, from: string) => {
 
   const originalData = useRef<directConversationRequest>({
     to,
-    from,
     content: "",
   });
 
@@ -56,7 +55,10 @@ const useRequestForm = (to: string, from: string) => {
         if (handleSubmitValidity()) {
           dispatch(setFormLoading(true));
           const { request } =
-            await directRequestsAPI.makeDirectConversationRequest(requestData);
+            await directRequestsAPI.makeDirectConversationRequest(
+              from,
+              requestData
+            );
 
           socket.emit("addRequest", {
             requestType: "direct-requests-received",

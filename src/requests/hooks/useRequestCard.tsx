@@ -8,8 +8,6 @@ import type {
   SentGroupCard,
   ReceivedGroupCard,
 } from "../../types/requestTypes";
-import { useAppSelector } from "../../features/hooks";
-import { shallowEqual } from "react-redux";
 
 type input = {
   requestType: requestType;
@@ -43,10 +41,6 @@ const useRequestCard = ({
   removeGroupInvitation,
   resendGroupInvitation,
 }: input) => {
-  const username = useAppSelector((store) => {
-    return store.user.user?.username;
-  }, shallowEqual);
-
   // callback function that allows user to respond to the requests that they have received; works for
   // both acceptance and denial
   const respond = useCallback((accepted: boolean) => {
@@ -58,7 +52,6 @@ const useRequestCard = ({
       respondToDirectRequest({
         id: request.id,
         from: request.from,
-        to: username!,
         accepted,
       });
     } else if (
@@ -69,7 +62,6 @@ const useRequestCard = ({
       respondToGroupInvitation({
         id: request.id,
         from: request.from,
-        to: username!,
         groupID: request.groupID,
         groupTitle: request.groupTitle,
         accepted,
@@ -81,7 +73,6 @@ const useRequestCard = ({
     ) {
       respondToGroupRequest({
         id: request.id,
-        to: username!,
         from: request.from,
         groupID: request.groupID,
         groupTitle: request.groupTitle,

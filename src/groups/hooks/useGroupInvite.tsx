@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 // hook for page with form to create a group invitation
 const useGroupInvite = () => {
-  const from = useAppSelector((store) => {
+  const username = useAppSelector((store) => {
     return store.user.user?.username;
   });
   const navigate: NavigateFunction = useNavigate();
@@ -23,7 +23,6 @@ const useGroupInvite = () => {
   const { to } = useParams();
   const originalData = useRef<GroupInvitation>({
     to: "",
-    from: "",
     content: "",
     group: "",
   });
@@ -52,11 +51,11 @@ const useGroupInvite = () => {
   // and url params exist, also sets the group list state with a list of groups that the current
   // user is in
   useEffect(() => {
-    if (from && to) {
-      setFormData((prev) => ({ ...prev, from, to }));
-      originalData.current = { ...originalData.current, from, to };
+    if (username && to) {
+      setFormData((prev) => ({ ...prev, to }));
+      originalData.current = { ...originalData.current, to };
       const getGroups = async () => {
-        const groups = await groupConversationsAPI.getAllGroups(from, {
+        const groups = await groupConversationsAPI.getAllGroups(username, {
           getSingle: true,
         });
         if (Array.isArray(groups)) setGroupList(groups);
@@ -86,6 +85,7 @@ const useGroupInvite = () => {
           dispatch(setFormLoading(true));
 
           const invitation = await groupRequestsAPI.sendGroupInvitation(
+            username!,
             formData
           );
           socket.emit("addRequest", {

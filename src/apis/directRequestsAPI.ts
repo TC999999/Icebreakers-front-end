@@ -13,9 +13,10 @@ class directRequestsAPI extends requestsAPI {
 
   // creates and returns a new direct conversation request
   public static async makeDirectConversationRequest(
+    username: string,
     request: directConversationRequest
   ): Promise<any> {
-    let res = await this.postRequest(`new/${request.from}`, request);
+    let res = await this.postRequest(`new/${username}`, request);
     return res;
   }
 
@@ -32,10 +33,11 @@ class directRequestsAPI extends requestsAPI {
   // deletes an existing direct conversation request and creates and returns a new conversation
   // if receiving user accepts request
   public static async respondToDirectConversationRequest(
+    username: string,
     response: directConversationResponse
   ): Promise<any> {
     let res = await this.postRequest(
-      `response/${response.id}/${response.to}`,
+      `response/${response.id}/${username}`,
       response
     );
     return res;

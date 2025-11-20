@@ -57,7 +57,6 @@ export type directRequestCard = {
 export type directConversationResponse = {
   id: string;
   from: string;
-  to: string;
   accepted: boolean;
 };
 
@@ -65,7 +64,6 @@ export type groupConversationResponse = {
   id: string;
   from: string;
   groupID: string;
-  to: string;
   groupTitle: string;
   accepted: boolean;
 };

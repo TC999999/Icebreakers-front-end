@@ -383,13 +383,16 @@ const useRequestListPage = () => {
   const respondToDirectRequest = useCallback(
     async (response: directConversationResponse) => {
       let { requestResponse } =
-        await directRequestsAPI.respondToDirectConversationRequest(response);
+        await directRequestsAPI.respondToDirectConversationRequest(
+          username!,
+          response
+        );
       if (requestResponse.conversation) {
         socket.emit("addConversation", {
           conversation: {
             ...requestResponse.conversation,
             unreadMessages: 0,
-            otherUser: response.to,
+            otherUser: username!,
           },
           to: response.from,
         });
@@ -419,7 +422,10 @@ const useRequestListPage = () => {
   // removes invitation from both users' inboxes
   const respondToGroupInvitation = useCallback(
     async (response: groupConversationResponse) => {
-      let res = await groupRequestsAPI.respondToGroupInvitation(response);
+      let res = await groupRequestsAPI.respondToGroupInvitation(
+        username!,
+        response
+      );
       if (res.user) {
         socket.emit("addUserToGroup", {
           user: res.user,
@@ -454,7 +460,10 @@ const useRequestListPage = () => {
   // request from both users' inboxes
   const respondToGroupRequest = useCallback(
     async (response: groupConversationResponse) => {
-      let res = await groupRequestsAPI.respondToGroupRequest(response);
+      let res = await groupRequestsAPI.respondToGroupRequest(
+        username!,
+        response
+      );
       if (res.user) {
         socket.emit("addUserToGroup", {
           user: res.user,
