@@ -2,7 +2,6 @@ import requestsAPI from "./requestsAPI";
 import type {
   groupConversationResponse,
   groupRequestFormData,
-  groupRequestResponse,
 } from "../types/requestTypes";
 import type { GroupInvitation } from "../types/groupTypes";
 
@@ -18,21 +17,30 @@ class groupRequestsAPI extends requestsAPI {
     id: string,
     message: groupRequestFormData
   ): Promise<any> {
-    let res = await this.postRequest(`${id}/new`, message);
+    let res = await this.postRequest(`${id}/new/${message.from}`, message);
     return res.request;
   }
 
   // updates and returns an existing group request made by current user to join an existing group
   // to be marked as removed an be unseeable by the host of the group
-  public static async removeRequest(id: string, remove: boolean): Promise<any> {
-    let res = await this.patchRequest(`update/${id}`, { remove });
+  public static async removeRequest(
+    id: string,
+    username: string,
+    remove: boolean
+  ): Promise<any> {
+    let res = await this.patchRequest(`update/${id}/${username}`, { remove });
     return res.request;
   }
 
   // deletes and returns a request received by the current host user and adds the sender user
   // to the group they requested to join
-  public static async respondToGroupRequest(response: groupRequestResponse) {
-    let res = await this.postRequest(`response/${response.groupID}`, response);
+  public static async respondToGroupRequest(
+    response: groupConversationResponse
+  ) {
+    let res = await this.postRequest(
+      `response/${response.id}/${response.to}`,
+      response
+    );
     return res;
   }
 
@@ -40,7 +48,10 @@ class groupRequestsAPI extends requestsAPI {
   public static async sendGroupInvitation(
     group: GroupInvitation
   ): Promise<any> {
-    const res = await this.postRequest(`${group.group}/invitation/new`, group);
+    const res = await this.postRequest(
+      `${group.group}/invitation/new/${group.from}`,
+      group
+    );
     return res.invitation;
   }
 
@@ -49,9 +60,12 @@ class groupRequestsAPI extends requestsAPI {
   // recipient
   public static async removeGroupConversationInvitation(
     id: string,
+    username: string,
     remove: boolean
   ): Promise<any> {
-    let res = await this.patchRequest(`invitation/update/${id}`, { remove });
+    let res = await this.patchRequest(`invitation/update/${id}/${username}`, {
+      remove,
+    });
     return res.invitation;
   }
 
@@ -61,7 +75,7 @@ class groupRequestsAPI extends requestsAPI {
     response: groupConversationResponse
   ) {
     let res = await this.postRequest(
-      `invitation/response/${response.groupID}`,
+      `invitation/response/${response.id}/${response.to}`,
       response
     );
     return res;

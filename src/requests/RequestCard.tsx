@@ -6,7 +6,6 @@ import type {
   SentGroupCard,
   ReceivedGroupCard,
   groupConversationResponse,
-  groupRequestResponse,
 } from "../types/requestTypes";
 
 import "../styles/requests/RequestCard.scss";
@@ -23,7 +22,7 @@ type Props = {
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
-  respondToGroupRequest: (response: groupRequestResponse) => void;
+  respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   resendGroupRequest: (request: SentGroupCard) => void;
 
@@ -64,11 +63,21 @@ const RequestCard: React.FC<Props> = ({
 
   return (
     <div className="request-card">
-      <h2>
-        {"from" in request
-          ? `Request From ${request.from}`
-          : `Request For ${request.to}`}
-      </h2>
+      {requestType === "group-invites-received" ||
+      requestType === "group-invites-sent" ||
+      requestType === "group-invites-removed" ? (
+        <h2>
+          {"from" in request
+            ? `Invitation From ${request.from}`
+            : `Invitation For ${request.to}`}
+        </h2>
+      ) : (
+        <h2>
+          {"from" in request
+            ? `Request From ${request.from}`
+            : `Request For ${request.to}`}
+        </h2>
+      )}
 
       {"groupTitle" in request && <h3>For Group: {request.groupTitle}</h3>}
       <div className="request-message">

@@ -8,7 +8,6 @@ import type {
   directConversationResponse,
   requestType,
   groupConversationResponse,
-  groupRequestResponse,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
@@ -26,7 +25,7 @@ type Props = {
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
-  respondToGroupRequest: (response: groupRequestResponse) => void;
+  respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   resendGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;

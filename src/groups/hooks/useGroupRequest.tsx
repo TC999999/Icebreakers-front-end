@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import { useAppSelector } from "../../features/hooks";
 import type { groupRequestFormData } from "../../types/requestTypes";
 import type { groupName } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
@@ -20,8 +21,13 @@ const useGroupRequest = () => {
   const navigate: NavigateFunction = useNavigate();
   const dispatch = useAppDispatch();
   const notify = (message: string) => toast.error(message);
+  const username = useAppSelector((store) => store.user.user?.username);
 
-  const originalData = useRef<groupRequestFormData>({ content: "" });
+  const originalData = useRef<groupRequestFormData>({
+    to: "",
+    from: "",
+    content: "",
+  });
 
   const [formData, setFormData] = useState<groupRequestFormData>(
     originalData.current
@@ -50,7 +56,16 @@ const useGroupRequest = () => {
         dispatch(setFormLoading(true));
         if (id) {
           const { group } = await groupConversationsAPI.getGroup(id, true);
-          if (!("id" in group)) setGroupData(group);
+          if (!("id" in group) && username) {
+            setGroupData(group);
+            let newFormData = {
+              content: "",
+              to: group.host,
+              from: username,
+            };
+            originalData.current = newFormData;
+            setFormData(newFormData);
+          }
         }
       } catch (err) {
         console.log(err);

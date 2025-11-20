@@ -20,7 +20,6 @@ import type {
   requestCountChange,
   socketRequest,
   groupConversationResponse,
-  groupRequestResponse,
 } from "../../types/requestTypes";
 import requestDesc from "../../helpers/maps/requestList";
 import {
@@ -134,8 +133,8 @@ const useRequestListPage = () => {
       | sentRequestCard
       | receivedRequestCard
       | directConversationResponse
-      | groupConversationResponse
-      | groupRequestResponse,
+      | groupConversationResponse,
+
     addOrRemove: addOrRemove
   ) => {
     updateSentRequests(request, addOrRemove, setCurrentRequests);
@@ -150,8 +149,7 @@ const useRequestListPage = () => {
       | SentGroupCard
       | ReceivedGroupCard
       | directConversationResponse
-      | groupConversationResponse
-      | groupRequestResponse,
+      | groupConversationResponse,
 
     addOrRemove: addOrRemove,
     requestChange: requestCountChange,
@@ -212,6 +210,7 @@ const useRequestListPage = () => {
       let resentRequest =
         await directRequestsAPI.removeDirectConversationRequest(
           request.id,
+          username!,
           true
         );
 
@@ -240,6 +239,7 @@ const useRequestListPage = () => {
       let resentRequest =
         await directRequestsAPI.removeDirectConversationRequest(
           request.id,
+          username!,
           false
         );
 
@@ -269,6 +269,7 @@ const useRequestListPage = () => {
     async (request: SentGroupCard) => {
       const removedRequest = await groupRequestsAPI.removeRequest(
         request.id,
+        username!,
         true
       );
 
@@ -296,6 +297,7 @@ const useRequestListPage = () => {
     async (request: SentGroupCard) => {
       const resentRequest = await groupRequestsAPI.removeRequest(
         request.id,
+        username!,
         false
       );
 
@@ -325,6 +327,7 @@ const useRequestListPage = () => {
     async (request: SentGroupCard) => {
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
+        username!,
         true
       );
 
@@ -351,6 +354,7 @@ const useRequestListPage = () => {
     async (request: SentGroupCard) => {
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
+        username!,
         false
       );
 
@@ -449,7 +453,7 @@ const useRequestListPage = () => {
   // if request was accepted, the sender join the group and removes
   // request from both users' inboxes
   const respondToGroupRequest = useCallback(
-    async (response: groupRequestResponse) => {
+    async (response: groupConversationResponse) => {
       let res = await groupRequestsAPI.respondToGroupRequest(response);
       if (res.user) {
         socket.emit("addUserToGroup", {

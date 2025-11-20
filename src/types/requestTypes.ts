@@ -136,5 +136,7 @@ export type socketRequest = {
 };
 
 export type groupRequestFormData = {
+  to: string;
+  from: string;
   content: string;
 };

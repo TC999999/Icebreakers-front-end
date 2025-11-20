@@ -15,16 +15,17 @@ class directRequestsAPI extends requestsAPI {
   public static async makeDirectConversationRequest(
     request: directConversationRequest
   ): Promise<any> {
-    let res = await this.postRequest("new", request);
+    let res = await this.postRequest(`new/${request.from}`, request);
     return res;
   }
 
   // updates and returns an existing direct conversation request so the other user no longer sees it
   public static async removeDirectConversationRequest(
     id: string,
+    username: string,
     remove: boolean
   ): Promise<any> {
-    let res = await this.patchRequest(`update/${id}`, { remove });
+    let res = await this.patchRequest(`update/${id}/${username}`, { remove });
     return res.request;
   }
 
@@ -33,7 +34,10 @@ class directRequestsAPI extends requestsAPI {
   public static async respondToDirectConversationRequest(
     response: directConversationResponse
   ): Promise<any> {
-    let res = await this.postRequest(`response/${response.id}`, response);
+    let res = await this.postRequest(
+      `response/${response.id}/${response.to}`,
+      response
+    );
     return res;
   }
 }

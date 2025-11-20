@@ -32,10 +32,7 @@ const useLogIn = () => {
         await dispatch(LogInUser(formData)).unwrap();
         navigate("/");
       } catch (err) {
-        console.log(err);
-        if (typeof err === "string") {
-          setError(err);
-        }
+        if (typeof err === "string") setError(err);
       }
     },
     [formData]
