@@ -1,4 +1,4 @@
-import { type requestType } from "../../types/requestTypes";
+import type { requestType } from "../../types/requestTypes";
 
 // initial dynamic object for setting up request type map
 type typeMap = {

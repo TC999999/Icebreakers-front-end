@@ -11,7 +11,6 @@ export type requestType =
 
 export type directConversationRequest = {
   to: string;
-  from: string;
   content: string;
 };
 

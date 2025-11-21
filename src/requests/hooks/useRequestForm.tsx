@@ -1,8 +1,8 @@
 import { useState, useCallback, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
-import { type directConversationRequest } from "../../types/requestTypes";
+import type { directConversationRequest } from "../../types/requestTypes";
 import { useAppDispatch } from "../../features/hooks";
-import { type AppDispatch } from "../../features/store";
+import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 import directRequestsAPI from "../../apis/directRequestsAPI";

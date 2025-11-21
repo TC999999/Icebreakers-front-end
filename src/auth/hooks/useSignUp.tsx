@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
-import { type Register } from "../../types/authTypes";
-import { type interests } from "../../types/interestTypes";
+import type { Register } from "../../types/authTypes";
+import type { interests } from "../../types/interestTypes";
 import { RegisterUser } from "../../features/actions/auth";
-import { type AppDispatch } from "../../features/store";
+import type { AppDispatch } from "../../features/store";
 import { useAppDispatch } from "../../features/hooks";
 import interestsAPI from "../../apis/interestsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";

@@ -1,5 +1,5 @@
-import { type JSX } from "react";
-import { type directConversationRequestPair } from "../types/requestTypes";
+import type { JSX } from "react";
+import type { directConversationRequestPair } from "../types/requestTypes";
 import useRequestForm from "./hooks/useRequestForm";
 import "../styles/requests/RequestForm.scss";
 import InputDirections from "../InputDirections";

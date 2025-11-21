@@ -1,9 +1,5 @@
 import type { ToastContentProps } from "react-toastify";
 
-export type DynamicObject = {
-  [key: string]: any;
-};
-
 export type FormData = {
   [key: string]: string | number[];
 };
