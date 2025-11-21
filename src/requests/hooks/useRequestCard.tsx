@@ -19,12 +19,15 @@ type input = {
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
+  deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   resendGroupRequest: (request: SentGroupCard) => void;
+  deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
   resendGroupInvitation: (request: SentGroupCard) => void;
+  deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
 // custom hook for request card in list of requests in any tab in request inbox
@@ -34,12 +37,15 @@ const useRequestCard = ({
   respondToDirectRequest,
   removeDirectRequest,
   resendDirectRequest,
+  deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
   resendGroupRequest,
+  deleteGroupRequest,
   respondToGroupInvitation,
   removeGroupInvitation,
   resendGroupInvitation,
+  deleteGroupInvitation,
 }: input) => {
   // callback function that allows user to respond to the requests that they have received; works for
   // both acceptance and denial
@@ -128,7 +134,30 @@ const useRequestCard = ({
     }
   }, []);
 
-  return { respond, remove, resend };
+  // callback function that allows user to remove the requests that they have sent to other users
+  const deleteRequest = useCallback(() => {
+    if (
+      "to" in request &&
+      !("groupID" in request) &&
+      requestType === "direct-requests-removed"
+    ) {
+      deleteDirectRequest(request);
+    } else if (
+      "to" in request &&
+      "groupID" in request &&
+      requestType === "group-requests-removed"
+    ) {
+      deleteGroupRequest(request);
+    } else if (
+      "to" in request &&
+      "groupID" in request &&
+      requestType === "group-invites-removed"
+    ) {
+      deleteGroupInvitation(request);
+    }
+  }, []);
+
+  return { respond, remove, resend, deleteRequest };
 };
 
 export default useRequestCard;

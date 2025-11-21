@@ -292,7 +292,8 @@ const useRequestListPage = () => {
     [currentRequests, requestCount]
   );
 
-  // resend removed group requests
+  // removes a single request from the user's removed group requests inbox, moves it to their sent
+  // group requests inbox, and sends request to its intended recipient via websocket
   const resendGroupRequest = useCallback(
     async (request: SentGroupCard) => {
       const resentRequest = await groupRequestsAPI.removeRequest(
@@ -373,6 +374,47 @@ const useRequestListPage = () => {
           request: invitation,
         }
       );
+    },
+    [currentRequests, requestCount]
+  );
+
+  // DELETION (SENDER'S SIDE ONLY)
+  // deletes direct request entirely from senders's inbox
+  const deleteDirectRequest = useCallback(
+    async (request: sentRequestCard) => {
+      await directRequestsAPI.deleteDirectConversationRequest(
+        request.id,
+        username!,
+        { to: request.to }
+      );
+      setNewRequests(request, "remove");
+      setNewRequestCount({ subtractRequest: "removedDirectRequestCount" });
+    },
+    [currentRequests, requestCount]
+  );
+
+  // deletes group invitation entirely from senders's inbox
+  const deleteGroupInvitation = useCallback(
+    async (request: SentGroupCard) => {
+      await groupRequestsAPI.deleteGroupConversationInvitation(
+        request.id,
+        username!,
+        { to: request.to, groupID: request.groupID }
+      );
+      setNewRequests(request, "remove");
+      setNewRequestCount({ subtractRequest: "removedGroupInvitationCount" });
+    },
+    [currentRequests, requestCount]
+  );
+
+  // deletes group request entirely from senders's inbox
+  const deleteGroupRequest = useCallback(
+    async (request: SentGroupCard) => {
+      await groupRequestsAPI.deleteGroupRequest(request.id, username!, {
+        groupID: request.groupID,
+      });
+      setNewRequests(request, "remove");
+      setNewRequestCount({ subtractRequest: "removedGroupRequestCount" });
     },
     [currentRequests, requestCount]
   );
@@ -506,12 +548,15 @@ const useRequestListPage = () => {
     respondToDirectRequest,
     removeDirectRequest,
     resendDirectRequest,
+    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     resendGroupRequest,
+    deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
     resendGroupInvitation,
+    deleteGroupInvitation,
   };
 };
 

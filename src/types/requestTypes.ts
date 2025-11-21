@@ -54,6 +54,10 @@ export type directRequestCard = {
   createdAt: string;
 };
 
+export type directConversationDelete = {
+  to: string;
+};
+
 export type directConversationResponse = {
   id: string;
   from: string;
@@ -66,6 +70,15 @@ export type groupConversationResponse = {
   groupID: string;
   groupTitle: string;
   accepted: boolean;
+};
+
+export type groupInvitationDelete = {
+  to: string;
+  groupID: string;
+};
+
+export type groupRequestDelete = {
+  groupID: string;
 };
 
 export type groupRequestResponse = {

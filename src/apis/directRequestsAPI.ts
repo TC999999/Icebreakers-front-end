@@ -2,6 +2,7 @@ import requestsAPI from "./requestsAPI";
 import type {
   directConversationRequest,
   directConversationResponse,
+  directConversationDelete,
 } from "../types/requestTypes";
 
 // API for direct conversation requests, including creating requests for other users, removing
@@ -28,6 +29,16 @@ class directRequestsAPI extends requestsAPI {
   ): Promise<any> {
     let res = await this.patchRequest(`update/${id}/${username}`, { remove });
     return res.request;
+  }
+
+  // creates and returns a new direct conversation request
+  public static async deleteDirectConversationRequest(
+    id: string,
+    username: string,
+    request: directConversationDelete
+  ): Promise<any> {
+    let res = await this.deleteRequest(`delete/${id}/${username}`, request);
+    return res;
   }
 
   // deletes an existing direct conversation request and creates and returns a new conversation

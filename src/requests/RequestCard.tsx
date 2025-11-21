@@ -22,13 +22,15 @@ type Props = {
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
+  deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   resendGroupRequest: (request: SentGroupCard) => void;
-
+  deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
   resendGroupInvitation: (request: SentGroupCard) => void;
+  deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
 // reusable React component for request cards that show up in the user's request inbox; can ue used
@@ -40,25 +42,31 @@ const RequestCard: React.FC<Props> = ({
   respondToDirectRequest,
   removeDirectRequest,
   resendDirectRequest,
+  deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
   resendGroupRequest,
+  deleteGroupRequest,
   respondToGroupInvitation,
   removeGroupInvitation,
   resendGroupInvitation,
+  deleteGroupInvitation,
 }) => {
-  const { respond, remove, resend } = useRequestCard({
+  const { respond, remove, resend, deleteRequest } = useRequestCard({
     requestType,
     request,
     respondToDirectRequest,
     removeDirectRequest,
     resendDirectRequest,
+    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     resendGroupRequest,
+    deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
     resendGroupInvitation,
+    deleteGroupInvitation,
   });
 
   return (
@@ -127,7 +135,9 @@ const RequestCard: React.FC<Props> = ({
             <button className="resend-button" onClick={() => resend()}>
               Resend
             </button>
-            <button className="delete-button">Delete</button>
+            <button className="delete-button" onClick={() => deleteRequest()}>
+              Delete
+            </button>
           </div>
         )}
       </div>

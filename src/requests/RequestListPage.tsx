@@ -15,12 +15,15 @@ const RequestListPage = () => {
     respondToDirectRequest,
     removeDirectRequest,
     resendDirectRequest,
+    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     resendGroupRequest,
+    deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
     resendGroupInvitation,
+    deleteGroupInvitation,
   } = useRequestListPage();
 
   return (
@@ -149,12 +152,15 @@ const RequestListPage = () => {
           respondToDirectRequest={respondToDirectRequest}
           removeDirectRequest={removeDirectRequest}
           resendDirectRequest={resendDirectRequest}
+          deleteDirectRequest={deleteDirectRequest}
           respondToGroupRequest={respondToGroupRequest}
           removeGroupRequest={removeGroupRequest}
           resendGroupRequest={resendGroupRequest}
+          deleteGroupRequest={deleteGroupRequest}
           respondToGroupInvitation={respondToGroupInvitation}
           removeGroupInvitation={removeGroupInvitation}
           resendGroupInvitation={resendGroupInvitation}
+          deleteGroupInvitation={deleteGroupInvitation}
         />
       </div>
     </main>

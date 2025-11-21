@@ -2,6 +2,8 @@ import requestsAPI from "./requestsAPI";
 import type {
   groupConversationResponse,
   groupRequestFormData,
+  groupInvitationDelete,
+  groupRequestDelete,
 } from "../types/requestTypes";
 import type { GroupInvitation } from "../types/groupTypes";
 
@@ -30,6 +32,15 @@ class groupRequestsAPI extends requestsAPI {
   ): Promise<any> {
     let res = await this.patchRequest(`update/${id}/${username}`, { remove });
     return res.request;
+  }
+
+  // deletes an existing group request created by the requests's sender; no return value
+  public static async deleteGroupRequest(
+    id: string,
+    username: string,
+    request: groupRequestDelete
+  ): Promise<void> {
+    await this.deleteRequest(`delete/${id}/${username}`, request);
   }
 
   // deletes and returns a request received by the current host user and adds the sender user
@@ -69,6 +80,14 @@ class groupRequestsAPI extends requestsAPI {
       remove,
     });
     return res.invitation;
+  }
+  // deletes an existing group invitation created by the invitation's sender; no return value
+  public static async deleteGroupConversationInvitation(
+    id: string,
+    username: string,
+    request: groupInvitationDelete
+  ): Promise<void> {
+    await this.deleteRequest(`invitation/delete/${id}/${username}`, request);
   }
 
   // deletes and returns an inviation received by the current user and adds the user

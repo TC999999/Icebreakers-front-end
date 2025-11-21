@@ -21,16 +21,18 @@ type Props = {
     | ReceivedGroupCard
     | SentGroupCard
   )[];
-
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
+  deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   resendGroupRequest: (request: SentGroupCard) => void;
+  deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
   resendGroupInvitation: (request: SentGroupCard) => void;
+  deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
 // React Component with a list of Request Cards to be viewed in any of the the request inbox
@@ -41,12 +43,15 @@ const RequestList: React.FC<Props> = ({
   respondToDirectRequest,
   removeDirectRequest,
   resendDirectRequest,
+  deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
   resendGroupRequest,
+  deleteGroupRequest,
   respondToGroupInvitation,
   removeGroupInvitation,
   resendGroupInvitation,
+  deleteGroupInvitation,
 }): JSX.Element => {
   return (
     <div className="request-list">
@@ -64,12 +69,15 @@ const RequestList: React.FC<Props> = ({
                 respondToDirectRequest={respondToDirectRequest}
                 removeDirectRequest={removeDirectRequest}
                 resendDirectRequest={resendDirectRequest}
+                deleteDirectRequest={deleteDirectRequest}
                 respondToGroupRequest={respondToGroupRequest}
                 removeGroupRequest={removeGroupRequest}
                 resendGroupRequest={resendGroupRequest}
+                deleteGroupRequest={deleteGroupRequest}
                 respondToGroupInvitation={respondToGroupInvitation}
                 removeGroupInvitation={removeGroupInvitation}
                 resendGroupInvitation={resendGroupInvitation}
+                deleteGroupInvitation={deleteGroupInvitation}
               />
             </li>
           ))}
