@@ -24,7 +24,7 @@ class groupConversationsAPI extends API {
 
   // creates and returns a new group conversation where the inputted user is the host
   public static async createConversation(username: string, group: newGroup) {
-    const res = await this.postRequest("new", { ...group, host: username });
+    const res = await this.postRequest(`new/${username}`, group);
     return res;
   }
 
