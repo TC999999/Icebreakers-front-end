@@ -12,7 +12,7 @@ import { shallowEqual } from "react-redux";
 // user on a profile page that is not their own
 
 const UserProfile = () => {
-  const { userState } = useUserProfile();
+  const { userState, goToMessages } = useUserProfile();
   const navigate: NavigateFunction = useNavigate();
 
   const { user } = useAppSelector((store) => {
@@ -68,9 +68,10 @@ const UserProfile = () => {
               )}
 
               {!userState.requestSent && userState.conversationExists && (
-                <p id="request-message">
-                  You are already chatting with this user!
-                </p>
+                // <p id="request-message">
+                //   You are already chatting with this user!
+                // </p>
+                <button onClick={() => goToMessages()}>Go To Messages</button>
               )}
 
               {!userState.requestSent && !userState.conversationExists && (

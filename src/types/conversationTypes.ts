@@ -4,6 +4,8 @@ export type conversation = {
   otherUser: string;
   lastUpdatedAt: string;
   unreadMessages: number;
+  latestMessage?: string;
+  isTyping?: boolean;
 };
 
 export type conversationMessage = {

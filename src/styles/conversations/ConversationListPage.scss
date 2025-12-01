@@ -20,7 +20,7 @@
       #conversation-messages-window {
         background-color: c.$thirdly;
         z-index: 0;
-        width: 80%;
+        width: 100%;
         height: 100%;
         position: relative;
 
@@ -131,6 +131,10 @@
         width: 20%;
         height: 100%;
         border-right: s.$borderSettings c.$primary;
+
+        @include s.tabsForTablet {
+          width: 220px;
+        }
       }
     }
   }

@@ -31,6 +31,15 @@ class directConversationsAPI extends API {
     return res.conversations;
   }
 
+  // retrieves the direct conversation id that two distinct users share
+  public static async getConversationID(
+    username: string,
+    otherUser: string
+  ): Promise<any> {
+    let res = await this.getRequest(`${username}/conversation/${otherUser}`);
+    return res;
+  }
+
   // retrieves a list of all messages that belong to a single conversation based on id; messages can
   // belong to either user in the conversation
   public static async getMessages(

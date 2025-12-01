@@ -10,6 +10,10 @@ const LogIn = (): JSX.Element => {
       <div id="login-form">
         <form onSubmit={handleSubmit}>
           <h1>Log In Here!</h1>
+          <small>
+            For security purposes, you will be unable to log in if you are
+            already logged in on another browser.
+          </small>
           <div id="username-div" className="form-div">
             <label htmlFor="username">
               Username:

@@ -16,6 +16,13 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
   }
 }
 
+// only allow at larger widths for conversation tabs
+@mixin tabsForTablet {
+  @media (min-width: 1173px) {
+    @content;
+  }
+}
+
 // only allow at smaller widths
 @mixin desktop {
   @media (max-width: 1000px) {

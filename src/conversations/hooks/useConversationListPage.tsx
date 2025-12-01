@@ -13,6 +13,7 @@ import type {
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import socket from "../../helpers/socket";
 import savedMessages from "../../helpers/maps/savedMessages";
+import messageTruncate from "../../helpers/messageTruncate";
 import { shallowEqual } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -106,32 +107,51 @@ const useConversationListPage = () => {
     }
   }, [currentMessages]);
 
-  // updates list of current messages when a message from current conversation is added from other user in conversation
+  // updates list of current messages when a message from current conversation
+  // is added from other user in conversation
   useEffect(() => {
     socket.on("directMessage", ({ message, id }) => {
       if (id === currentConversation.id) {
         setCurrentMessages((prev) => {
           return [...prev, message];
         });
-        const newConversations = conversations.map((convo) => {
-          return convo.id === currentConversation.id
-            ? { ...convo, lastUpdatedAt: message.createdAt }
-            : convo;
-        });
-        setConversations(newConversations);
+
+        let findConvo = conversations.find(
+          (conversation) => conversation.id === currentConversation.id
+        );
+        if (findConvo) {
+          findConvo = {
+            ...findConvo,
+            latestMessage: messageTruncate(message.content),
+            lastUpdatedAt: message.createdAt,
+          };
+
+          const filteredConversations = conversations.filter((convo) => {
+            return convo.id !== currentConversation.id;
+          });
+
+          setConversations([findConvo, ...filteredConversations]);
+        }
         dispatch(setUnreadMessages(-1));
         socket.emit("decreaseUnreadMessages", { id });
       } else {
-        const newConversations = conversations.map((convo) => {
-          return convo.id === id
-            ? {
-                ...convo,
-                unreadMessages: convo.unreadMessages + 1,
-                lastUpdatedAt: message.createdAt,
-              }
-            : convo;
-        });
-        setConversations(newConversations);
+        let findConvo = conversations.find(
+          (conversation) => conversation.id === id
+        );
+        console.log(findConvo);
+        if (findConvo) {
+          findConvo = {
+            ...findConvo,
+            latestMessage: messageTruncate(message.content),
+            lastUpdatedAt: message.createdAt,
+            unreadMessages: findConvo.unreadMessages + 1,
+          };
+          console.log(findConvo);
+          const filteredConversations = conversations.filter((convo) => {
+            return convo.id !== id;
+          });
+          setConversations([findConvo, ...filteredConversations]);
+        }
       }
     });
 
@@ -150,12 +170,18 @@ const useConversationListPage = () => {
           setTypingMessage("");
         }
       }
+
+      setConversations(
+        conversations.map((c) => {
+          return c.id === id ? { ...c, isTyping } : c;
+        })
+      );
     });
 
     return () => {
       socket.off("isTyping");
     };
-  }, [currentConversation]);
+  }, [currentConversation, conversations]);
 
   // adds conversation to list if requested user accepts conversation request
   useEffect(() => {
@@ -375,28 +401,40 @@ const useConversationListPage = () => {
 
         setMessageInput(initialInput);
 
-        const newConversations = conversations.map((convo) => {
-          return convo.id === currentConversation.id
-            ? { ...convo, lastUpdatedAt: message.createdAt }
-            : convo;
-        });
-        setConversations(newConversations);
-        socket.emit("directMessage", {
-          message,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
-        });
+        let findConvo = conversations.find(
+          (conversation) => conversation.id === currentConversation.id
+        );
+        if (findConvo) {
+          findConvo = {
+            ...findConvo,
+            latestMessage: messageTruncate(message.content),
+            lastUpdatedAt: message.createdAt,
+          };
+
+          const filteredConversations = conversations.filter((convo) => {
+            return convo.id !== currentConversation.id;
+          });
+
+          setConversations([findConvo, ...filteredConversations]);
+        }
+
         socket.emit("isTyping", {
           otherUser: username,
           id: currentConversation.id,
           to: currentConversation.recipient,
           isTyping: false,
         });
+
+        socket.emit("directMessage", {
+          message,
+          id: currentConversation.id,
+          to: currentConversation.recipient,
+        });
       } catch (err: any) {
         notify(err.message);
       }
     },
-    [messageInput]
+    [messageInput, conversations]
   );
 
   return {

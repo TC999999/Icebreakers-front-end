@@ -3,12 +3,24 @@
 
 .conversation-tab {
   background-color: white;
-  padding: 1px;
+  padding: 5px;
   border-bottom: s.$borderSettings c.$primary;
+  height: 90px;
+  position: relative;
+
+  @include s.tabsForTablet {
+    width: 220px;
+  }
 
   &:hover {
     background-color: aliceblue;
     color: blue;
+  }
+
+  .conversation-header {
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 0;
   }
 
   .unread-messages-count {
@@ -18,10 +30,22 @@
     border: s.$borderSettings;
     border-radius: s.$borderRadius;
   }
-}
 
-.selected {
-  background-color: beige;
-  color: blue;
-  text-decoration: underline;
+  .latest-message {
+    height: 35px;
+
+    overflow: hidden;
+  }
+
+  .last-updated-at {
+    position: absolute;
+    bottom: 0;
+    font-size: smaller;
+  }
+
+  &.selected {
+    background-color: beige;
+    color: blue;
+    text-decoration: underline;
+  }
 }
