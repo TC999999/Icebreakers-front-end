@@ -11,6 +11,7 @@ import type {
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
+import { IoReorderThree } from "react-icons/io5";
 
 type Props = {
   currentRequestType: requestType;
@@ -21,6 +22,9 @@ type Props = {
     | ReceivedGroupCard
     | SentGroupCard
   )[];
+  toggleTabletTabs: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => Promise<void>;
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
   resendDirectRequest: (request: sentRequestCard) => void;
@@ -40,6 +44,7 @@ const RequestList: React.FC<Props> = ({
   currentRequestType,
   currentTitleAndDesc,
   requestList,
+  toggleTabletTabs,
   respondToDirectRequest,
   removeDirectRequest,
   resendDirectRequest,
@@ -56,6 +61,14 @@ const RequestList: React.FC<Props> = ({
   return (
     <div className="request-list">
       <header id="request-list-header">
+        <button
+          title="Change Request Category"
+          type="button"
+          className="tab-button"
+          onClick={toggleTabletTabs}
+        >
+          <IoReorderThree />
+        </button>
         <h2>{currentTitleAndDesc.title}</h2>
         <p id="request-description">{currentTitleAndDesc.description}</p>
       </header>

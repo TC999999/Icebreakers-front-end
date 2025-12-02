@@ -81,6 +81,9 @@ const useRequestListPage = () => {
     )[]
   >([]);
 
+  const [showTabletRequestTabs, setShowTabletRequestTabs] =
+    useState<boolean>(false);
+
   // on initial render, gets url search query data and sets the initial selected request tab and
   // the initial header shown based on those params; also retrieves the initial request list to be
   // shown based on the search query and retrieves the count for each unanswered/sent/removed request
@@ -183,6 +186,18 @@ const useRequestListPage = () => {
     };
   }, [viewedRequests, requestCount]);
 
+  // when user clicks on upper left hand corner button (when visible) either hides or shows request
+  // category tabs on smaller screens
+  const toggleTabletTabs = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      setShowTabletRequestTabs(!showTabletRequestTabs);
+    },
+    [showTabletRequestTabs]
+  );
+
   // when user clicks on respective request tab, highlights tab and sets description state to respective
   // text, and retrieves the correct request list from the backend database
   const changeViewedRequests = useCallback(
@@ -198,8 +213,9 @@ const useRequestListPage = () => {
         const requests = await requestsAPI.getRequests(username, params);
         setCurrentRequests(requests);
       }
+      if (showTabletRequestTabs) setShowTabletRequestTabs(false);
     },
-    [viewedRequests]
+    [viewedRequests, showTabletRequestTabs]
   );
 
   // UPDATE DIRECT REQUESTS (SENDER'S SIDE ONLY)
@@ -544,6 +560,8 @@ const useRequestListPage = () => {
     currentTitleAndDesc,
     currentRequests,
     requestCount,
+    showTabletRequestTabs,
+    toggleTabletTabs,
     changeViewedRequests,
     respondToDirectRequest,
     removeDirectRequest,

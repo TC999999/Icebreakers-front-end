@@ -16,11 +16,10 @@ h1#request-list-page-header {
   height: 600px;
   width: 100%;
 
-  div#request-tabs {
-    border-right: s.$borderSettings c.$secondary;
-    background-color: c.$primary;
-    width: 300px;
-    height: 100%;
-    overflow: scroll;
+  .request-tabs {
+    display: none;
+    @include s.tabsForTablet {
+      display: block;
+    }
   }
 }

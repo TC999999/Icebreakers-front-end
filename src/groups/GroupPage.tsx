@@ -66,7 +66,9 @@ const GroupPage = () => {
           {!isInGroupState &&
             !requestPendingState &&
             !invitationPendingState && (
-              <button onClick={handleNavigate}>Request To Join</button>
+              <button className="submit-button" onClick={handleNavigate}>
+                Request To Join
+              </button>
             )}
         </div>
       </div>

@@ -326,6 +326,20 @@ form {
   }
 }
 
+#tab-list-tablet {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  .conversation-tabs,
+  .request-tabs {
+    animation: slideFromLeft 0.5s;
+    width: 210px;
+    height: 700px;
+    border: s.$borderSettings c.$primary;
+  }
+}
+
 #search-results {
   display: flex;
   justify-content: center;

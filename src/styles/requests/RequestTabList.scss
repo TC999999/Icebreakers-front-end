@@ -1,0 +1,10 @@
+@use "../settings" as s;
+@use "../colors" as c;
+
+.request-tabs {
+  border-right: s.$borderSettings c.$secondary;
+  background-color: c.$primary;
+  width: 300px;
+  height: auto;
+  overflow: scroll;
+}

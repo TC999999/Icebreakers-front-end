@@ -3,7 +3,6 @@ import type {
   conversation,
   currentConversation,
 } from "../types/conversationTypes";
-import "../styles/conversations/ConversationTabListTablet.scss";
 import { FaArrowLeft } from "react-icons/fa";
 
 type Props = {
@@ -24,7 +23,7 @@ const ConversationTabListTablet: React.FC<Props> = ({
   toggleTabletConversationTabs,
 }) => {
   return show ? (
-    <div className="modal-transparent" id="conversation-tab-list-tablet">
+    <div className="modal-transparent" id="tab-list-tablet">
       <div>
         <button
           type="button"
