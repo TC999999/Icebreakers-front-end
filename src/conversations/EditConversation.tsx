@@ -31,7 +31,7 @@ const EditConversation: React.FC<Props> = ({
     });
 
   return show ? (
-    <div id="edit-conversation-background">
+    <div className="modal-transparent" id="edit-conversation-background">
       <div id="edit-conversation-content">
         <h1>Edit Conversation with {currentConversation.recipient}</h1>
         <div id="edit-form">

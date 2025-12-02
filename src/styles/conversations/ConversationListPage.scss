@@ -31,7 +31,7 @@
           z-index: 2;
           padding: 0;
           font-weight: bold;
-          height: auto;
+          height: 80px;
 
           #online-status {
             display: inline-block;
@@ -50,7 +50,7 @@
 
           #conversation-tab-button {
             position: absolute;
-            left: 5%;
+            left: 10%;
             top: 10%;
             visibility: visible;
             button {
@@ -59,6 +59,7 @@
               border-radius: s.$borderRadius;
               color: c.$thirdly;
               padding: 10px;
+              cursor: pointer;
             }
 
             @include s.tabsForTablet {
@@ -85,6 +86,24 @@
           overflow-y: scroll;
           display: flex;
           flex-direction: column;
+
+          #no-conversation-selected-message {
+            width: 50%;
+            align-self: center;
+            text-align: center;
+            top: 350px;
+            padding: 20px;
+            position: absolute;
+            background-color: c.$primary;
+            border: s.$borderSettings c.$secondary;
+            border-radius: s.$borderRadius;
+
+            h5 {
+              color: c.$secondary;
+              font-family: Impact, Haettenschweiler, "Arial Narrow Bold",
+                sans-serif;
+            }
+          }
         }
 
         #typing-message {

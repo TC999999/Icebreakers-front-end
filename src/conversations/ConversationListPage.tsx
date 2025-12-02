@@ -5,6 +5,7 @@ import ConversationLoading from "./ConversationLoading";
 import EditConversation from "./EditConversation";
 import ConversationTabList from "./ConversationTabList";
 import { FaArrowUp } from "react-icons/fa";
+import { IoReorderThree } from "react-icons/io5";
 
 const ConversationListPage = () => {
   const {
@@ -54,15 +55,19 @@ const ConversationListPage = () => {
               <div ref={scrollRef} id="conversation-messages">
                 <header id="messages-header">
                   <div id="conversation-tab-button">
-                    <button type="button">three lines</button>
+                    <button type="button" title="Show Conversations">
+                      <IoReorderThree />
+                    </button>
                   </div>
-                  <h3>
-                    {currentConversation.title.length > 0
-                      ? currentConversation.title
-                      : currentConversation.recipient}
-                  </h3>
-                  <div>
-                    {currentConversation.recipient.length > 0 && (
+                  {currentMessages.length > 0 && (
+                    <h3>
+                      {currentConversation.title.length > 0
+                        ? currentConversation.title
+                        : currentConversation.recipient}
+                    </h3>
+                  )}
+                  {currentConversation.recipient.length > 0 && (
+                    <div>
                       <span>
                         <b>With:</b> {currentConversation.recipient}{" "}
                         <div
@@ -75,8 +80,8 @@ const ConversationListPage = () => {
                           }
                         ></div>
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   {currentConversation.id.length > 0 && (
                     <div id="edit-conversation-button">
                       <button type="button" onClick={(e) => toggleEditForm(e)}>
@@ -85,6 +90,16 @@ const ConversationListPage = () => {
                     </div>
                   )}
                 </header>
+
+                {currentMessages.length === 0 && !loadingMessages && (
+                  <div id="no-conversation-selected-message">
+                    <h5>
+                      Please select one of the conversations on the left. If
+                      viewing on a smaller screen, click the top left button and
+                      select a conversation.
+                    </h5>
+                  </div>
+                )}
 
                 {currentMessages.map((m) => {
                   return (

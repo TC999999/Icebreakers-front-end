@@ -1,26 +1,14 @@
 @use "colors" as c;
 
 #small-loading-message-background {
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(55, 55, 55, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#small-loading-message-content {
-  background-color: white;
-  border: 2px solid c.$primary;
-  border-radius: 30px;
-  width: 200px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  #small-loading-message-content {
+    background-color: white;
+    border: 2px solid c.$primary;
+    border-radius: 30px;
+    width: 200px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

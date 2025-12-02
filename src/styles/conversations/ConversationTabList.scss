@@ -6,10 +6,10 @@
   width: 0;
   height: 100%;
   border-right: s.$borderSettings c.$primary;
-  visibility: hidden;
+  display: none;
 
   @include s.tabsForTablet {
     width: 220px;
-    visibility: visible;
+    display: block;
   }
 }
