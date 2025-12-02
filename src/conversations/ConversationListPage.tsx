@@ -68,6 +68,7 @@ const ConversationListPage = () => {
                   <div id="conversation-tab-button">
                     <button
                       type="button"
+                      className="tab-button"
                       title="Show Conversations"
                       onClick={(e) => toggleTabletConversationTabs(e)}
                     >
@@ -99,7 +100,11 @@ const ConversationListPage = () => {
                   )}
                   {currentConversation.id.length > 0 && (
                     <div id="edit-conversation-button">
-                      <button type="button" onClick={(e) => toggleEditForm(e)}>
+                      <button
+                        className="edit-button"
+                        type="button"
+                        onClick={(e) => toggleEditForm(e)}
+                      >
                         Edit
                       </button>
                     </div>

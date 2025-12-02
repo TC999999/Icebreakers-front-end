@@ -26,7 +26,12 @@ const ConversationTabListTablet: React.FC<Props> = ({
   return show ? (
     <div className="modal-transparent" id="conversation-tab-list-tablet">
       <div>
-        <button title="Cancel" onClick={toggleTabletConversationTabs}>
+        <button
+          type="button"
+          title="Cancel"
+          className="cancel-button"
+          onClick={toggleTabletConversationTabs}
+        >
           <FaArrowLeft />
         </button>
       </div>

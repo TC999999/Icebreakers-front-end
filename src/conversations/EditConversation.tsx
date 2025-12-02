@@ -50,8 +50,12 @@ const EditConversation: React.FC<Props> = ({
                 />
               </label>
             </div>
-            <div>
-              <button type="button" onClick={(e) => handleCancel(e)}>
+            <div className="button-row">
+              <button
+                type="button"
+                className="cancel-button"
+                onClick={(e) => handleCancel(e)}
+              >
                 Cancel
               </button>
               <button type="submit" className="submit-button">

@@ -211,23 +211,6 @@ form {
     border-radius: 0px 0px s.$borderRadius s.$borderRadius;
   }
 
-  .submit-button {
-    background-color: c.$secondary;
-    color: white;
-    padding: 10px;
-    border: s.$borderSettings c.$primary;
-    border-radius: s.$borderRadius;
-
-    &:hover {
-      background-color: c.$thirdly;
-      color: black;
-    }
-
-    &:active {
-      background-color: antiquewhite;
-    }
-  }
-
   .send-button {
     background-color: c.$secondary;
     width: 50px;
@@ -235,6 +218,7 @@ form {
     border-radius: 50%;
     font-size: large;
     color: c.$primary;
+    cursor: pointer;
 
     &:hover {
       background-color: c.$thirdly;
@@ -318,6 +302,27 @@ form {
         border-left: 10px solid transparent;
       }
     }
+  }
+}
+
+.submit-button,
+.cancel-button,
+.tab-button,
+.edit-button {
+  background-color: c.$secondary;
+  color: white;
+  padding: 10px;
+  border: s.$borderSettings c.$primary;
+  border-radius: s.$borderRadius;
+  cursor: pointer;
+
+  &:hover {
+    background-color: c.$thirdly;
+    color: black;
+  }
+
+  &:active {
+    background-color: antiquewhite;
   }
 }
 

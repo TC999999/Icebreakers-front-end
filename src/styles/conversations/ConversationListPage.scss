@@ -61,14 +61,6 @@
             left: 10%;
             top: 10%;
             visibility: visible;
-            button {
-              background-color: c.$secondary;
-              border: s.$borderSettings c.$thirdly;
-              border-radius: s.$borderRadius;
-              color: c.$thirdly;
-              padding: 10px;
-              cursor: pointer;
-            }
 
             @include s.tabsForTablet {
               visibility: hidden;
@@ -79,13 +71,6 @@
             position: absolute;
             left: 85%;
             top: 10%;
-            button {
-              background-color: c.$secondary;
-              border: s.$borderSettings c.$thirdly;
-              border-radius: s.$borderRadius;
-              color: c.$thirdly;
-              padding: 10px;
-            }
           }
         }
 

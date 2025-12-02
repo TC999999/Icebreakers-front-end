@@ -9,5 +9,10 @@
     border: s.$borderSettings c.$secondary;
     border-radius: s.$borderRadius;
     padding: 10px;
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 }
