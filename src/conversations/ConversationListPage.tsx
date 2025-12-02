@@ -1,9 +1,9 @@
 import "../styles/conversations/ConversationListPage.scss";
 import useConversationListPage from "./hooks/useConversationListPage";
-import ConversationTab from "./ConversationTab";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
 import EditConversation from "./EditConversation";
+import ConversationTabList from "./ConversationTabList";
 import { FaArrowUp } from "react-icons/fa";
 
 const ConversationListPage = () => {
@@ -42,24 +42,20 @@ const ConversationListPage = () => {
 
       <div id="conversation-list">
         <div id="conversation-list-window">
-          <div id="conversation-tabs">
-            {conversations.map((c) => {
-              return (
-                <ConversationTab
-                  key={`conversation-${c.id}`}
-                  conversation={c}
-                  selected={currentConversation.id === c.id}
-                  handleCurrentConversation={handleCurrentConversation}
-                />
-              );
-            })}
-          </div>
+          <ConversationTabList
+            conversations={conversations}
+            currentConversation={currentConversation}
+            handleCurrentConversation={handleCurrentConversation}
+          />
           <div id="conversation-messages-window">
             {loadingMessages ? (
               <ConversationLoading />
             ) : (
               <div ref={scrollRef} id="conversation-messages">
                 <header id="messages-header">
+                  <div id="conversation-tab-button">
+                    <button type="button">three lines</button>
+                  </div>
                   <h3>
                     {currentConversation.title.length > 0
                       ? currentConversation.title

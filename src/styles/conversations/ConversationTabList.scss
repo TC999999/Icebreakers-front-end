@@ -1,0 +1,15 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+.conversation-tabs {
+  background-color: c.$secondary;
+  width: 0;
+  height: 100%;
+  border-right: s.$borderSettings c.$primary;
+  visibility: hidden;
+
+  @include s.tabsForTablet {
+    width: 220px;
+    visibility: visible;
+  }
+}

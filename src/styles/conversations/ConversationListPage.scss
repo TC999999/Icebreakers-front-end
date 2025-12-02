@@ -48,6 +48,24 @@
             }
           }
 
+          #conversation-tab-button {
+            position: absolute;
+            left: 5%;
+            top: 10%;
+            visibility: visible;
+            button {
+              background-color: c.$secondary;
+              border: s.$borderSettings c.$thirdly;
+              border-radius: s.$borderRadius;
+              color: c.$thirdly;
+              padding: 10px;
+            }
+
+            @include s.tabsForTablet {
+              visibility: hidden;
+            }
+          }
+
           #edit-conversation-button {
             position: absolute;
             left: 85%;
@@ -124,16 +142,6 @@
               }
             }
           }
-        }
-      }
-      #conversation-tabs {
-        background-color: c.$secondary;
-        width: 20%;
-        height: 100%;
-        border-right: s.$borderSettings c.$primary;
-
-        @include s.tabsForTablet {
-          width: 220px;
         }
       }
     }
