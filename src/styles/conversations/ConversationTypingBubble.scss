@@ -1,0 +1,30 @@
+@use "../colors" as c;
+@use "../settings" as s;
+
+.conversation-typing-bubble {
+  background-color: c.$thirdly;
+  text-align: center;
+  width: 50%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: s.$borderRadius;
+  text-decoration: none;
+  font-size: large;
+  position: absolute;
+  top: 35px;
+  left: 40px;
+
+  &::after {
+    content: " ";
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    border-top: 5px solid c.$thirdly;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-right: 5px solid c.$thirdly;
+  }
+}

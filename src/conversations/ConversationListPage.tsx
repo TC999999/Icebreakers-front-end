@@ -4,6 +4,7 @@ import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
 import EditConversation from "./EditConversation";
 import ConversationTabList from "./ConversationTabList";
+import ConversationTabListTablet from "./ConversationTabListTablet";
 import { FaArrowUp } from "react-icons/fa";
 import { IoReorderThree } from "react-icons/io5";
 
@@ -16,10 +17,12 @@ const ConversationListPage = () => {
     currentMessages,
     typingMessage,
     showEditForm,
+    showTabletConversationTabs,
     scrollRef,
     handleChangeInput,
     handleCurrentConversation,
     toggleEditForm,
+    toggleTabletConversationTabs,
     handleSend,
     handleBlur,
     handleFocus,
@@ -41,6 +44,14 @@ const ConversationListPage = () => {
         <h3>All of your direct messages with other users.</h3>
       </header>
 
+      <ConversationTabListTablet
+        conversations={conversations}
+        currentConversation={currentConversation}
+        handleCurrentConversation={handleCurrentConversation}
+        show={showTabletConversationTabs}
+        toggleTabletConversationTabs={toggleTabletConversationTabs}
+      />
+
       <div id="conversation-list">
         <div id="conversation-list-window">
           <ConversationTabList
@@ -55,7 +66,11 @@ const ConversationListPage = () => {
               <div ref={scrollRef} id="conversation-messages">
                 <header id="messages-header">
                   <div id="conversation-tab-button">
-                    <button type="button" title="Show Conversations">
+                    <button
+                      type="button"
+                      title="Show Conversations"
+                      onClick={(e) => toggleTabletConversationTabs(e)}
+                    >
                       <IoReorderThree />
                     </button>
                   </div>

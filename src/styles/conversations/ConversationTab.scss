@@ -7,12 +7,7 @@
   border-bottom: s.$borderSettings c.$primary;
   height: 90px;
   position: relative;
-  visibility: hidden;
-
-  @include s.tabsForTablet {
-    width: 200px;
-    visibility: visible;
-  }
+  width: 200px;
 
   &:hover {
     background-color: aliceblue;

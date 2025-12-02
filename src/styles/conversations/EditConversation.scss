@@ -2,6 +2,8 @@
 @use "../settings" as s;
 
 #edit-conversation-background {
+  justify-content: center;
+  align-items: center;
   #edit-conversation-content {
     background-color: c.$primary;
     border: s.$borderSettings c.$secondary;

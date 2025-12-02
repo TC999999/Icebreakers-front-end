@@ -1,5 +1,6 @@
 import { memo } from "react";
 import type { conversation } from "../types/conversationTypes";
+import ConversationTypingBubble from "./ConversationTypingBubble";
 import "../styles/conversations/ConversationTab.scss";
 import createDate from "../helpers/createDate";
 
@@ -28,11 +29,13 @@ const ConversationTab: React.FC<Props> = memo(
           )}
         </p>
         <div className="latest-message">
-          {conversation.isTyping && <p>typing...</p>}
+          {conversation.isTyping && <ConversationTypingBubble />}
 
-          {conversation.latestMessage ? (
+          {conversation.latestMessage && !conversation.isTyping && (
             <p>{conversation.latestMessage}</p>
-          ) : (
+          )}
+
+          {!conversation.latestMessage && !conversation.isTyping && (
             <p>
               <i>No Messages Yet</i>
             </p>

@@ -91,3 +91,27 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
     background-color: white;
   }
 }
+
+// side from right
+@keyframes slideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+// slide from left
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}

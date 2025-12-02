@@ -43,6 +43,8 @@ const useConversationListPage = () => {
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [typingMessage, setTypingMessage] = useState<string>("");
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
+  const [showTabletConversationTabs, setShowTabletConversationTabs] =
+    useState<boolean>(false);
 
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -265,6 +267,7 @@ const useConversationListPage = () => {
       setTypingMessage("");
       setLoadingMessages(false);
       setSearchParams({ id: conversation.id.toString() });
+      if (showTabletConversationTabs) setShowTabletConversationTabs(false);
     },
     [
       loadingMessages,
@@ -273,6 +276,7 @@ const useConversationListPage = () => {
       typingMessage,
       messageInput,
       savedMessages,
+      showTabletConversationTabs,
     ]
   );
 
@@ -289,6 +293,20 @@ const useConversationListPage = () => {
       setShowEditForm(!showEditForm);
     },
     [showEditForm]
+  );
+
+  // toggles showing left hand conversation tab list on smaller screen sizes (document.activeElement.blur() is
+  // to prevent user from accidentally closing the form by any enter key misclicks on keyboard
+  // before changing input value)
+  const toggleTabletConversationTabs = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+      e.preventDefault();
+
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      setShowTabletConversationTabs(!showTabletConversationTabs);
+    },
+    [showTabletConversationTabs]
   );
 
   // handles change event on message input, also lets other user know
@@ -446,8 +464,10 @@ const useConversationListPage = () => {
     typingMessage,
     scrollRef,
     showEditForm,
+    showTabletConversationTabs,
     handleCurrentConversation,
     toggleEditForm,
+    toggleTabletConversationTabs,
     handleChangeInput,
     handleFocus,
     handleBlur,
