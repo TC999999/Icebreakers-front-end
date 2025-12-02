@@ -330,9 +330,11 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  z-index: 4;
 
   .conversation-tabs,
   .request-tabs {
+    z-index: 4;
     animation: slideFromLeft 0.5s;
     width: 210px;
     height: 700px;
