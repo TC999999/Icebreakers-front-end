@@ -15,6 +15,7 @@ type Props = {
   ) => void;
 };
 
+// Reusable react component for list of left hand conversation tabs for changing viewed messages
 const ConversationTabListTablet: React.FC<Props> = ({
   conversations,
   currentConversation,

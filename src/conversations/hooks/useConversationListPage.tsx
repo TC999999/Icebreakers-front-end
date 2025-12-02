@@ -218,6 +218,17 @@ const useConversationListPage = () => {
     };
   }, [conversations, currentConversation]);
 
+  // if hidden conversation tab list is shown on smaller screen, automatically hides tab list if
+  // screen width is wider than 1173px
+  useEffect(() => {
+    const handleResize = () => {
+      if (showTabletConversationTabs && window.innerWidth > 1173) {
+        setShowTabletConversationTabs(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+  }, [showTabletConversationTabs]);
+
   // handles when a user changes conversation tabs: if conversation has unread messages,
   // clears unread message number and subtracts
   // that amount from total number of unread messages, also changes online status of other user
@@ -301,7 +312,6 @@ const useConversationListPage = () => {
   const toggleTabletConversationTabs = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
       e.preventDefault();
-
       if (document.activeElement instanceof HTMLElement)
         document.activeElement.blur();
       setShowTabletConversationTabs(!showTabletConversationTabs);

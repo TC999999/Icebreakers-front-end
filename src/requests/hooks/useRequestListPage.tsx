@@ -186,6 +186,17 @@ const useRequestListPage = () => {
     };
   }, [viewedRequests, requestCount]);
 
+  // if hidden request tab list is shown on smaller screen, automatically hides tab list if
+  // screen width is wider than 1173px
+  useEffect(() => {
+    const handleResize = () => {
+      if (showTabletRequestTabs && window.innerWidth > 1173) {
+        setShowTabletRequestTabs(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+  }, [showTabletRequestTabs]);
+
   // when user clicks on upper left hand corner button (when visible) either hides or shows request
   // category tabs on smaller screens
   const toggleTabletTabs = useCallback(
