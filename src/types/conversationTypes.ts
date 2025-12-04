@@ -33,3 +33,5 @@ export type returnUpdateConversation = {
   title: string;
   lastUpdatedAt: string;
 };
+
+export type newConversationMessage = { content: string };

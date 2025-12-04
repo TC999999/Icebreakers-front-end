@@ -1,4 +1,5 @@
-import type { groupUser } from "./userTypes";
+import type { groupUser, groupUserTab } from "./userTypes";
+import type { conversationMessage } from "./conversationTypes";
 
 export type newGroup = {
   title: string;
@@ -61,4 +62,11 @@ export type GroupInvitation = {
   to: string;
   group: string;
   content: string;
+};
+
+export type groupTab = { id: string; title: string; unreadMessages: number };
+
+export type groupMessageInfo = {
+  users: groupUserTab[];
+  messages: conversationMessage[];
 };

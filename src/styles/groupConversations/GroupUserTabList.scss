@@ -1,0 +1,8 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#group-user-tab-list {
+  background-color: c.$primary;
+  width: 110px;
+  border: s.$borderSettings c.$secondary;
+}

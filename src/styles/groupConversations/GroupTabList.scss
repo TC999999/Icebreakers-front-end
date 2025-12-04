@@ -1,0 +1,13 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#group-tab-list {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  overflow-x: scroll;
+
+  .group-message-tab:last-child {
+    border-right: s.$borderSettings;
+  }
+}

@@ -1,0 +1,21 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+.group-user-tab {
+  background-color: c.$fourthly;
+  padding: 5px;
+  width: auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: s.$borderSettings c.$secondary;
+
+  .profile-pic {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: s.$borderRadius;
+  }
+}

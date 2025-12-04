@@ -1,0 +1,16 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#group-conversation-page {
+  h1,
+  h3 {
+    color: c.$secondary;
+    text-align: center;
+  }
+
+  #group-convertation-message-window {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+  }
+}

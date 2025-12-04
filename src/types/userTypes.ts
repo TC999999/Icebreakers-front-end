@@ -27,3 +27,9 @@ export type UserEdit = {
   biography: string;
   interests: number[];
 };
+
+export type groupUserTab = {
+  username: string;
+  favoriteColor: string;
+  isOnline: boolean;
+};

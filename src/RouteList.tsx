@@ -17,6 +17,7 @@ import GroupPage from "./groups/GroupPage";
 import GroupInvite from "./groups/GroupInvite";
 import GroupSearchPage from "./groups/GroupSearchPage";
 import GroupRequest from "./groups/GroupRequest";
+import GroupConversationPage from "./groupConversations/GroupConversationPage";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -51,6 +52,7 @@ const RouteList = (): JSX.Element | null => {
         </Route>
         <Route path="/conversations">
           <Route index element={<ConversationListPage />} />
+          <Route path="groups" element={<GroupConversationPage />} />
         </Route>
         <Route path="/groups">
           <Route index element={<GroupList />} />

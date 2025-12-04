@@ -1,0 +1,29 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#group-conversation-messages {
+  background-color: c.$thirdly;
+  width: 100%;
+  height: 800px;
+  border-top: s.$borderSettings c.$secondary;
+  border-right: s.$borderSettings c.$secondary;
+  border-bottom: s.$borderSettings c.$secondary;
+
+  #message-window {
+    height: 90%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #message-input {
+    height: 10%;
+    background-color: c.$secondary;
+
+    .form-div {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+    }
+  }
+}

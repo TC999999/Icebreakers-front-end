@@ -1,0 +1,25 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+.group-message-tab {
+  background-color: c.$primary;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: c.$secondary;
+  font-weight: bold;
+  padding: 20px;
+  border-top: s.$borderSettings c.$secondary;
+  border-bottom: s.$borderSettings c.$secondary;
+  border-left: s.$borderSettings c.$secondary;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    background-color: c.$thirdly;
+    font-weight: bolder;
+    text-decoration: underline;
+  }
+
+  &.selected {
+    background-color: c.$fourthly;
+  }
+}

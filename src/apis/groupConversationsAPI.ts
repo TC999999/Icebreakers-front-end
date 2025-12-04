@@ -6,7 +6,10 @@ import type {
   simpleGroup,
   groupSearchCard,
   groupName,
+  groupTab,
+  groupMessageInfo,
 } from "../types/groupTypes";
+import type { newConversationMessage } from "../types/conversationTypes";
 
 type returnGroup = {
   group: GroupPage | groupName;
@@ -58,6 +61,33 @@ class groupConversationsAPI extends API {
   public static async searchGroups(params: any): Promise<groupSearchCard[]> {
     const res = await this.getRequest("search", params);
     return res.groups;
+  }
+
+  // returns a list of group tabs for the group conversation page
+  public static async getGroupTabs(username: string): Promise<groupTab[]> {
+    const res = await this.getRequest(`${username}/tabs`);
+    return res.groups;
+  }
+
+  // returns a list of group members other than current user and group messages for a
+  // group conversation for the group conversation page
+  public static async getGroupMessages(
+    username: string,
+    id: string
+  ): Promise<groupMessageInfo> {
+    const res = await this.getRequest(`${username}/message/${id}`);
+    return res;
+  }
+
+  // creates and returns a new message in a group conversation for group with inputted id and
+  // from the user with the inputted username
+  public static async createGroupMessage(
+    username: string,
+    id: string,
+    message: newConversationMessage
+  ): Promise<any> {
+    const res = await this.postRequest(`${username}/message/${id}`, message);
+    return res.message;
   }
 }
 

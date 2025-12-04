@@ -68,9 +68,6 @@ const UserProfile = () => {
               )}
 
               {!userState.requestSent && userState.conversationExists && (
-                // <p id="request-message">
-                //   You are already chatting with this user!
-                // </p>
                 <button onClick={() => goToMessages()}>Go To Messages</button>
               )}
 
