@@ -59,10 +59,9 @@
         border: s.$borderSettings c.$secondary;
         border-radius: s.$borderRadius;
         height: 150px;
-        overflow: hidden;
 
         ul {
-          height: 150px;
+          height: 90px;
           overflow: scroll;
           li {
             font-family: Arial, Helvetica, sans-serif;
