@@ -163,12 +163,10 @@ form {
     }
   }
 
-  input[type="checkbox"] {
-    accent-color: c.$secondary;
-  }
-
+  input[type="checkbox"],
   input[type="radio"] {
     accent-color: c.$secondary;
+    cursor: pointer;
   }
 
   .input-bottom-with-results {

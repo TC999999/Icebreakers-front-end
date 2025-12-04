@@ -19,6 +19,7 @@ export type UserState = {
   isFlagged: boolean;
   unansweredRequests: number;
   unreadMessages: number;
+  unreadGroupMessages: number;
 };
 
 type loadingInfo = {

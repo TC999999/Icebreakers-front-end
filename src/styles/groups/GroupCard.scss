@@ -11,7 +11,9 @@
   margin: 10px;
   height: 200px;
   width: 20%;
-  transition: 0.2s ease h3 {
+  cursor: pointer;
+  transition: 0.2s ease;
+  h3 {
     text-decoration: underline;
   }
 

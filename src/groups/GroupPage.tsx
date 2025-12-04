@@ -48,7 +48,9 @@ const GroupPage = () => {
         <div id="button-row">
           {isInGroupState &&
             !requestPendingState &&
-            !invitationPendingState && <button>Go To Messages</button>}
+            !invitationPendingState && (
+              <button className="submit-button">Go To Messages</button>
+            )}
 
           {!isInGroupState &&
             requestPendingState &&

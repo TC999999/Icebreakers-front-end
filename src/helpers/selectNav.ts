@@ -4,6 +4,8 @@ const selectNav = (pathName: string, username?: string): string => {
   switch (pathName) {
     case "/conversations":
       return "conversations";
+    case "/conversations/groups":
+      return "groupConversations";
     case "/groups":
       return "groups";
     case "/groups/search":

@@ -45,6 +45,24 @@ const NavBar = (): JSX.Element => {
                   Conversations
                 </button>
               </div>
+
+              <div className="navlink">
+                {user.unreadGroupMessages > 0 && (
+                  <div className="notification-label">
+                    {user.unreadGroupMessages}
+                  </div>
+                )}
+                <button
+                  name="groupConversations"
+                  value={"/conversations/groups"}
+                  onClick={move}
+                  className={
+                    selectedNav === "groupConversations" ? "selectedNav" : ""
+                  }
+                >
+                  Group Conversations
+                </button>
+              </div>
               <div className="navlink">
                 <button
                   name="groups"
