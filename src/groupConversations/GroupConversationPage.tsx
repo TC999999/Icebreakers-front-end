@@ -2,8 +2,8 @@ import GroupTabList from "./GroupTabList";
 import GroupUserTabList from "./GroupUserTabList";
 import GroupConversationMessages from "./GroupConversationMessages";
 import "../styles/groupConversations/GroupConversationPage.scss";
-
 import useGroupConversationPage from "./hooks/useGroupConversationPage";
+import { Link } from "react-router-dom";
 
 const GroupConversationPage = () => {
   const {
@@ -22,8 +22,22 @@ const GroupConversationPage = () => {
   } = useGroupConversationPage();
   return (
     <main id="group-conversation-page">
-      <h1>Group Conversations</h1>
-      <h3>Chat with all of your groups here!</h3>
+      {selectedGroup.title ? (
+        <>
+          <h1>
+            <Link to={`/groups/${selectedGroup.id}`}>
+              {selectedGroup.title}
+            </Link>
+          </h1>
+          <h3>Hosted By {selectedGroup.host}</h3>
+        </>
+      ) : (
+        <>
+          <h1>Group Conversations</h1>
+          <h3>Please select a group tab from below</h3>
+        </>
+      )}
+
       <div id="group-conversation-messaging">
         <GroupTabList
           selectedGroup={selectedGroup}

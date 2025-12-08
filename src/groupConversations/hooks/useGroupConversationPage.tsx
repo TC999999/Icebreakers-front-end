@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppSelector } from "../../features/hooks";
-import type { groupTab } from "../../types/groupTypes";
+import type { groupTab, selectedGroup } from "../../types/groupTypes";
 import type { groupUserTab } from "../../types/userTypes";
 import type {
   conversationMessage,
@@ -13,6 +13,9 @@ import socket from "../../helpers/socket";
 import { useAppDispatch } from "../../features/hooks";
 import { setUnreadGroupMessages } from "../../features/slices/auth";
 
+// custom react hook for group conversation page; handles all group conversation logic such as
+// retrieving initial list of conversations, getting a list of all users and messages for
+// those respective groups, and creating new messages
 const useGroupConversationPage = () => {
   const username = useAppSelector((store) => store.user.user?.username);
   const dispatch = useAppDispatch();
@@ -22,7 +25,11 @@ const useGroupConversationPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [groupTabs, setGroupTabs] = useState<groupTab[]>([]);
 
-  const [selectedGroup, setSelectedGroup] = useState<string>("");
+  const [selectedGroup, setSelectedGroup] = useState<selectedGroup>({
+    id: "",
+    title: "",
+    host: "",
+  });
   const [currentUsers, setCurrentUsers] = useState<groupUserTab[]>([]);
   const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
     []
@@ -46,10 +53,9 @@ const useGroupConversationPage = () => {
         setGroupTabs(groups);
       }
       if (id && username) {
-        setSelectedGroup(id);
-        const { users, messages } =
+        const { users, messages, title, host } =
           await groupConversationsAPI.getGroupMessages(username, id, 0);
-
+        setSelectedGroup({ id, title, host });
         socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
           setCurrentUsers(newUsers);
         });
@@ -124,8 +130,13 @@ const useGroupConversationPage = () => {
   // in state and in the search params, retrieves that users and messages from that group, checks if
   // any of the users are online, and sets the user list and message list in state
   const changeSelectedTab = useCallback(
-    async (id: string, unreadGroupMessages: number) => {
-      setSelectedGroup(id);
+    async (
+      id: string,
+      groupName: string,
+      host: string,
+      unreadGroupMessages: number
+    ) => {
+      setSelectedGroup({ id, title: groupName, host });
       setSearchParams({ id });
       setUsersTyping({});
       if (username) {
@@ -204,7 +215,12 @@ const useGroupConversationPage = () => {
           );
         setMessageInput(initialMessageInput.current);
         setCurrentMessages((prev) => [...prev, message]);
-        socket.emit("groupMessage", { message, id, userList: users });
+        socket.emit("groupMessage", {
+          message,
+          id,
+          group: selectedGroup.title,
+          userList: users,
+        });
       }
     },
     [messageInput, selectedGroup, currentMessages]

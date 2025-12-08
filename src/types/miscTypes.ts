@@ -12,4 +12,5 @@ export type titleAndDesc = {
 export type ToastProps = Partial<ToastContentProps> & {
   from: string;
   message: string;
+  group?: string;
 };

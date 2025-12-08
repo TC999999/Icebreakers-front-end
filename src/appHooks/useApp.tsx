@@ -21,8 +21,8 @@ import { useLocation } from "react-router-dom";
 const useApp = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const location = useLocation();
-  const notify = ({ message, from }: ToastProps) => {
-    toast(<CustomToastContent message={message} from={from} />);
+  const notify = ({ message, from, group }: ToastProps) => {
+    toast(<CustomToastContent message={message} from={from} group={group} />);
   };
   const user: UserState | null = useAppSelector((store) => {
     return store.user.user;
@@ -41,8 +41,8 @@ const useApp = () => {
   // notification to prevent redundancy
   useEffect((): (() => void) | undefined => {
     if (user) {
-      socket.on("notify", ({ message, from, pathname }) => {
-        if (pathname !== location.pathname) notify({ message, from });
+      socket.on("notify", ({ message, from, pathname, group }) => {
+        if (pathname !== location.pathname) notify({ message, from, group });
       });
 
       return () => {

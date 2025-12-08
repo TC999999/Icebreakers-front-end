@@ -4,8 +4,15 @@
 #group-conversation-page {
   h1,
   h3 {
-    color: c.$secondary;
     text-align: center;
+    color: c.$secondary;
+    a {
+      text-decoration: none;
+      &:hover {
+        color: c.$secondary;
+        color: c.$primary;
+      }
+    }
   }
 
   #group-convertation-message-window {

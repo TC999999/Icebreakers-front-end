@@ -1,12 +1,17 @@
 import React from "react";
-import type { groupTab } from "../types/groupTypes";
+import type { groupTab, simpleGroup } from "../types/groupTypes";
 import GroupTab from "./GroupTab";
 import "../styles/groupConversations/GroupTabList.scss";
 
 type Props = {
-  selectedGroup: string;
+  selectedGroup: simpleGroup;
   groupTabList: groupTab[];
-  changeSelectedTab: (id: string, unreadMessages: number) => void;
+  changeSelectedTab: (
+    id: string,
+    groupName: string,
+    host: string,
+    unreadMessages: number
+  ) => void;
 };
 
 const GroupTabList: React.FC<Props> = ({
@@ -19,7 +24,7 @@ const GroupTabList: React.FC<Props> = ({
       {groupTabList.map((tab) => (
         <GroupTab
           key={`tab-${tab.id}`}
-          selected={selectedGroup === tab.id}
+          selected={selectedGroup.id === tab.id}
           group={tab}
           changeSelectedTab={changeSelectedTab}
         />

@@ -30,6 +30,8 @@ export type simpleGroup = {
 
 export type groupName = { title: string; host: string };
 
+export type selectedGroup = { id: string; title: string; host: string };
+
 export type hostedGroupCard = {
   id: string;
   title: string;
@@ -64,9 +66,16 @@ export type GroupInvitation = {
   content: string;
 };
 
-export type groupTab = { id: string; title: string; unreadMessages: number };
+export type groupTab = {
+  id: string;
+  title: string;
+  host: string;
+  unreadMessages: number;
+};
 
 export type groupMessageInfo = {
   users: groupUserTab[];
   messages: conversationMessage[];
+  title: string;
+  host: string;
 };

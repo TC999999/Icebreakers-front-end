@@ -6,10 +6,11 @@ import type {
 import type { userTyping } from "../types/userTypes";
 import ConversationMessageBubble from "../conversations/ConversationMessageBubble";
 import GroupConversationUserTypingBlock from "./GroupConversationUserTypingBlock";
+import type { simpleGroup } from "../types/groupTypes";
 
 type Props = {
   scrollReference: React.RefObject<HTMLDivElement | null>;
-  selctedGroup: string;
+  selctedGroup: simpleGroup;
   messageInput: newConversationMessage;
   messages: conversationMessage[];
   usersTyping: userTyping;
@@ -54,13 +55,13 @@ const GroupConversationMessages: React.FC<Props> = ({
             onChange={handleMessage}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            disabled={selctedGroup.length === 0}
+            disabled={selctedGroup.id.length === 0}
           ></textarea>
 
           <div id="send">
             <button
               className="submit-button"
-              disabled={selctedGroup.length === 0}
+              disabled={selctedGroup.id.length === 0}
             >
               Send
             </button>
