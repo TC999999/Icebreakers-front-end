@@ -9,13 +9,22 @@ import type {
   groupTab,
   groupMessageInfo,
 } from "../types/groupTypes";
-import type { newConversationMessage } from "../types/conversationTypes";
+import type {
+  conversationMessage,
+  newConversationMessage,
+} from "../types/conversationTypes";
+import type { groupMessageUserUpdate } from "../types/userTypes";
 
 type returnGroup = {
   group: GroupPage | groupName;
   isInGroup?: boolean;
   requestPending?: boolean;
   invitationPending?: boolean;
+};
+
+type returnMessage = {
+  message: conversationMessage;
+  users: groupMessageUserUpdate[];
 };
 
 // API class for group conversations, including getting all current groups a user is a part of,
@@ -73,9 +82,12 @@ class groupConversationsAPI extends API {
   // group conversation for the group conversation page
   public static async getGroupMessages(
     username: string,
-    id: string
+    id: string,
+    unreadGroupMessages: number
   ): Promise<groupMessageInfo> {
-    const res = await this.getRequest(`${username}/message/${id}`);
+    const res = await this.getRequest(`${username}/message/${id}`, {
+      unreadGroupMessages,
+    });
     return res;
   }
 
@@ -85,9 +97,9 @@ class groupConversationsAPI extends API {
     username: string,
     id: string,
     message: newConversationMessage
-  ): Promise<any> {
+  ): Promise<returnMessage> {
     const res = await this.postRequest(`${username}/message/${id}`, message);
-    return res.message;
+    return res;
   }
 }
 

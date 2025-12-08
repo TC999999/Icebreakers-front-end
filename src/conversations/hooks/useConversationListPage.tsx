@@ -63,8 +63,9 @@ const useConversationListPage = () => {
           const currentID = searchParams.get("id");
           if (currentID) {
             setLoadingMessages(true);
-            let { messages, conversationData } =
-              await directConversationsAPI.getMessages(username!, currentID, 0);
+
+            let { messages, conversationData, unreadMessages } =
+              await directConversationsAPI.getMessages(username!, currentID);
             setCurrentConversation(conversationData);
             socket.emit(
               "isOnline",
@@ -78,6 +79,20 @@ const useConversationListPage = () => {
             );
             setCurrentMessages(messages);
             setLoadingMessages(false);
+            if (unreadMessages > 0) {
+              setConversations((prev) =>
+                prev.map((convo) =>
+                  convo.id === currentID
+                    ? { ...convo, unreadMessages: 0 }
+                    : convo
+                )
+              );
+
+              dispatch(setUnreadMessages(unreadMessages * -1));
+              socket.emit("clearTotalUnreadMessages", {
+                unreadMessages,
+              });
+            }
           }
         }
       };
@@ -140,7 +155,6 @@ const useConversationListPage = () => {
         let findConvo = conversations.find(
           (conversation) => conversation.id === id
         );
-        console.log(findConvo);
         if (findConvo) {
           findConvo = {
             ...findConvo,
@@ -148,7 +162,6 @@ const useConversationListPage = () => {
             lastUpdatedAt: message.createdAt,
             unreadMessages: findConvo.unreadMessages + 1,
           };
-          console.log(findConvo);
           const filteredConversations = conversations.filter((convo) => {
             return convo.id !== id;
           });
@@ -254,8 +267,7 @@ const useConversationListPage = () => {
       }
       let { messages } = await directConversationsAPI.getMessages(
         username!,
-        conversation.id,
-        conversation.unreadMessages
+        conversation.id
       );
 
       const convoMessage = savedMessages.get(conversation.id);

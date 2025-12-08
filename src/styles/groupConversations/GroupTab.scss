@@ -12,6 +12,23 @@
   border-left: s.$borderSettings c.$secondary;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+  position: relative;
+
+  .notification-label {
+    z-index: 1;
+    position: absolute;
+    left: 85%;
+    bottom: 55%;
+    background-color: rgb(224, 23, 23);
+    padding: 1px;
+    text-align: center;
+    border-radius: 50px;
+    color: white;
+    border: solid rgb(141, 7, 7);
+    z-index: 3;
+    font-weight: bold;
+    animation: notificationPopUp 0.5s;
+  }
 
   &:hover {
     background-color: c.$thirdly;

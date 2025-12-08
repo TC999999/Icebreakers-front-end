@@ -6,7 +6,7 @@ import "../styles/groupConversations/GroupTabList.scss";
 type Props = {
   selectedGroup: string;
   groupTabList: groupTab[];
-  changeSelectedTab: (id: string) => void;
+  changeSelectedTab: (id: string, unreadMessages: number) => void;
 };
 
 const GroupTabList: React.FC<Props> = ({

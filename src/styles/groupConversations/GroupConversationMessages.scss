@@ -8,6 +8,7 @@
   border-top: s.$borderSettings c.$secondary;
   border-right: s.$borderSettings c.$secondary;
   border-bottom: s.$borderSettings c.$secondary;
+  position: relative;
 
   #message-window {
     height: 90%;

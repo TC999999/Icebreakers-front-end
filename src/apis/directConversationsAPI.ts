@@ -10,6 +10,7 @@ import type {
 type getMessagesReturn = {
   messages: conversationMessage[];
   conversationData: currentConversation;
+  unreadMessages: number;
 };
 
 type createMessagesReturn = {
@@ -44,15 +45,9 @@ class directConversationsAPI extends API {
   // belong to either user in the conversation
   public static async getMessages(
     username: string,
-    id: string,
-    unreadMessages: number
+    id: string
   ): Promise<getMessagesReturn> {
-    const res = await this.getRequest(
-      `${username}/conversation/${id}/message`,
-      {
-        unreadMessages,
-      }
-    );
+    const res = await this.getRequest(`${username}/conversation/${id}/message`);
     return res;
   }
 

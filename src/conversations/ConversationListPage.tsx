@@ -126,6 +126,7 @@ const ConversationListPage = () => {
                     <ConversationMessageBubble
                       key={`conversation-${m.id}`}
                       conversationMessage={m}
+                      isGroup={false}
                     />
                   );
                 })}

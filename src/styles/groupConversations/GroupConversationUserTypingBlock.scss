@@ -1,0 +1,9 @@
+#users-typing {
+  width: 100%;
+  position: absolute;
+  bottom: 10%;
+  display: flex;
+  justify-content: flex-start;
+  overflow-x: scroll;
+  z-index: 0;
+}

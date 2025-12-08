@@ -6,6 +6,7 @@
   padding: 10px;
   margin: 15px;
   position: relative;
+  word-wrap: break-word;
 
   &.self-bubble {
     background-color: blue;
@@ -37,7 +38,6 @@
 
 .other-bubble::before {
   content: " ";
-  z-index: -1;
   width: 0;
   height: 0;
   position: absolute;

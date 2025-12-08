@@ -42,6 +42,11 @@
 
         &#group-interests {
           width: 50%;
+
+          #group-interest-list-items {
+            height: 100px;
+            overflow: scroll;
+          }
         }
       }
     }

@@ -27,9 +27,13 @@ const authSlice = createSlice({
     setUnansweredRequests: (state, action) => {
       state.user!.unansweredRequests += action.payload;
     },
-    // updates total number of unread messages on client side
+    // updates total number of unread direct messages on client side
     setUnreadMessages: (state, action) => {
       state.user!.unreadMessages += action.payload;
+    },
+    // updates total number of unread group messages on client side
+    setUnreadGroupMessages: (state, action) => {
+      state.user!.unreadGroupMessages += action.payload;
     },
     // updates user's favorite color on client side
     setFavoriteColor: (state, action) => {
@@ -97,6 +101,7 @@ export const {
   setLoadError,
   setUnansweredRequests,
   setUnreadMessages,
+  setUnreadGroupMessages,
   setFavoriteColor,
 } = authSlice.actions;
 

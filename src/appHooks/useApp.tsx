@@ -8,6 +8,7 @@ import socket from "../helpers/socket";
 import {
   setUnansweredRequests,
   setUnreadMessages,
+  setUnreadGroupMessages,
 } from "../features/slices/auth";
 import { shallowEqual } from "react-redux";
 import { toast } from "react-toastify";
@@ -48,8 +49,10 @@ const useApp = () => {
         socket.off("notify");
       };
     }
-  }, [location.pathname]);
+  }, [user, location.pathname]);
 
+  // socket signal listener for updates to numeric notification values for both conversations
+  // and requests
   useEffect((): (() => void) | undefined => {
     if (user) {
       socket.on("updateUnansweredRequests", ({ change }) => {
@@ -60,9 +63,14 @@ const useApp = () => {
         dispatch(setUnreadMessages(1));
       });
 
+      socket.on("increaseUnreadGroupMessages", () => {
+        dispatch(setUnreadGroupMessages(1));
+      });
+
       return () => {
         socket.off("updateUnansweredRequests");
         socket.off("increaseUnreadMessages");
+        socket.off("increaseUnreadGroupMessages");
       };
     }
   }, [user, dispatch]);

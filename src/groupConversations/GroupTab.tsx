@@ -5,7 +5,7 @@ import "../styles/groupConversations/GroupTab.scss";
 type Props = {
   group: groupTab;
   selected: boolean;
-  changeSelectedTab: (id: string) => void;
+  changeSelectedTab: (id: string, unreadMessages: number) => void;
 };
 
 const GroupTab: React.FC<Props> = memo(
@@ -13,8 +13,11 @@ const GroupTab: React.FC<Props> = memo(
     return (
       <div
         className={`group-message-tab ${selected ? "selected" : ""}`}
-        onClick={() => changeSelectedTab(group.id)}
+        onClick={() => changeSelectedTab(group.id, group.unreadMessages)}
       >
+        {group.unreadMessages > 0 && (
+          <div className="notification-label">{group.unreadMessages}</div>
+        )}
         {group.title}
       </div>
     );

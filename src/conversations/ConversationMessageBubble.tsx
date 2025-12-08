@@ -5,11 +5,12 @@ import "../styles/conversations/ConversationMessageBubble.scss";
 import createDate from "../helpers/createDate";
 import { shallowEqual } from "react-redux";
 
-type Props = { conversationMessage: conversationMessage };
+type Props = { conversationMessage: conversationMessage; isGroup: boolean };
 
 // component for conversation message bubbles, both for current and other user
 const ConversationMessageBubble: React.FC<Props> = ({
   conversationMessage,
+  isGroup,
 }) => {
   const username = useAppSelector((store) => {
     return store.user.user?.username;
@@ -25,6 +26,12 @@ const ConversationMessageBubble: React.FC<Props> = ({
     >
       <div>
         <p>{conversationMessage.content}</p>
+        {isGroup && conversationMessage.username !== username && (
+          <>
+            <small>From: {conversationMessage.username}</small>
+            <br />
+          </>
+        )}
         <small>{createDate(conversationMessage.createdAt, "short")}</small>
       </div>
     </div>

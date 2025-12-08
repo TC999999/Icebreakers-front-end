@@ -35,9 +35,11 @@ const GroupPage = () => {
           <section id="group-interests">
             <ul>
               <h4>Interests</h4>
-              {group.interests.map((i) => {
-                return <li key={`interest-${i}`}>{i}</li>;
-              })}
+              <div id="group-interest-list-items">
+                {group.interests.map((i) => {
+                  return <li key={`interest-${i}`}>{i}</li>;
+                })}
+              </div>
             </ul>
           </section>
         </div>

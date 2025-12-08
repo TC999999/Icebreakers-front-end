@@ -8,13 +8,17 @@ import useGroupConversationPage from "./hooks/useGroupConversationPage";
 const GroupConversationPage = () => {
   const {
     groupTabs,
+    scrollRef,
     currentUsers,
     currentMessages,
     selectedGroup,
     messageInput,
+    usersTyping,
     changeSelectedTab,
     handleMessage,
     handleSend,
+    handleFocus,
+    handleBlur,
   } = useGroupConversationPage();
   return (
     <main id="group-conversation-page">
@@ -29,11 +33,15 @@ const GroupConversationPage = () => {
         <div id="group-convertation-message-window">
           <GroupUserTabList currentUsers={currentUsers} />
           <GroupConversationMessages
+            scrollReference={scrollRef}
             selctedGroup={selectedGroup}
             messages={currentMessages}
             messageInput={messageInput}
+            usersTyping={usersTyping}
             handleMessage={handleMessage}
             handleSend={handleSend}
+            handleFocus={handleFocus}
+            handleBlur={handleBlur}
           />
         </div>
       </div>

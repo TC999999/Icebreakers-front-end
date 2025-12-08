@@ -33,3 +33,13 @@ export type groupUserTab = {
   favoriteColor: string;
   isOnline: boolean;
 };
+
+export type groupMessageUserUpdate = {
+  id: string;
+  username: string;
+  unreadGroupMessages: number;
+};
+
+export type userTyping = {
+  [key: string]: number;
+};

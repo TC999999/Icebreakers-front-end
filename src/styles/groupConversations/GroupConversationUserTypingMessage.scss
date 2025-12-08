@@ -1,0 +1,13 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+.group-conversation-user-typing {
+  background-color: c.$primary;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+  width: auto;
+  text-align: center;
+  padding: 5px;
+  margin: 5px;
+  word-wrap: break-word;
+}
