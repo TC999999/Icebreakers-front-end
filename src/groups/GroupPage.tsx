@@ -51,7 +51,13 @@ const GroupPage = () => {
           {isInGroupState &&
             !requestPendingState &&
             !invitationPendingState && (
-              <button className="submit-button">Go To Messages</button>
+              <button
+                className="submit-button"
+                value={`/conversations/groups?id=${group.id}`}
+                onClick={handleNavigate}
+              >
+                Go To Messages
+              </button>
             )}
 
           {!isInGroupState &&
@@ -70,7 +76,11 @@ const GroupPage = () => {
           {!isInGroupState &&
             !requestPendingState &&
             !invitationPendingState && (
-              <button className="submit-button" onClick={handleNavigate}>
+              <button
+                className="submit-button"
+                value={`/groups/${group.id}/request`}
+                onClick={handleNavigate}
+              >
                 Request To Join
               </button>
             )}

@@ -11,7 +11,10 @@ import { useSearchParams } from "react-router-dom";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import socket from "../../helpers/socket";
 import { useAppDispatch } from "../../features/hooks";
-import { setUnreadGroupMessages } from "../../features/slices/auth";
+import {
+  setFormLoading,
+  setUnreadGroupMessages,
+} from "../../features/slices/auth";
 
 // custom react hook for group conversation page; handles all group conversation logic such as
 // retrieving initial list of conversations, getting a list of all users and messages for
@@ -19,6 +22,8 @@ import { setUnreadGroupMessages } from "../../features/slices/auth";
 const useGroupConversationPage = () => {
   const username = useAppSelector((store) => store.user.user?.username);
   const dispatch = useAppDispatch();
+
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
 
   const initialMessageInput = useRef<newConversationMessage>({ content: "" });
 
@@ -47,20 +52,27 @@ const useGroupConversationPage = () => {
   // is a group id set in state, gets all other users and messages and sets them in state
   useEffect(() => {
     const getGroupTabs = async () => {
-      const id = searchParams.get("id");
-      if (username) {
-        const groups = await groupConversationsAPI.getGroupTabs(username);
-        setGroupTabs(groups);
-      }
-      if (id && username) {
-        const { users, messages, title, host } =
-          await groupConversationsAPI.getGroupMessages(username, id, 0);
-        setSelectedGroup({ id, title, host });
-        socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
-          setCurrentUsers(newUsers);
-        });
+      try {
+        dispatch(setFormLoading(true));
+        const id = searchParams.get("id");
+        if (username) {
+          const groups = await groupConversationsAPI.getGroupTabs(username);
+          setGroupTabs(groups);
+        }
+        if (id && username) {
+          const { users, messages, title, host } =
+            await groupConversationsAPI.getGroupMessages(username, id, 0);
+          setSelectedGroup({ id, title, host });
+          socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
+            setCurrentUsers(newUsers);
+          });
 
-        setCurrentMessages(messages);
+          setCurrentMessages(messages);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
       }
     };
 
@@ -136,27 +148,36 @@ const useGroupConversationPage = () => {
       host: string,
       unreadGroupMessages: number
     ) => {
-      setSelectedGroup({ id, title: groupName, host });
-      setSearchParams({ id });
-      setUsersTyping({});
-      if (username) {
-        const { users, messages } =
-          await groupConversationsAPI.getGroupMessages(
-            username,
-            id,
-            unreadGroupMessages
-          );
-        socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
-          setCurrentUsers(newUsers);
-        });
-        setCurrentMessages(messages);
-        if (unreadGroupMessages > 0) {
-          setGroupTabs((prev) =>
-            prev.map((g) => (g.id === id ? { ...g, unreadMessages: 0 } : g))
-          );
-          socket.emit("clearTotalUnreadGroupMessages", { unreadGroupMessages });
-          dispatch(setUnreadGroupMessages(unreadGroupMessages * -1));
+      try {
+        setLoadingMessages(true);
+        setSelectedGroup({ id, title: groupName, host });
+        setSearchParams({ id });
+        setUsersTyping({});
+        if (username) {
+          const { users, messages } =
+            await groupConversationsAPI.getGroupMessages(
+              username,
+              id,
+              unreadGroupMessages
+            );
+          socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
+            setCurrentUsers(newUsers);
+          });
+          setCurrentMessages(messages);
+          if (unreadGroupMessages > 0) {
+            setGroupTabs((prev) =>
+              prev.map((g) => (g.id === id ? { ...g, unreadMessages: 0 } : g))
+            );
+            socket.emit("clearTotalUnreadGroupMessages", {
+              unreadGroupMessages,
+            });
+            dispatch(setUnreadGroupMessages(unreadGroupMessages * -1));
+          }
         }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoadingMessages(false);
       }
     },
     [selectedGroup, currentUsers, dispatch]
@@ -234,6 +255,7 @@ const useGroupConversationPage = () => {
     currentUsers,
     currentMessages,
     usersTyping,
+    loadingMessages,
     handleMessage,
     handleSend,
     handleFocus,

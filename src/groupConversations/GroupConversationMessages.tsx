@@ -5,12 +5,14 @@ import type {
 } from "../types/conversationTypes";
 import type { userTyping } from "../types/userTypes";
 import ConversationMessageBubble from "../conversations/ConversationMessageBubble";
+import ConversationLoading from "../conversations/ConversationLoading";
 import GroupConversationUserTypingBlock from "./GroupConversationUserTypingBlock";
 import type { simpleGroup } from "../types/groupTypes";
 
 type Props = {
   scrollReference: React.RefObject<HTMLDivElement | null>;
   selctedGroup: simpleGroup;
+  loadingMessages: boolean;
   messageInput: newConversationMessage;
   messages: conversationMessage[];
   usersTyping: userTyping;
@@ -25,6 +27,7 @@ const GroupConversationMessages: React.FC<Props> = ({
   scrollReference,
   selctedGroup,
   messageInput,
+  loadingMessages,
   messages,
   usersTyping,
   handleMessage,
@@ -34,16 +37,20 @@ const GroupConversationMessages: React.FC<Props> = ({
 }) => {
   return (
     <div id="group-conversation-messages">
-      <div ref={scrollReference} id="message-window">
-        {messages.map((message) => (
-          <ConversationMessageBubble
-            key={message.id}
-            conversationMessage={message}
-            isGroup={true}
-          />
-        ))}
-        <GroupConversationUserTypingBlock usersTyping={usersTyping} />
-      </div>
+      {loadingMessages ? (
+        <ConversationLoading />
+      ) : (
+        <div ref={scrollReference} id="message-window">
+          {messages.map((message) => (
+            <ConversationMessageBubble
+              key={message.id}
+              conversationMessage={message}
+              isGroup={true}
+            />
+          ))}
+          <GroupConversationUserTypingBlock usersTyping={usersTyping} />
+        </div>
+      )}
       <div id="message-input">
         <form className="form-div" onSubmit={handleSend}>
           <textarea

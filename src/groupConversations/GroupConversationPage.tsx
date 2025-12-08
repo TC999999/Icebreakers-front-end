@@ -9,6 +9,7 @@ const GroupConversationPage = () => {
   const {
     groupTabs,
     scrollRef,
+    loadingMessages,
     currentUsers,
     currentMessages,
     selectedGroup,
@@ -48,6 +49,7 @@ const GroupConversationPage = () => {
           <GroupUserTabList currentUsers={currentUsers} />
           <GroupConversationMessages
             scrollReference={scrollRef}
+            loadingMessages={loadingMessages}
             selctedGroup={selectedGroup}
             messages={currentMessages}
             messageInput={messageInput}

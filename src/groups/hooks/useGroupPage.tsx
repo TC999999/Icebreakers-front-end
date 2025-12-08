@@ -78,7 +78,7 @@ const useGroupPage = () => {
   const handleNavigate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      navigate(`/groups/${id}/request`);
+      navigate(e.currentTarget.value);
     },
     []
   );
