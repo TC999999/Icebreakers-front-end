@@ -7,7 +7,7 @@ import type { UserState } from "../types/authTypes";
 import socket from "../helpers/socket";
 import {
   setUnansweredRequests,
-  setUnreadMessages,
+  setUnreadDirectMessages,
   setUnreadGroupMessages,
 } from "../features/slices/auth";
 import { shallowEqual } from "react-redux";
@@ -34,7 +34,7 @@ const useApp = () => {
       await dispatch(getCurrentUser({}));
     };
     getUserInfo();
-  }, [dispatch]);
+  }, []);
 
   // allows users to receive real time notifications from server when another user sends them a
   // message or request; if user is already in location specified in path name, will not give
@@ -59,8 +59,8 @@ const useApp = () => {
         dispatch(setUnansweredRequests(change));
       });
 
-      socket.on("increaseUnreadMessages", () => {
-        dispatch(setUnreadMessages(1));
+      socket.on("increaseUnreadDirectMessages", () => {
+        dispatch(setUnreadDirectMessages(1));
       });
 
       socket.on("increaseUnreadGroupMessages", () => {
@@ -69,11 +69,11 @@ const useApp = () => {
 
       return () => {
         socket.off("updateUnansweredRequests");
-        socket.off("increaseUnreadMessages");
+        socket.off("increaseUnreadDirectMessages");
         socket.off("increaseUnreadGroupMessages");
       };
     }
-  }, [user, dispatch]);
+  }, [user]);
 };
 
 export default useApp;

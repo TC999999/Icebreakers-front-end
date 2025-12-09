@@ -18,7 +18,7 @@ export type UserState = {
   isAdmin: boolean;
   isFlagged: boolean;
   unansweredRequests: number;
-  unreadMessages: number;
+  unreadDirectMessages: number;
   unreadGroupMessages: number;
 };
 

@@ -28,8 +28,8 @@ const authSlice = createSlice({
       state.user!.unansweredRequests += action.payload;
     },
     // updates total number of unread direct messages on client side
-    setUnreadMessages: (state, action) => {
-      state.user!.unreadMessages += action.payload;
+    setUnreadDirectMessages: (state, action) => {
+      state.user!.unreadDirectMessages += action.payload;
     },
     // updates total number of unread group messages on client side
     setUnreadGroupMessages: (state, action) => {
@@ -100,7 +100,7 @@ export const {
   setPageLoading,
   setLoadError,
   setUnansweredRequests,
-  setUnreadMessages,
+  setUnreadDirectMessages,
   setUnreadGroupMessages,
   setFavoriteColor,
 } = authSlice.actions;

@@ -1,35 +1,36 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useAppSelector } from "../../features/hooks";
-import type { groupTab, selectedGroup } from "../../types/groupTypes";
-import type { groupUserTab } from "../../types/userTypes";
-import type {
-  conversationMessage,
-  newConversationMessage,
-} from "../../types/conversationTypes";
-import type { userTyping } from "../../types/userTypes";
-import { useSearchParams } from "react-router-dom";
-import groupConversationsAPI from "../../apis/groupConversationsAPI";
-import socket from "../../helpers/socket";
-import { useAppDispatch } from "../../features/hooks";
+import { useAppSelector, useAppDispatch } from "../../features/hooks";
+import type { AppDispatch } from "../../features/store";
 import {
   setFormLoading,
   setUnreadGroupMessages,
 } from "../../features/slices/auth";
+import { useSearchParams } from "react-router-dom";
+import type { groupTab, selectedGroup } from "../../types/groupTypes";
+import type { groupUserTab, userTyping } from "../../types/userTypes";
+import type {
+  conversationMessage,
+  newConversationMessage,
+} from "../../types/conversationTypes";
+import groupConversationsAPI from "../../apis/groupConversationsAPI";
+import socket from "../../helpers/socket";
+import { shallowEqual } from "react-redux";
 
 // custom react hook for group conversation page; handles all group conversation logic such as
 // retrieving initial list of conversations, getting a list of all users and messages for
 // those respective groups, and creating new messages
 const useGroupConversationPage = () => {
-  const username = useAppSelector((store) => store.user.user?.username);
-  const dispatch = useAppDispatch();
+  const username = useAppSelector((store) => {
+    return store.user.user?.username;
+  }, shallowEqual);
+  const dispatch: AppDispatch = useAppDispatch();
 
-  const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const initialMessageInput = useRef<newConversationMessage>({ content: "" });
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [groupTabs, setGroupTabs] = useState<groupTab[]>([]);
-
   const [selectedGroup, setSelectedGroup] = useState<selectedGroup>({
     id: "",
     title: "",
@@ -48,26 +49,48 @@ const useGroupConversationPage = () => {
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // reusable function used to update unread group message notification indicator
+  const updateGroupMessageCount = useCallback(
+    (unreadMessages: number, id: string) => {
+      if (unreadMessages > 0) {
+        setGroupTabs((prev) =>
+          prev.map((g) => (g.id === id ? { ...g, unreadMessages: 0 } : g))
+        );
+        socket.emit("clearTotalUnreadGroupMessages", {
+          unreadMessages,
+        });
+        dispatch(setUnreadGroupMessages(unreadMessages * -1));
+      }
+    },
+    []
+  );
+
   // on initial render get a list of all the current user's groups and sets them in state, if there
   // is a group id set in state, gets all other users and messages and sets them in state
   useEffect(() => {
+    let ignore = true;
+
     const getGroupTabs = async () => {
       try {
         dispatch(setFormLoading(true));
-        const id = searchParams.get("id");
         if (username) {
           const groups = await groupConversationsAPI.getGroupTabs(username);
           setGroupTabs(groups);
-        }
-        if (id && username) {
-          const { users, messages, title, host } =
-            await groupConversationsAPI.getGroupMessages(username, id, 0);
-          setSelectedGroup({ id, title, host });
-          socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
-            setCurrentUsers(newUsers);
-          });
 
-          setCurrentMessages(messages);
+          const id = searchParams.get("id");
+          if (id) {
+            setLoadingMessages(true);
+            const { users, messages, title, host, unreadMessages } =
+              await groupConversationsAPI.getGroupMessages(username, id);
+            setSelectedGroup({ id, title, host });
+            socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
+              setCurrentUsers(newUsers);
+            });
+
+            setCurrentMessages(messages);
+            setLoadingMessages(false);
+            if (!ignore) updateGroupMessageCount(unreadMessages, id);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -77,6 +100,10 @@ const useGroupConversationPage = () => {
     };
 
     getGroupTabs();
+
+    return () => {
+      ignore = false;
+    };
   }, []);
 
   // auto scrolls to the bottom of the messages list div whenever a new message is added
@@ -106,7 +133,7 @@ const useGroupConversationPage = () => {
   // message list if id matches selected group id
   useEffect(() => {
     socket.on("groupMessage", ({ message, id }) => {
-      if (selectedGroup === id) {
+      if (selectedGroup.id === id) {
         setCurrentMessages((prev) => [...prev, message]);
 
         dispatch(setUnreadGroupMessages(-1));
@@ -128,7 +155,7 @@ const useGroupConversationPage = () => {
   // listens for a signal that another user in the group is typing
   useEffect(() => {
     socket.on("isGroupTyping", ({ id, username, isTyping }) => {
-      if (selectedGroup === id) {
+      if (selectedGroup.id === id) {
         setUsersTyping((prev) => ({ ...prev, [username]: isTyping ? 1 : 0 }));
       }
     });
@@ -142,45 +169,34 @@ const useGroupConversationPage = () => {
   // in state and in the search params, retrieves that users and messages from that group, checks if
   // any of the users are online, and sets the user list and message list in state
   const changeSelectedTab = useCallback(
-    async (
-      id: string,
-      groupName: string,
-      host: string,
-      unreadGroupMessages: number
-    ) => {
-      try {
+    async (id: string, unreadMessages: number): Promise<void> => {
+      if (id !== selectedGroup.id) {
         setLoadingMessages(true);
-        setSelectedGroup({ id, title: groupName, host });
         setSearchParams({ id });
         setUsersTyping({});
         if (username) {
-          const { users, messages } =
-            await groupConversationsAPI.getGroupMessages(
-              username,
-              id,
-              unreadGroupMessages
-            );
+          const { users, messages, title, host } =
+            await groupConversationsAPI.getGroupMessages(username, id);
+          setSelectedGroup({ id, title, host });
           socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
             setCurrentUsers(newUsers);
           });
           setCurrentMessages(messages);
-          if (unreadGroupMessages > 0) {
-            setGroupTabs((prev) =>
-              prev.map((g) => (g.id === id ? { ...g, unreadMessages: 0 } : g))
-            );
-            socket.emit("clearTotalUnreadGroupMessages", {
-              unreadGroupMessages,
-            });
-            dispatch(setUnreadGroupMessages(unreadGroupMessages * -1));
-          }
+          updateGroupMessageCount(unreadMessages, id);
         }
-      } catch (err) {
-        console.log(err);
-      } finally {
+
         setLoadingMessages(false);
       }
     },
-    [selectedGroup, currentUsers, dispatch]
+    [
+      loadingMessages,
+      selectedGroup,
+      currentMessages,
+      usersTyping,
+      messageInput,
+      currentUsers,
+      dispatch,
+    ]
   );
 
   // listens for changes in the message input on the front end and changes message input state
@@ -197,9 +213,10 @@ const useGroupConversationPage = () => {
   const handleFocus = useCallback(
     (e: React.FocusEvent<HTMLTextAreaElement>) => {
       e.preventDefault();
-      if (selectedGroup) {
+
+      if (selectedGroup.id.length > 0) {
         socket.emit("isGroupTyping", {
-          id: selectedGroup,
+          id: selectedGroup.id,
           isTyping: true,
         });
       }
@@ -212,9 +229,9 @@ const useGroupConversationPage = () => {
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLTextAreaElement>) => {
       e.preventDefault();
-      if (selectedGroup) {
+      if (selectedGroup.id.length > 0) {
         socket.emit("isGroupTyping", {
-          id: selectedGroup,
+          id: selectedGroup.id,
           isTyping: false,
         });
       }
@@ -226,6 +243,7 @@ const useGroupConversationPage = () => {
   const handleSend = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+
       const id = searchParams.get("id");
       if (username && id) {
         const { message, users } =

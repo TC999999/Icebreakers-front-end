@@ -78,4 +78,5 @@ export type groupMessageInfo = {
   messages: conversationMessage[];
   title: string;
   host: string;
+  unreadMessages: number;
 };

@@ -82,12 +82,9 @@ class groupConversationsAPI extends API {
   // group conversation for the group conversation page
   public static async getGroupMessages(
     username: string,
-    id: string,
-    unreadGroupMessages: number
+    id: string
   ): Promise<groupMessageInfo> {
-    const res = await this.getRequest(`${username}/message/${id}`, {
-      unreadGroupMessages,
-    });
+    const res = await this.getRequest(`${username}/message/${id}`);
     return res;
   }
 

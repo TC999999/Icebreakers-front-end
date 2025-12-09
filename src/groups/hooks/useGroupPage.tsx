@@ -1,12 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import type { GroupPage } from "../../types/groupTypes";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, createSearchParams } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 
+// custom hook for group page, handles navigating to group messages, form to request to join,
+// and showing all information about the group
 const useGroupPage = () => {
   const { id } = useParams();
   const dispatch: AppDispatch = useAppDispatch();
@@ -75,20 +77,29 @@ const useGroupPage = () => {
   }, [group.users]);
 
   // reusable callback automatically navigates to the page linked by the url; used for buttons
-  const handleNavigate = useCallback(
+  const handleNavigateRequest = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      navigate(e.currentTarget.value);
+      navigate(`/groups/${group.id}/request`);
     },
-    []
+    [group.id]
   );
+
+  // navigates to group conversation page and injects url search params for group id
+  const handleNavigateConversations = useCallback(() => {
+    navigate({
+      pathname: "/conversations/groups",
+      search: `?${createSearchParams({ id: group.id })}`,
+    });
+  }, [group.id]);
 
   return {
     group,
     isInGroupState,
     requestPendingState,
     invitationPendingState,
-    handleNavigate,
+    handleNavigateRequest,
+    handleNavigateConversations,
   };
 };
 

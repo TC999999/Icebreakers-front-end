@@ -56,7 +56,7 @@ const useUserProfile = () => {
   // the url
   const goToMessages = useCallback(async () => {
     if (currentUser && username) {
-      dispatch(setFormLoading(true));
+      // dispatch(setFormLoading(true));
       let res = await directConversationsAPI.getConversationID(
         currentUser,
         username
@@ -66,7 +66,7 @@ const useUserProfile = () => {
         pathname: "/conversations",
         search: `?${createSearchParams({ id: res.id })}`,
       });
-      dispatch(setFormLoading(false));
+      // dispatch(setFormLoading(false));
     }
   }, [username, currentUser]);
 

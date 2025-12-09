@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { useSearchParams } from "react-router-dom";
-import { setFormLoading, setUnreadMessages } from "../../features/slices/auth";
+import {
+  setFormLoading,
+  setUnreadDirectMessages,
+} from "../../features/slices/auth";
 import type {
   conversation,
   conversationMessage,
@@ -24,6 +27,7 @@ const useConversationListPage = () => {
   const username = useAppSelector((store) => {
     return store.user.user?.username;
   }, shallowEqual);
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialInput: savedMessage = { content: "" };
@@ -49,23 +53,43 @@ const useConversationListPage = () => {
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // reusable function used to update unread direct message notification indicator
+  const updateDirectMessageCount = useCallback(
+    (unreadMessages: number, id: string) => {
+      if (unreadMessages > 0) {
+        setConversations((prev) =>
+          prev.map((convo) =>
+            convo.id === id ? { ...convo, unreadMessages: 0 } : convo
+          )
+        );
+
+        dispatch(setUnreadDirectMessages(unreadMessages * -1));
+        socket.emit("clearTotalUnreadDirectMessages", {
+          unreadMessages,
+        });
+      }
+    },
+    []
+  );
+
   // gets all of a user's direct conversations on initial render. If there's a conversation id in parameters,
   // retrieves messages from that conversation
   useEffect(() => {
-    try {
-      dispatch(setFormLoading(true));
-      const getConversations = async () => {
+    let ignore = true;
+    const getConversations = async () => {
+      try {
+        dispatch(setFormLoading(true));
         if (username) {
           const conversations = await directConversationsAPI.getConversations(
             username
           );
           setConversations(conversations);
-          const currentID = searchParams.get("id");
-          if (currentID) {
+          const id = searchParams.get("id");
+          if (id) {
             setLoadingMessages(true);
 
-            let { messages, conversationData, unreadMessages } =
-              await directConversationsAPI.getMessages(username!, currentID);
+            const { messages, conversationData, unreadMessages } =
+              await directConversationsAPI.getMessages(username, id);
             setCurrentConversation(conversationData);
             socket.emit(
               "isOnline",
@@ -77,32 +101,25 @@ const useConversationListPage = () => {
                 }));
               }
             );
+
             setCurrentMessages(messages);
             setLoadingMessages(false);
-            if (unreadMessages > 0) {
-              setConversations((prev) =>
-                prev.map((convo) =>
-                  convo.id === currentID
-                    ? { ...convo, unreadMessages: 0 }
-                    : convo
-                )
-              );
 
-              dispatch(setUnreadMessages(unreadMessages * -1));
-              socket.emit("clearTotalUnreadMessages", {
-                unreadMessages,
-              });
-            }
+            if (!ignore) updateDirectMessageCount(unreadMessages, id);
           }
         }
-      };
-      getConversations();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      dispatch(setFormLoading(false));
-    }
-  }, [dispatch]);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
+      }
+    };
+    getConversations();
+
+    return () => {
+      ignore = false;
+    };
+  }, []);
 
   // lets user know when other user in the conversation is online
   useEffect(() => {
@@ -149,8 +166,8 @@ const useConversationListPage = () => {
 
           setConversations([findConvo, ...filteredConversations]);
         }
-        dispatch(setUnreadMessages(-1));
-        socket.emit("decreaseUnreadMessages", { id });
+        dispatch(setUnreadDirectMessages(-1));
+        socket.emit("decreaseUnreadDirectMessages", { id });
       } else {
         let findConvo = conversations.find(
           (conversation) => conversation.id === id
@@ -247,50 +264,43 @@ const useConversationListPage = () => {
   // that amount from total number of unread messages, also changes online status of other user
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
-      setLoadingMessages(true);
-      savedMessages.delete(currentConversation.id);
+      if (conversation.id !== currentConversation.id) {
+        setLoadingMessages(true);
+        savedMessages.delete(currentConversation.id);
 
-      if (currentConversation.id && messageInput.content.length > 0) {
-        savedMessages.set(currentConversation.id, messageInput.content);
-      }
+        if (currentConversation.id && messageInput.content.length > 0) {
+          savedMessages.set(currentConversation.id, messageInput.content);
+        }
 
-      if (conversation.unreadMessages > 0) {
-        const newConversations = conversations.map((convo) =>
-          convo.id === conversation.id ? { ...convo, unreadMessages: 0 } : convo
+        updateDirectMessageCount(conversation.unreadMessages, conversation.id);
+
+        const { messages } = await directConversationsAPI.getMessages(
+          username!,
+          conversation.id
         );
-        setConversations(newConversations);
 
-        dispatch(setUnreadMessages(conversation.unreadMessages * -1));
-        socket.emit("clearTotalUnreadMessages", {
-          unreadMessages: conversation.unreadMessages,
-        });
-      }
-      let { messages } = await directConversationsAPI.getMessages(
-        username!,
-        conversation.id
-      );
+        const convoMessage = savedMessages.get(conversation.id);
 
-      const convoMessage = savedMessages.get(conversation.id);
-
-      setMessageInput((prev) => ({
-        ...prev,
-        content: convoMessage ? convoMessage : "",
-      }));
-
-      socket.emit("isOnline", conversation.otherUser, (response: boolean) => {
-        setCurrentConversation((prev) => ({
+        setMessageInput((prev) => ({
           ...prev,
-          id: conversation.id,
-          title: conversation.title,
-          recipient: conversation.otherUser,
-          isOnline: response,
+          content: convoMessage ? convoMessage : "",
         }));
-      });
-      setCurrentMessages(messages);
-      setTypingMessage("");
-      setLoadingMessages(false);
-      setSearchParams({ id: conversation.id.toString() });
-      if (showTabletConversationTabs) setShowTabletConversationTabs(false);
+
+        socket.emit("isOnline", conversation.otherUser, (response: boolean) => {
+          setCurrentConversation((prev) => ({
+            ...prev,
+            id: conversation.id,
+            title: conversation.title,
+            recipient: conversation.otherUser,
+            isOnline: response,
+          }));
+        });
+        setCurrentMessages(messages);
+        setTypingMessage("");
+        setLoadingMessages(false);
+        setSearchParams({ id: conversation.id.toString() });
+        if (showTabletConversationTabs) setShowTabletConversationTabs(false);
+      }
     },
     [
       loadingMessages,

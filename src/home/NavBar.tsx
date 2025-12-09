@@ -29,9 +29,9 @@ const NavBar = (): JSX.Element => {
           <div className="tabs">
             <div id="scrollable-tabs">
               <div className="navlink">
-                {user.unreadMessages > 0 && (
+                {user.unreadDirectMessages > 0 && (
                   <div className="notification-label">
-                    {user.unreadMessages}
+                    {user.unreadDirectMessages}
                   </div>
                 )}
                 <button

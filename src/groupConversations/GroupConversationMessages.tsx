@@ -7,6 +7,7 @@ import type { userTyping } from "../types/userTypes";
 import ConversationMessageBubble from "../conversations/ConversationMessageBubble";
 import ConversationLoading from "../conversations/ConversationLoading";
 import GroupConversationUserTypingBlock from "./GroupConversationUserTypingBlock";
+import { FaArrowUp } from "react-icons/fa";
 import type { simpleGroup } from "../types/groupTypes";
 
 type Props = {
@@ -63,14 +64,20 @@ const GroupConversationMessages: React.FC<Props> = ({
             onFocus={handleFocus}
             onBlur={handleBlur}
             disabled={selctedGroup.id.length === 0}
+            autoComplete="off"
           ></textarea>
 
           <div id="send">
             <button
               className="submit-button"
-              disabled={selctedGroup.id.length === 0}
+              title={
+                messageInput.content
+                  ? "Send"
+                  : "Please Type a Message Into the Input on the Left"
+              }
+              disabled={messageInput.content.length === 0}
             >
-              Send
+              <FaArrowUp />
             </button>
           </div>
         </form>

@@ -13,7 +13,8 @@ const GroupPage = () => {
     isInGroupState,
     requestPendingState,
     invitationPendingState,
-    handleNavigate,
+    handleNavigateRequest,
+    handleNavigateConversations,
   } = useGroupPage();
 
   return (
@@ -53,8 +54,7 @@ const GroupPage = () => {
             !invitationPendingState && (
               <button
                 className="submit-button"
-                value={`/conversations/groups?id=${group.id}`}
-                onClick={handleNavigate}
+                onClick={() => handleNavigateConversations()}
               >
                 Go To Messages
               </button>
@@ -76,11 +76,7 @@ const GroupPage = () => {
           {!isInGroupState &&
             !requestPendingState &&
             !invitationPendingState && (
-              <button
-                className="submit-button"
-                value={`/groups/${group.id}/request`}
-                onClick={handleNavigate}
-              >
+              <button className="submit-button" onClick={handleNavigateRequest}>
                 Request To Join
               </button>
             )}
