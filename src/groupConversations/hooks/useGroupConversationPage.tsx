@@ -65,8 +65,9 @@ const useGroupConversationPage = () => {
     []
   );
 
-  // on initial render get a list of all the current user's groups and sets them in state, if there
-  // is a group id set in state, gets all other users and messages and sets them in state
+  // on initial render get a list of all the current user's groups and sets them in state,
+  // if there is a group id set in state, gets all other users and messages and sets them
+  // in state, ignore flag prevents any mathematical errors for unread message count
   useEffect(() => {
     let ignore = true;
 
@@ -164,6 +165,27 @@ const useGroupConversationPage = () => {
       socket.off("isGroupTyping");
     };
   }, [usersTyping, selectedGroup]);
+
+  // socket signal listener to add new user to group if current group id matches received
+  // group id, stops listening when component unmounts
+  useEffect(() => {
+    socket.on("addUserToGroup", ({ groupID, user, isOnline }) => {
+      if (selectedGroup.id === groupID) {
+        setCurrentUsers((prev) => [
+          ...prev,
+          {
+            username: user.username,
+            favoriteColor: user.favoriteColor,
+            isOnline,
+          },
+        ]);
+      }
+    });
+
+    return () => {
+      socket.off("addUserToGroup");
+    };
+  }, [currentUsers, selectedGroup]);
 
   // when a user clicks a new group tab at the top of the page, sets the id associated with that tab
   // in state and in the search params, retrieves that users and messages from that group, checks if

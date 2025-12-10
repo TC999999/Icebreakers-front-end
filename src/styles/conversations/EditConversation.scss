@@ -1,18 +1,14 @@
 @use "../colors" as c;
 @use "../settings" as s;
 
-#edit-conversation-background {
-  justify-content: center;
-  align-items: center;
-  #edit-conversation-content {
-    background-color: c.$primary;
-    border: s.$borderSettings c.$secondary;
-    border-radius: s.$borderRadius;
-    padding: 10px;
+#edit-conversation-content {
+  background-color: c.$primary;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+  padding: 10px;
 
-    .button-row {
-      display: flex;
-      justify-content: space-between;
-    }
+  .button-row {
+    display: flex;
+    justify-content: space-between;
   }
 }

@@ -10,8 +10,8 @@ const LoadingSmall = (): JSX.Element | null => {
     shallowEqual
   );
   return loading ? (
-    <div className="modal-transparent" id="small-loading-message-background">
-      <div id="small-loading-message-content">
+    <div className="modal-transparent modal-background">
+      <div className="modal-content" id="small-loading-message-content">
         <h2>Loading...</h2>
       </div>
     </div>

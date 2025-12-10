@@ -15,6 +15,34 @@
   overflow: auto;
   background-color: rgba(55, 55, 55, 0.5);
   display: flex;
+
+  &.modal-background {
+    justify-content: center;
+    align-items: center;
+
+    .modal-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+
+  &#tab-list-tablet {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    z-index: 4;
+
+    .conversation-tabs,
+    .request-tabs {
+      z-index: 4;
+      animation: slideFromLeft 0.5s;
+      width: 210px;
+      height: 700px;
+      border: s.$borderSettings c.$primary;
+    }
+  }
 }
 
 .ellipsis {
@@ -306,7 +334,8 @@ form {
 .submit-button,
 .cancel-button,
 .tab-button,
-.edit-button {
+.edit-button,
+.delete-button {
   background-color: c.$secondary;
   color: white;
   padding: 10px;
@@ -321,22 +350,6 @@ form {
 
   &:active {
     background-color: antiquewhite;
-  }
-}
-
-#tab-list-tablet {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  z-index: 4;
-
-  .conversation-tabs,
-  .request-tabs {
-    z-index: 4;
-    animation: slideFromLeft 0.5s;
-    width: 210px;
-    height: 700px;
-    border: s.$borderSettings c.$primary;
   }
 }
 

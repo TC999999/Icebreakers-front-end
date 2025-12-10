@@ -6,6 +6,8 @@ export type UserProfile = {
   createdAt: string;
   requestSent?: boolean;
   conversationExists?: boolean;
+  blockedByYou?: boolean;
+  blockedByThem?: boolean;
 };
 
 export type UserCard = {

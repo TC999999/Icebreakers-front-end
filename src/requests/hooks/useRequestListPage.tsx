@@ -538,6 +538,11 @@ const useRequestListPage = () => {
           user: res.user,
           groupID: response.groupID,
         });
+
+        socket.emit("bringIntoGroup", {
+          to: response.from,
+          group: { id: response.groupID },
+        });
       }
       handleRequests(
         response,
@@ -555,13 +560,6 @@ const useRequestListPage = () => {
       );
 
       dispatch(setUnansweredRequests(-1));
-
-      if (res.user) {
-        socket.emit("bringIntoGroup", {
-          to: response.from,
-          group: { id: response.groupID },
-        });
-      }
     },
     []
   );

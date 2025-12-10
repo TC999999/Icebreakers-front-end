@@ -1,0 +1,26 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#delete-conversation-content {
+  background-color: white;
+  border: 2px solid c.$primary;
+  border-radius: 30px;
+  width: 400px;
+  padding: 10px;
+  h2,
+  h4 {
+    text-align: center;
+    color: c.$secondary;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  li {
+    font-family: Georgia, "Times New Roman", Times, serif;
+  }
+
+  #button-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+  }
+}

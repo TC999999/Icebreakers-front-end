@@ -4,6 +4,7 @@ import "../styles/users/UserProfile.scss";
 import { useAppSelector } from "../features/hooks";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { shallowEqual } from "react-redux";
+import BlockUser from "./BlockUser";
 
 // React component for user profile page; shows a user's username, description, interest list,
 // and joined date. Shows different buttons and messages if the profile the user if viewing is
@@ -12,7 +13,13 @@ import { shallowEqual } from "react-redux";
 // user on a profile page that is not their own
 
 const UserProfile = () => {
-  const { userState, goToMessages } = useUserProfile();
+  const {
+    userState,
+    showBlockForm,
+    goToMessages,
+    toggleBlockForm,
+    handleBlockUser,
+  } = useUserProfile();
   const navigate: NavigateFunction = useNavigate();
 
   const { user } = useAppSelector((store) => {
@@ -85,10 +92,22 @@ const UserProfile = () => {
               >
                 Invite to a Group
               </button>
+              <button
+                id="block-user-button"
+                onClick={(e) => toggleBlockForm(e)}
+              >
+                Block this User
+              </button>
             </div>
           )}
         </div>
       </section>
+      <BlockUser
+        show={showBlockForm}
+        username={userState.username}
+        cancel={toggleBlockForm}
+        handleBlockUser={handleBlockUser}
+      />
     </main>
   );
 };

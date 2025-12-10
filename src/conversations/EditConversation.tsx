@@ -31,8 +31,8 @@ const EditConversation: React.FC<Props> = ({
     });
 
   return show ? (
-    <div className="modal-transparent" id="edit-conversation-background">
-      <div id="edit-conversation-content">
+    <div className="modal-transparent modal-background">
+      <div className="modal-content" id="edit-conversation-content">
         <h1>Edit Conversation with {currentConversation.recipient}</h1>
         <div id="edit-form">
           <form onSubmit={handleSubmit}>

@@ -47,6 +47,7 @@ const useConversationListPage = () => {
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [typingMessage, setTypingMessage] = useState<string>("");
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
+  const [showDeleteForm, setShowDeleteForm] = useState<boolean>(false);
   const [showTabletConversationTabs, setShowTabletConversationTabs] =
     useState<boolean>(false);
 
@@ -328,6 +329,21 @@ const useConversationListPage = () => {
     [showEditForm]
   );
 
+  // toggles showing form to delete current conversation title (document.activeElement.blur() is
+  // to prevent user from accidentally closing the form by any enter key misclicks on keyboard
+  // before changing input value)
+  const toggleDeleteForm = useCallback(
+    (
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent
+    ): void => {
+      e.preventDefault();
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+      setShowDeleteForm(!showDeleteForm);
+    },
+    [showDeleteForm]
+  );
+
   // toggles showing left hand conversation tab list on smaller screen sizes (document.activeElement.blur() is
   // to prevent user from accidentally closing the form by any enter key misclicks on keyboard
   // before changing input value)
@@ -496,9 +512,11 @@ const useConversationListPage = () => {
     typingMessage,
     scrollRef,
     showEditForm,
+    showDeleteForm,
     showTabletConversationTabs,
     handleCurrentConversation,
     toggleEditForm,
+    toggleDeleteForm,
     toggleTabletConversationTabs,
     handleChangeInput,
     handleFocus,

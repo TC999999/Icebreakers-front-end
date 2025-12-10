@@ -12,6 +12,7 @@ import { type UserProfile } from "../../types/userTypes";
 import userAPI from "../../apis/userAPI";
 import createDate from "../../helpers/createDate";
 import directConversationsAPI from "../../apis/directConversationsAPI";
+import blockAPI from "../../apis/blockAPI";
 
 // custom hook for user profile page
 const useUserProfile = () => {
@@ -26,6 +27,7 @@ const useUserProfile = () => {
     favoriteColor: "#ffffff",
     createdAt: "",
   });
+  const [showBlockForm, setShowBlockForm] = useState<boolean>(false);
 
   // on initial render, retrieves user information and sets it in state; if user does not exist, throws
   // an error and redirects user to error page
@@ -56,7 +58,6 @@ const useUserProfile = () => {
   // the url
   const goToMessages = useCallback(async () => {
     if (currentUser && username) {
-      // dispatch(setFormLoading(true));
       let res = await directConversationsAPI.getConversationID(
         currentUser,
         username
@@ -66,11 +67,39 @@ const useUserProfile = () => {
         pathname: "/conversations",
         search: `?${createSearchParams({ id: res.id })}`,
       });
-      // dispatch(setFormLoading(false));
     }
   }, [username, currentUser]);
 
-  return { userState, goToMessages };
+  // toggles state that shows user block form
+  const toggleBlockForm = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setShowBlockForm(!showBlockForm);
+    },
+    [showBlockForm]
+  );
+
+  //
+  const handleBlockUser = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      if (currentUser && username) {
+        dispatch(setFormLoading(true));
+        await blockAPI.blockUser(currentUser, username);
+        setShowBlockForm(false);
+        dispatch(setFormLoading(false));
+      }
+    },
+    [currentUser, userState]
+  );
+
+  return {
+    userState,
+    showBlockForm,
+    goToMessages,
+    toggleBlockForm,
+    handleBlockUser,
+  };
 };
 
 export default useUserProfile;
