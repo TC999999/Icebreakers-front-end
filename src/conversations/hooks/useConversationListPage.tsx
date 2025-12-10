@@ -459,7 +459,8 @@ const useConversationListPage = () => {
         const { message } = await directConversationsAPI.createMessage(
           messageInput,
           username!,
-          currentConversation.id
+          currentConversation.id,
+          currentConversation.recipient
         );
         setCurrentMessages((prev) => {
           return [...prev, message];

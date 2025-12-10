@@ -56,11 +56,12 @@ class directConversationsAPI extends API {
   public static async createMessage(
     message: savedMessage,
     username: string,
-    id: string
+    id: string,
+    otherUser: string
   ): Promise<createMessagesReturn> {
     const res = await this.postRequest(
       `${username}/conversation/${id}/message`,
-      message
+      { ...message, otherUser }
     );
     return res;
   }
