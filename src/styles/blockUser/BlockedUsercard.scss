@@ -1,0 +1,45 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+.blocked-user-card {
+  background-color: c.$primary;
+  padding: 5px;
+  position: relative;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+
+  h1 {
+    color: c.$secondary;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+  .blocked-user-identification {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .profile-pic {
+      margin: 10px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: s.$borderSettings;
+      border-radius: 50%;
+    }
+  }
+
+  .unblock-button {
+    position: absolute;
+    top: 15%;
+    right: 10%;
+  }
+
+  .block-date {
+    p {
+      b {
+        color: c.$secondary;
+      }
+      color: c.$fourthly;
+    }
+  }
+}

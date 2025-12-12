@@ -1,0 +1,10 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+section#blocked-user-list {
+  background-color: c.$fourthly;
+  padding: 10px;
+  border: s.$borderSettings c.$secondary;
+  height: 500px;
+  overflow-x: scroll;
+}

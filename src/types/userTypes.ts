@@ -6,8 +6,8 @@ export type UserProfile = {
   createdAt: string;
   requestSent?: boolean;
   conversationExists?: boolean;
-  blockedByYou?: boolean;
-  blockedByThem?: boolean;
+  blockedOtherUser?: boolean;
+  blockedByOtherUser?: boolean;
 };
 
 export type UserCard = {
@@ -44,4 +44,10 @@ export type groupMessageUserUpdate = {
 
 export type userTyping = {
   [key: string]: number;
+};
+
+export type blockedUser = {
+  username: string;
+  favoriteColor: string;
+  blockedAt: string;
 };

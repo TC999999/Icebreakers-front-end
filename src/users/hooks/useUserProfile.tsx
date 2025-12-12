@@ -79,7 +79,8 @@ const useUserProfile = () => {
     [showBlockForm]
   );
 
-  //
+  // sends data to backend that prevents the current user and this user from contacting each
+  // other directly
   const handleBlockUser = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
@@ -88,6 +89,7 @@ const useUserProfile = () => {
         await blockAPI.blockUser(currentUser, username);
         setShowBlockForm(false);
         dispatch(setFormLoading(false));
+        setUserState((prev) => ({ ...prev, blockedOtherUser: true }));
       }
     },
     [currentUser, userState]

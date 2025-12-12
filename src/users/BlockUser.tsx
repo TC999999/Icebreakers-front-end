@@ -10,6 +10,9 @@ type Props = {
   ) => Promise<void>;
 };
 
+// React component that shows user a list of details of what happens when they block another
+// user and list of other actions they may want to take; also has buttons that either cancels
+// blocking or proceeds with it
 const BlockUser: React.FC<Props> = ({
   username,
   show,

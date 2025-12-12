@@ -72,9 +72,12 @@
     }
 
     #button-row {
+      display: flex;
+      justify-content: center;
       #request-message {
         color: rgb(73, 3, 73);
         font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+        margin: 10px;
       }
 
       button {

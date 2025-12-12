@@ -8,9 +8,11 @@ import BlockUser from "./BlockUser";
 
 // React component for user profile page; shows a user's username, description, interest list,
 // and joined date. Shows different buttons and messages if the profile the user if viewing is
-// their own or not (shows edit profile  button if this is their own page, or a request conversation
+// their own or not (shows edit profile button if this is their own page, or a request conversation
 // button if not), also shows different messages if the user has requested a conversation with a
-// user on a profile page that is not their own
+// user on a profile page that is not their own, also shows a button to block that user on profile
+// pages that aren't yours or a messages that tells whether the user has been blocked by you, or
+// has blocked you themself
 
 const UserProfile = () => {
   const {
@@ -66,10 +68,15 @@ const UserProfile = () => {
               >
                 Edit Profile
               </button>
-              <button>View Blocked List</button>
+
+              <button
+                onClick={() => navigate(`/user/${userState.username}/blocked`)}
+              >
+                View Blocked List
+              </button>
             </div>
           ) : (
-            <div>
+            <>
               {userState.requestSent && !userState.conversationExists && (
                 <p id="request-message">Request Has Already Been Sent!</p>
               )}
@@ -92,13 +99,24 @@ const UserProfile = () => {
               >
                 Invite to a Group
               </button>
-              <button
-                id="block-user-button"
-                onClick={(e) => toggleBlockForm(e)}
-              >
-                Block this User
-              </button>
-            </div>
+
+              {!userState.blockedByOtherUser && !userState.blockedOtherUser && (
+                <button
+                  id="block-user-button"
+                  onClick={(e) => toggleBlockForm(e)}
+                >
+                  Block this User
+                </button>
+              )}
+
+              {userState.blockedByOtherUser && !userState.blockedOtherUser && (
+                <p id="request-message">You Have Been Blocked By This User!</p>
+              )}
+
+              {!userState.blockedByOtherUser && userState.blockedOtherUser && (
+                <p id="request-message">You Have Blocked This User!</p>
+              )}
+            </>
           )}
         </div>
       </section>

@@ -18,6 +18,7 @@ import GroupInvite from "./groups/GroupInvite";
 import GroupSearchPage from "./groups/GroupSearchPage";
 import GroupRequest from "./groups/GroupRequest";
 import GroupConversationPage from "./groupConversations/GroupConversationPage";
+import BlockedUserPage from "./blockUser/BlockedUserPage";
 import UserRoutes from "./routes/UserRoutes";
 import LoggedOutRoutes from "./routes/LoggedOutRoutes";
 import { useAppSelector } from "./features/hooks";
@@ -43,6 +44,7 @@ const RouteList = (): JSX.Element | null => {
           <Route path=":username">
             <Route index element={<UserProfile />} />
             <Route path="edit" element={<EditUser />} />
+            <Route path="blocked" element={<BlockedUserPage />} />
           </Route>
           <Route path="search" element={<UserSearch />} />
         </Route>
@@ -68,7 +70,6 @@ const RouteList = (): JSX.Element | null => {
           <Route path="/error" element={<Error />} />
         </Route>
       </Route>
-
       <Route path="*" element={<NotFound />} />
     </Routes>
   ) : null;

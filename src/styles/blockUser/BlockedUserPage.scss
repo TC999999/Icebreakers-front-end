@@ -1,0 +1,9 @@
+@use "../colors.scss" as c;
+
+#blocked-users-list-page {
+  header {
+    color: c.$secondary;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    text-align: center;
+  }
+}
