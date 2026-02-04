@@ -41,13 +41,12 @@ const useConversationListPage = () => {
   const [currentConversation, setCurrentConversation] =
     useState<currentConversation>(initialConversationData);
   const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
-    []
+    [],
   );
   const [messageInput, setMessageInput] = useState<savedMessage>(initialInput);
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
   const [typingMessage, setTypingMessage] = useState<string>("");
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
-  const [showDeleteForm, setShowDeleteForm] = useState<boolean>(false);
   const [showTabletConversationTabs, setShowTabletConversationTabs] =
     useState<boolean>(false);
 
@@ -60,8 +59,8 @@ const useConversationListPage = () => {
       if (unreadMessages > 0) {
         setConversations((prev) =>
           prev.map((convo) =>
-            convo.id === id ? { ...convo, unreadMessages: 0 } : convo
-          )
+            convo.id === id ? { ...convo, unreadMessages: 0 } : convo,
+          ),
         );
 
         dispatch(setUnreadDirectMessages(unreadMessages * -1));
@@ -70,7 +69,7 @@ const useConversationListPage = () => {
         });
       }
     },
-    []
+    [],
   );
 
   // gets all of a user's direct conversations on initial render. If there's a conversation id in parameters,
@@ -81,9 +80,8 @@ const useConversationListPage = () => {
       try {
         dispatch(setFormLoading(true));
         if (username) {
-          const conversations = await directConversationsAPI.getConversations(
-            username
-          );
+          const conversations =
+            await directConversationsAPI.getConversations(username);
           setConversations(conversations);
           const id = searchParams.get("id");
           if (id) {
@@ -100,7 +98,7 @@ const useConversationListPage = () => {
                   ...prev,
                   isOnline: response,
                 }));
-              }
+              },
             );
 
             setCurrentMessages(messages);
@@ -152,7 +150,7 @@ const useConversationListPage = () => {
         });
 
         let findConvo = conversations.find(
-          (conversation) => conversation.id === currentConversation.id
+          (conversation) => conversation.id === currentConversation.id,
         );
         if (findConvo) {
           findConvo = {
@@ -171,7 +169,7 @@ const useConversationListPage = () => {
         socket.emit("decreaseUnreadDirectMessages", { id });
       } else {
         let findConvo = conversations.find(
-          (conversation) => conversation.id === id
+          (conversation) => conversation.id === id,
         );
         if (findConvo) {
           findConvo = {
@@ -207,7 +205,7 @@ const useConversationListPage = () => {
       setConversations(
         conversations.map((c) => {
           return c.id === id ? { ...c, isTyping } : c;
-        })
+        }),
       );
     });
 
@@ -277,7 +275,7 @@ const useConversationListPage = () => {
 
         const { messages } = await directConversationsAPI.getMessages(
           username!,
-          conversation.id
+          conversation.id,
         );
 
         const convoMessage = savedMessages.get(conversation.id);
@@ -311,7 +309,7 @@ const useConversationListPage = () => {
       messageInput,
       savedMessages,
       showTabletConversationTabs,
-    ]
+    ],
   );
 
   // toggles showing form to edit current conversation title (document.activeElement.blur() is
@@ -319,29 +317,14 @@ const useConversationListPage = () => {
   // before changing input value)
   const toggleEditForm = useCallback(
     (
-      e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent
+      e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent,
     ): void => {
       e.preventDefault();
       if (document.activeElement instanceof HTMLElement)
         document.activeElement.blur();
       setShowEditForm(!showEditForm);
     },
-    [showEditForm]
-  );
-
-  // toggles showing form to delete current conversation title (document.activeElement.blur() is
-  // to prevent user from accidentally closing the form by any enter key misclicks on keyboard
-  // before changing input value)
-  const toggleDeleteForm = useCallback(
-    (
-      e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent
-    ): void => {
-      e.preventDefault();
-      if (document.activeElement instanceof HTMLElement)
-        document.activeElement.blur();
-      setShowDeleteForm(!showDeleteForm);
-    },
-    [showDeleteForm]
+    [showEditForm],
   );
 
   // toggles showing left hand conversation tab list on smaller screen sizes (document.activeElement.blur() is
@@ -354,7 +337,7 @@ const useConversationListPage = () => {
         document.activeElement.blur();
       setShowTabletConversationTabs(!showTabletConversationTabs);
     },
-    [showTabletConversationTabs]
+    [showTabletConversationTabs],
   );
 
   // handles change event on message input, also lets other user know
@@ -379,7 +362,7 @@ const useConversationListPage = () => {
         });
       }
     },
-    [messageInput, currentConversation]
+    [messageInput, currentConversation],
   );
 
   // when user types at least one character into message input, sends socket signal to other user
@@ -388,7 +371,7 @@ const useConversationListPage = () => {
     (
       e:
         | React.FocusEvent<HTMLInputElement>
-        | React.FocusEvent<HTMLTextAreaElement>
+        | React.FocusEvent<HTMLTextAreaElement>,
     ) => {
       e.preventDefault();
       if (
@@ -403,7 +386,7 @@ const useConversationListPage = () => {
         });
       }
     },
-    [messageInput]
+    [messageInput],
   );
 
   // when user clicks off of message input, sends socket signal to other user
@@ -412,7 +395,7 @@ const useConversationListPage = () => {
     (
       e:
         | React.FocusEvent<HTMLInputElement>
-        | React.FocusEvent<HTMLTextAreaElement>
+        | React.FocusEvent<HTMLTextAreaElement>,
     ) => {
       e.preventDefault();
       if (currentConversation.id.length > 0) {
@@ -424,7 +407,7 @@ const useConversationListPage = () => {
         });
       }
     },
-    [messageInput]
+    [messageInput],
   );
 
   // when user updates conversation title, updates conversation tab list to show new title and
@@ -441,7 +424,7 @@ const useConversationListPage = () => {
         title: newConversation.title,
       }));
     },
-    [currentConversation, conversations]
+    [currentConversation, conversations],
   );
 
   // handles sending message to other users, including updated db
@@ -460,7 +443,7 @@ const useConversationListPage = () => {
           messageInput,
           username!,
           currentConversation.id,
-          currentConversation.recipient
+          currentConversation.recipient,
         );
         setCurrentMessages((prev) => {
           return [...prev, message];
@@ -469,7 +452,7 @@ const useConversationListPage = () => {
         setMessageInput(initialInput);
 
         let findConvo = conversations.find(
-          (conversation) => conversation.id === currentConversation.id
+          (conversation) => conversation.id === currentConversation.id,
         );
         if (findConvo) {
           findConvo = {
@@ -498,10 +481,10 @@ const useConversationListPage = () => {
           to: currentConversation.recipient,
         });
       } catch (err: any) {
-        notify(err.message);
+        notify(JSON.parse(err.message).message);
       }
     },
-    [messageInput, conversations]
+    [messageInput, conversations],
   );
 
   return {
@@ -513,11 +496,9 @@ const useConversationListPage = () => {
     typingMessage,
     scrollRef,
     showEditForm,
-    showDeleteForm,
     showTabletConversationTabs,
     handleCurrentConversation,
     toggleEditForm,
-    toggleDeleteForm,
     toggleTabletConversationTabs,
     handleChangeInput,
     handleFocus,

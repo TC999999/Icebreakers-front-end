@@ -32,11 +32,10 @@ const useGroupSearchPage = () => {
   // the search query boxes, and retrieves filtered list of all groups based on those parameters;
   // furthermore, retrieves a list of all group names and usernames for search query purposes
   useEffect(() => {
-    try {
-      dispatch(setFormLoading(true));
-      const getAllGroups = async () => {
+    const getAllGroups = async () => {
+      try {
+        dispatch(setFormLoading(true));
         let params = Object.fromEntries(searchParams.entries());
-
         setGroupSearchParams((prev) => ({
           ...prev,
           ...params,
@@ -52,13 +51,13 @@ const useGroupSearchPage = () => {
         setGroupSearchResults(groupNames);
         setHostSearchResults(allUsernames);
         setUserSearchResults(allUsernames);
-      };
-      getAllGroups();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      dispatch(setFormLoading(false));
-    }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
+      }
+    };
+    getAllGroups();
   }, []);
 
   // when the group name search query value changes, filters list of group names with names that
@@ -190,6 +189,7 @@ const useGroupSearchPage = () => {
 
   return {
     currentGroups,
+
     groupSearchParams,
     groupSearchResults,
     hostSearchResults,

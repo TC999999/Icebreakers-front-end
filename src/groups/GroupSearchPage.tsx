@@ -1,12 +1,20 @@
 import useGroupSearchPage from "./hooks/useGroupSearchPage";
 import GroupSearchCard from "./GroupSearchCard";
+import GroupSearchSkeleton from "./skeletons/GroupSearchSkeleton";
 import "../styles/groups/GroupSearchPage.scss";
+import { useAppSelector } from "../features/hooks";
+import { shallowEqual } from "react-redux";
 
 // React component that allows user to search for groups: includes search bars for group names,
 // users that host the group, and users who are members of groups; also includes checkboxes to filter
 // out groups that share no similar interests with the user, and groups that the user is already a
 // member of
 const GroupSearchPage = () => {
+  const loading = useAppSelector(
+    (store) => store.user.loading.loadingInfo.formLoading,
+    shallowEqual
+  );
+
   const {
     currentGroups,
     groupSearchParams,
@@ -193,28 +201,28 @@ const GroupSearchPage = () => {
           </form>
         </div>
       </header>
-
       <div id="group-search-list">
         <h1>Search Results</h1>
-
-        {currentGroups.length > 0 ? (
-          <div id="search-results">
-            {currentGroups.map((group) => (
-              <GroupSearchCard
-                key={`group-${group.id}`}
-                id={group.id}
-                title={group.title}
-                host={group.host}
-                interests={group.interests}
-                users={group.users}
-              />
-            ))}
-          </div>
-        ) : (
-          <div>
+        <div id="search-results">
+          {loading && <GroupSearchSkeleton cards={10} />}
+          {!loading && currentGroups.length > 0 && (
+            <>
+              {currentGroups.map((group) => (
+                <GroupSearchCard
+                  key={`group-${group.id}`}
+                  id={group.id}
+                  title={group.title}
+                  host={group.host}
+                  interests={group.interests}
+                  users={group.users}
+                />
+              ))}
+            </>
+          )}
+          {!loading && currentGroups.length === 0 && (
             <h2 id="empty-list">There Are No Groups That Match Your Query</h2>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </main>
   );

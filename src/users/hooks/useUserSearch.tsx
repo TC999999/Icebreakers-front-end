@@ -28,30 +28,35 @@ const useUserSearch = () => {
   // values are set into the search bar input value state
   useEffect(() => {
     const getUsernames = async () => {
-      dispatch(setFormLoading(true));
-      setSearchQuery(initialQuery);
-      let params = {};
-      let username = searchParams.get("username");
-      let findSimilarInterests = searchParams.get("findSimilarInterests");
-      if (username) {
-        params = { ...params, username };
-        setSearchQuery((prev) => ({ ...prev, username }));
-      }
-      if (findSimilarInterests === "true") {
-        params = { ...params, findSimilarInterests: true };
-        setSearchQuery((prev) => ({ ...prev, findSimilarInterests: true }));
-      }
-      const allUsernames = await userAPI.getUserNames();
-      initialUsers.current = allUsernames;
-      setSearchResults(allUsernames);
+      try {
+        dispatch(setFormLoading(true));
+        setSearchQuery(initialQuery);
+        let params = {};
+        let username = searchParams.get("username");
+        let findSimilarInterests = searchParams.get("findSimilarInterests");
+        if (username) {
+          params = { ...params, username };
+          setSearchQuery((prev) => ({ ...prev, username }));
+        }
+        if (findSimilarInterests === "true") {
+          params = { ...params, findSimilarInterests: true };
+          setSearchQuery((prev) => ({ ...prev, findSimilarInterests: true }));
+        }
+        const allUsernames = await userAPI.getUserNames();
+        initialUsers.current = allUsernames;
+        setSearchResults(allUsernames);
 
-      const users = await userAPI.searchForUsers(params);
-      setSearchedUsers(users);
-      dispatch(setFormLoading(false));
+        const users = await userAPI.searchForUsers(params);
+        setSearchedUsers(users);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        dispatch(setFormLoading(false));
+      }
     };
 
     getUsernames();
-  }, [dispatch, searchParams]);
+  }, []);
 
   // when the user focuses their cursor on the search bar, automatically shows the current list of
   // filtered users based on the current search input value in the search dropdown

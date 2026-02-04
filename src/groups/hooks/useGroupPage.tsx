@@ -85,6 +85,15 @@ const useGroupPage = () => {
     [group.id]
   );
 
+  // reusable callback automatically navigates to the page linked by the url; used for buttons
+  const handleNavigateDeleteMember = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      navigate(`/groups/${group.id}/delete`);
+    },
+    [group.id]
+  );
+
   // navigates to group conversation page and injects url search params for group id
   const handleNavigateConversations = useCallback(() => {
     navigate({
@@ -99,6 +108,7 @@ const useGroupPage = () => {
     requestPendingState,
     invitationPendingState,
     handleNavigateRequest,
+    handleNavigateDeleteMember,
     handleNavigateConversations,
   };
 };

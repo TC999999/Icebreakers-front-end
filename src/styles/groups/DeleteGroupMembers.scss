@@ -1,0 +1,11 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#delete-group-member-page {
+  header {
+    color: c.$secondary;
+    text-align: center;
+    text-decoration: underline;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+}

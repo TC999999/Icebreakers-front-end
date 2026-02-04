@@ -6,6 +6,8 @@ import type {
 import ConversationTab from "./ConversationTab";
 import "../styles/conversations/ConversationTabList.scss";
 
+import ConversationTabLIstSkeleton from "./skeletons/ConversationTabLIstSkeleton";
+
 type Props = {
   conversations: conversation[];
   currentConversation: currentConversation;
@@ -21,16 +23,22 @@ const ConversationTabList: React.FC<Props> = ({
 }) => {
   return (
     <div className="conversation-tabs">
-      {conversations.map((c) => {
-        return (
-          <ConversationTab
-            key={`conversation-${c.id}`}
-            conversation={c}
-            selected={currentConversation.id === c.id}
-            handleCurrentConversation={handleCurrentConversation}
-          />
-        );
-      })}
+      {conversations.length ? (
+        <>
+          {conversations.map((c) => {
+            return (
+              <ConversationTab
+                key={`conversation-${c.id}`}
+                conversation={c}
+                selected={currentConversation.id === c.id}
+                handleCurrentConversation={handleCurrentConversation}
+              />
+            );
+          })}
+        </>
+      ) : (
+        <ConversationTabLIstSkeleton cards={8} />
+      )}
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useAppSelector } from "../features/hooks";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { shallowEqual } from "react-redux";
 import BlockUser from "./BlockUser";
+import UserProfileSkeleton from "./skeletons/UserProfileSkeleton";
 
 // React component for user profile page; shows a user's username, description, interest list,
 // and joined date. Shows different buttons and messages if the profile the user if viewing is
@@ -27,7 +28,10 @@ const UserProfile = () => {
   const { user } = useAppSelector((store) => {
     return store.user;
   }, shallowEqual);
-  return (
+  const loading = useAppSelector(
+    (store) => store.user.loading.loadingInfo.formLoading
+  );
+  return !loading ? (
     <main id="user-profile-page">
       <section id="user-profile-introduction">
         <div id="user-header" className="profile-section">
@@ -127,6 +131,8 @@ const UserProfile = () => {
         handleBlockUser={handleBlockUser}
       />
     </main>
+  ) : (
+    <UserProfileSkeleton />
   );
 };
 

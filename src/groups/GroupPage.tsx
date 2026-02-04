@@ -2,18 +2,25 @@ import useGroupPage from "./hooks/useGroupPage";
 import createDate from "../helpers/createDate";
 import GroupUserCard from "./GroupUserCard";
 import "../styles/groups/GroupPage.scss";
+import { useAppSelector } from "../features/hooks";
+import { shallowEqual } from "react-redux";
 
 // group page react component: shows all group information (title, host, description, interest list),
 // as well as all users in the group. Displays different buttons/messages depnding if user has
 // sent a request to join, received an invitation to join, is a member of the group, or none of
 // the above
 const GroupPage = () => {
+  const username = useAppSelector(
+    (store) => store.user.user?.username,
+    shallowEqual
+  );
   const {
     group,
     isInGroupState,
     requestPendingState,
     invitationPendingState,
     handleNavigateRequest,
+    handleNavigateDeleteMember,
     handleNavigateConversations,
   } = useGroupPage();
 
@@ -59,6 +66,15 @@ const GroupPage = () => {
                 Go To Messages
               </button>
             )}
+
+          {isInGroupState && username && username === group.host && (
+            <button
+              className="submit-button"
+              onClick={(e) => handleNavigateDeleteMember(e)}
+            >
+              Remove Group Members
+            </button>
+          )}
 
           {!isInGroupState &&
             requestPendingState &&

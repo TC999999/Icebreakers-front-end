@@ -12,6 +12,8 @@ import type {
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
 import { IoReorderThree } from "react-icons/io5";
+import { useAppSelector } from "../features/hooks";
+import RequestCardListSkeleton from "./skeletons/RequestCardListSkeleton";
 
 type Props = {
   currentRequestType: requestType;
@@ -58,6 +60,9 @@ const RequestList: React.FC<Props> = ({
   resendGroupInvitation,
   deleteGroupInvitation,
 }): JSX.Element => {
+  const loading = useAppSelector(
+    (store) => store.user.loading.loadingInfo.formLoading
+  );
   return (
     <div className="request-list">
       <header id="request-list-header">
@@ -72,7 +77,11 @@ const RequestList: React.FC<Props> = ({
         <h2>{currentTitleAndDesc.title}</h2>
         <p id="request-description">{currentTitleAndDesc.description}</p>
       </header>
-      {requestList && requestList.length > 0 ? (
+
+      {loading && requestList.length === 0 && (
+        <RequestCardListSkeleton cards={5} />
+      )}
+      {!loading && requestList.length > 0 && (
         <ul>
           {requestList.map((request) => (
             <li key={`request-${currentRequestType}-${request.id}`}>
@@ -95,7 +104,9 @@ const RequestList: React.FC<Props> = ({
             </li>
           ))}
         </ul>
-      ) : (
+      )}
+
+      {!loading && requestList.length === 0 && (
         <div>
           <h3 className="message">This list is currently empty!</h3>
         </div>

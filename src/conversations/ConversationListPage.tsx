@@ -3,7 +3,6 @@ import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
 import EditConversation from "./EditConversation";
-import DeleteConversation from "./DeleteConversation";
 import ConversationTabList from "./ConversationTabList";
 import ConversationTabListTablet from "./ConversationTabListTablet";
 import { FaArrowUp } from "react-icons/fa";
@@ -18,13 +17,13 @@ const ConversationListPage = () => {
     currentMessages,
     typingMessage,
     showEditForm,
-    showDeleteForm,
+
     showTabletConversationTabs,
     scrollRef,
     handleChangeInput,
     handleCurrentConversation,
     toggleEditForm,
-    toggleDeleteForm,
+
     toggleTabletConversationTabs,
     handleSend,
     handleBlur,
@@ -40,12 +39,6 @@ const ConversationListPage = () => {
         currentConversation={currentConversation}
         hideForm={toggleEditForm}
         updateConversations={updateConversations}
-      />
-
-      <DeleteConversation
-        currentConversation={currentConversation}
-        show={showDeleteForm}
-        cancel={toggleDeleteForm}
       />
 
       <header>
@@ -116,16 +109,6 @@ const ConversationListPage = () => {
                           onClick={(e) => toggleEditForm(e)}
                         >
                           Edit
-                        </button>
-                      </div>
-
-                      <div id="delete-conversation-button">
-                        <button
-                          className="delete-button"
-                          type="button"
-                          onClick={(e) => toggleDeleteForm(e)}
-                        >
-                          Delete
                         </button>
                       </div>
                     </>

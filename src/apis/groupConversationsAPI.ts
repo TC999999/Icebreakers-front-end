@@ -98,6 +98,25 @@ class groupConversationsAPI extends API {
     const res = await this.postRequest(`${username}/message/${id}`, message);
     return res;
   }
+
+  public static async getGroupMemberDeleteInfo(
+    username: string,
+    id: string
+  ): Promise<any> {
+    const res = await this.getRequest(`${username}/delete/${id}/member`);
+    return res;
+  }
+
+  public static async removeGroupMember(
+    username: string,
+    id: string,
+    removedUser: string
+  ): Promise<any> {
+    const res = await this.deleteRequest(`${username}/delete/${id}/member`, {
+      removedUser,
+    });
+    return res;
+  }
 }
 
 export default groupConversationsAPI;

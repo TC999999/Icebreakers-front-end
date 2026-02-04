@@ -1,0 +1,33 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+.delete-group-member-card {
+  background-color: c.$primary;
+  padding: 20px;
+  margin: 10px;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+  display: flex;
+  justify-content: space-between;
+
+  .user-info {
+    display: flex;
+    justify-content: flex-start;
+
+    align-items: center;
+
+    h2 {
+      margin: 10px;
+    }
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: larger;
+      border: s.$borderSettings;
+      border-radius: s.$borderRadius;
+    }
+  }
+}
