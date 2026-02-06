@@ -80,3 +80,5 @@ export type groupMessageInfo = {
   host: string;
   unreadMessages: number;
 };
+
+export type showResults = "" | "title" | "host" | "user";

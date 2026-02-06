@@ -3,6 +3,7 @@ import type {
   groupSearchCard,
   groupSearchParams,
   groupName,
+  showResults,
 } from "../../types/groupTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import userAPI from "../../apis/userAPI";
@@ -11,14 +12,18 @@ import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/auth";
 import { useSearchParams } from "react-router-dom";
 
-type showResults = "" | "title" | "host" | "user";
-
 const useGroupSearchPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [groupSearchParams, setGroupSearchParams] = useState<groupSearchParams>(
-    { title: "", host: "", user: "", similarInterests: false, newGroups: false }
+    {
+      title: "",
+      host: "",
+      user: "",
+      similarInterests: false,
+      newGroups: false,
+    },
   );
   const originalGroups = useRef<groupName[]>([]);
   const [showResults, setShowResults] = useState<showResults>("");
@@ -27,6 +32,8 @@ const useGroupSearchPage = () => {
   const [hostSearchResults, setHostSearchResults] = useState<string[]>([]);
   const [userSearchResults, setUserSearchResults] = useState<string[]>([]);
   const [currentGroups, setCurrentGroups] = useState<groupSearchCard[]>([]);
+  const [showGroupFilterTablet, setShowGroupFilterTablet] =
+    useState<boolean>(false);
 
   // on initial render, grabs search params values from url, sets those parameter values into
   // the search query boxes, and retrieves filtered list of all groups based on those parameters;
@@ -60,13 +67,24 @@ const useGroupSearchPage = () => {
     getAllGroups();
   }, []);
 
+  // if hidden conversation tab list is shown on smaller screen, automatically hides tab list if
+  // screen width is wider than 1173px
+  useEffect(() => {
+    const handleResize = () => {
+      if (showGroupFilterTablet && window.innerWidth > 1000) {
+        setShowGroupFilterTablet(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+  }, [showGroupFilterTablet]);
+
   // when the group name search query value changes, filters list of group names with names that
   // begins with the query value and sets the filtered list in state
   const handleGroupSearchResults = (value: string) => {
     setGroupSearchResults(
       originalGroups.current.filter((g) => {
         return g.title.startsWith(value);
-      })
+      }),
     );
   };
 
@@ -75,12 +93,12 @@ const useGroupSearchPage = () => {
   // the respective state
   const handleUserSearchResults = (
     setter: React.Dispatch<React.SetStateAction<string[]>>,
-    value: string
+    value: string,
   ) => {
     setter(
       initialUsers.current.filter((u) => {
         return u.startsWith(value);
-      })
+      }),
     );
   };
 
@@ -93,7 +111,7 @@ const useGroupSearchPage = () => {
         setShowResults(s);
       }
     },
-    [showResults]
+    [showResults],
   );
 
   // when user unfocuses their curson on a search query input div, hides dropdown search
@@ -103,7 +121,18 @@ const useGroupSearchPage = () => {
       e.preventDefault();
       setShowResults("");
     },
-    [showResults]
+    [showResults],
+  );
+
+  const toggleShowTabletGroupFilter = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      if (document.activeElement instanceof HTMLElement)
+        document.activeElement.blur();
+
+      setShowGroupFilterTablet(!showGroupFilterTablet);
+    },
+    [showGroupFilterTablet],
   );
 
   // when user clicks on one of the group name/username options from dropdown below search input,
@@ -131,7 +160,7 @@ const useGroupSearchPage = () => {
 
       setShowResults("");
     },
-    [showResults, groupSearchParams]
+    [showResults, groupSearchParams],
   );
 
   // changes group name/username search query value in group params state when value in any search
@@ -159,7 +188,7 @@ const useGroupSearchPage = () => {
         [name]: type === "search" ? value : checked,
       }));
     },
-    [groupSearchParams]
+    [groupSearchParams],
   );
 
   // sends params to backend to retrieve filtered group list from database, which is then set in
@@ -172,34 +201,35 @@ const useGroupSearchPage = () => {
         let newParams = Object.fromEntries(
           Object.entries(groupSearchParams).filter((p) => {
             return p[1];
-          })
+          }),
         );
-
         const groups = await groupConversationsAPI.searchGroups(newParams);
         setCurrentGroups(groups);
         setSearchParams((prev) => ({ ...prev, ...newParams }));
+        if (showGroupFilterTablet) setShowGroupFilterTablet(false);
       } catch (err) {
         console.log(err);
       } finally {
         dispatch(setFormLoading(false));
       }
     },
-    [groupSearchParams]
+    [groupSearchParams],
   );
 
   return {
     currentGroups,
-
     groupSearchParams,
     groupSearchResults,
     hostSearchResults,
     userSearchResults,
     showResults,
+    showGroupFilterTablet,
     handleChange,
     handleDivFocus,
     handleDivBlur,
     handleResults,
     handleSubmit,
+    toggleShowTabletGroupFilter,
   };
 };
 

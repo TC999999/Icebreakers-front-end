@@ -1,0 +1,43 @@
+@use "../colors.scss" as c;
+@use "../settings.scss" as s;
+
+#group-search-box {
+  display: flex;
+  justify-content: center;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    #inputs {
+      display: flex;
+      flex-direction: column;
+
+      @include s.tablet {
+        flex-direction: row;
+      }
+
+      div.input-div {
+        height: auto;
+        position: relative;
+      }
+    }
+
+    #search-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      fieldset {
+        background-color: white;
+        border: s.$borderSettings c.$secondary;
+        text-align: center;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-family: Georgia, "Times New Roman", Times, serif;
+      }
+    }
+  }
+}

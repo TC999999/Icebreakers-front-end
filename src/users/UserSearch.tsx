@@ -79,7 +79,7 @@ const UserSearch = (): JSX.Element => {
               checked={searchQuery.findSimilarInterests}
               onChange={handleChange}
             />
-            <button>Search</button>
+            <button className="submit-button">Search</button>
           </div>
         </form>
       </div>

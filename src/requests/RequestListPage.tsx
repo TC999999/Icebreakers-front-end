@@ -1,8 +1,11 @@
+import { lazy, Suspense } from "react";
 import useRequestListPage from "./hooks/useRequestListPage";
 import RequestList from "./RequestList";
 import RequestTabList from "./RequestTabList";
-import RequestTabListTablet from "./RequestTabListTablet";
+const RequestTabListTablet = lazy(() => import("./RequestTabListTablet"));
+// import RequestTabListTablet from "./RequestTabListTablet";
 import "../styles/requests/RequestListPage.scss";
+import LoadingSmall from "../LoadingSmall";
 
 // React Component for Request inbox; contains tabs for all different categories for requests and
 // a single list component that changes when the list in state changes
@@ -37,13 +40,16 @@ const RequestListPage = () => {
         </h1>
       </header>
 
-      <RequestTabListTablet
-        viewedRequests={viewedRequests}
-        requestCount={requestCount}
-        changeViewedRequests={changeViewedRequests}
-        toggleTabletTabs={toggleTabletTabs}
-        show={showTabletRequestTabs}
-      />
+      {showTabletRequestTabs && (
+        <Suspense fallback={<LoadingSmall lazy={true} />}>
+          <RequestTabListTablet
+            viewedRequests={viewedRequests}
+            requestCount={requestCount}
+            changeViewedRequests={changeViewedRequests}
+            toggleTabletTabs={toggleTabletTabs}
+          />
+        </Suspense>
+      )}
       <div id="request-list-page">
         <RequestTabList
           viewedRequests={viewedRequests}

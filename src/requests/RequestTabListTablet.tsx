@@ -1,5 +1,3 @@
-import React from "react";
-
 import RequestTabList from "./RequestTabList";
 import type {
   requestType,
@@ -13,12 +11,11 @@ type Props = {
   requestCount: requestCount;
   changeViewedRequests: (
     requestType: requestType,
-    params: requestParams
+    params: requestParams,
   ) => Promise<void>;
   toggleTabletTabs: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
-  show: boolean;
 };
 
 const RequestTabListTablet: React.FC<Props> = ({
@@ -26,9 +23,8 @@ const RequestTabListTablet: React.FC<Props> = ({
   requestCount,
   changeViewedRequests,
   toggleTabletTabs,
-  show,
 }) => {
-  return show ? (
+  return (
     <div className="modal-transparent" id="tab-list-tablet">
       <div>
         <button
@@ -46,7 +42,7 @@ const RequestTabListTablet: React.FC<Props> = ({
         changeViewedRequests={changeViewedRequests}
       />
     </div>
-  ) : null;
+  );
 };
 
 export default RequestTabListTablet;

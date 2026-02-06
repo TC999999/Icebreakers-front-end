@@ -1,0 +1,22 @@
+@use "../colors.scss" as c;
+
+@use "../settings.scss" as s;
+
+.modal-transparent {
+  z-index: 3;
+
+  .modal-filter-content {
+    background-color: c.$primary;
+    height: 37vh;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    overflow: scroll;
+    padding: 10px;
+    animation: slideFromBottom 0.5s;
+
+    #cancel-button-div {
+      position: fixed;
+    }
+  }
+}

@@ -5,8 +5,9 @@
   header {
     color: c.$secondary;
     text-align: center;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-      "Lucida Sans", Arial, sans-serif;
+    font-family:
+      "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+      Arial, sans-serif;
   }
 
   h2 {
@@ -19,8 +20,9 @@
     border: s.$borderSettings;
     border-radius: s.$borderRadius;
     color: purple;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-      "Lucida Sans", Arial, sans-serif;
+    font-family:
+      "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+      Arial, sans-serif;
 
     #group-about {
       display: flex;
@@ -32,7 +34,8 @@
         border: s.$borderSettings;
         border-radius: s.$borderRadius;
         h4 {
-          font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+          font-family:
+            Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
           font-size: larger;
         }
 
@@ -50,14 +53,20 @@
         }
       }
     }
+
+    #button-row {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   #group-users {
     h2 {
       text-decoration: underline;
       color: c.$secondary;
-      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+      font-family:
+        "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+        Arial, sans-serif;
     }
 
     #user-list {

@@ -2,24 +2,22 @@ import React from "react";
 import "../styles/groups/DeleteGroupMemberWarning.scss";
 
 type Props = {
-  show: boolean;
   username: string;
   title: string;
   cancel: (e: React.MouseEvent<HTMLButtonElement>, username: string) => void;
   remove: (
     e: React.MouseEvent<HTMLButtonElement>,
-    removedUser: string
+    removedUser: string,
   ) => Promise<void>;
 };
 
 const DeleteGroupMemberWarning: React.FC<Props> = ({
-  show,
   username,
   title,
   cancel,
   remove,
 }) => {
-  return show ? (
+  return (
     <div className="modal-transparent modal-background">
       <div className="modal-content" id="delete-group-member-warning">
         <header>
@@ -61,7 +59,7 @@ const DeleteGroupMemberWarning: React.FC<Props> = ({
         </div>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default DeleteGroupMemberWarning;

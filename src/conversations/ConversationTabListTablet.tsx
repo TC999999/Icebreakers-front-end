@@ -9,9 +9,8 @@ type Props = {
   conversations: conversation[];
   currentConversation: currentConversation;
   handleCurrentConversation: (conversation: conversation) => Promise<void>;
-  show: boolean;
   toggleTabletConversationTabs: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
 };
 
@@ -20,10 +19,9 @@ const ConversationTabListTablet: React.FC<Props> = ({
   conversations,
   currentConversation,
   handleCurrentConversation,
-  show,
   toggleTabletConversationTabs,
 }) => {
-  return show ? (
+  return (
     <div className="modal-transparent" id="tab-list-tablet">
       <div>
         <button
@@ -42,7 +40,7 @@ const ConversationTabListTablet: React.FC<Props> = ({
         handleCurrentConversation={handleCurrentConversation}
       />
     </div>
-  ) : null;
+  );
 };
 
 export default ConversationTabListTablet;

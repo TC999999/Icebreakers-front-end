@@ -136,8 +136,9 @@
 
     label {
       display: block;
-      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+      font-family:
+        "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+        Arial, sans-serif;
       margin-bottom: 5px;
 
       &:hover {
@@ -342,6 +343,8 @@ form {
   border: s.$borderSettings c.$primary;
   border-radius: s.$borderRadius;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background-color: c.$thirdly;

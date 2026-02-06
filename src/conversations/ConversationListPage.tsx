@@ -1,12 +1,20 @@
-import "../styles/conversations/ConversationListPage.scss";
+import { lazy, Suspense } from "react";
 import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
 import EditConversation from "./EditConversation";
 import ConversationTabList from "./ConversationTabList";
-import ConversationTabListTablet from "./ConversationTabListTablet";
+
+import LoadingSmall from "../LoadingSmall";
+
+// import ConversationTabListTablet from "./ConversationTabListTablet";
+
+const ConversationTabListTablet = lazy(
+  () => import("./ConversationTabListTablet"),
+);
 import { FaArrowUp } from "react-icons/fa";
 import { IoReorderThree } from "react-icons/io5";
+import "../styles/conversations/ConversationListPage.scss";
 
 const ConversationListPage = () => {
   const {
@@ -17,13 +25,11 @@ const ConversationListPage = () => {
     currentMessages,
     typingMessage,
     showEditForm,
-
     showTabletConversationTabs,
     scrollRef,
     handleChangeInput,
     handleCurrentConversation,
     toggleEditForm,
-
     toggleTabletConversationTabs,
     handleSend,
     handleBlur,
@@ -46,13 +52,16 @@ const ConversationListPage = () => {
         <h3>All of your direct messages with other users.</h3>
       </header>
 
-      <ConversationTabListTablet
-        conversations={conversations}
-        currentConversation={currentConversation}
-        handleCurrentConversation={handleCurrentConversation}
-        show={showTabletConversationTabs}
-        toggleTabletConversationTabs={toggleTabletConversationTabs}
-      />
+      {showTabletConversationTabs && (
+        <Suspense fallback={<LoadingSmall lazy={true} />}>
+          <ConversationTabListTablet
+            conversations={conversations}
+            currentConversation={currentConversation}
+            handleCurrentConversation={handleCurrentConversation}
+            toggleTabletConversationTabs={toggleTabletConversationTabs}
+          />
+        </Suspense>
+      )}
 
       <div id="conversation-list">
         <div id="conversation-list-window">

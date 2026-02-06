@@ -115,3 +115,15 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
     transform: translateX(0%);
   }
 }
+
+// slide from bottom
+@keyframes slideFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}

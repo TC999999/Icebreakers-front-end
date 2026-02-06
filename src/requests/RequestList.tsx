@@ -9,6 +9,8 @@ import type {
   requestType,
   groupConversationResponse,
 } from "../types/requestTypes";
+
+// const RequestCard = lazy(() => import("./RequestCard"));
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
 import { IoReorderThree } from "react-icons/io5";
@@ -25,7 +27,7 @@ type Props = {
     | SentGroupCard
   )[];
   toggleTabletTabs: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
@@ -61,7 +63,7 @@ const RequestList: React.FC<Props> = ({
   deleteGroupInvitation,
 }): JSX.Element => {
   const loading = useAppSelector(
-    (store) => store.user.loading.loadingInfo.formLoading
+    (store) => store.user.loading.loadingInfo.formLoading,
   );
   return (
     <div className="request-list">
@@ -79,7 +81,7 @@ const RequestList: React.FC<Props> = ({
       </header>
 
       {loading && requestList.length === 0 && (
-        <RequestCardListSkeleton cards={5} />
+        <RequestCardListSkeleton cards={2} />
       )}
       {!loading && requestList.length > 0 && (
         <ul>
