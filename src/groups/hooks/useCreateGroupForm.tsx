@@ -7,16 +7,17 @@ import type { newGroup } from "../../types/groupTypes";
 import interestsAPI from "../../apis/interestsAPI";
 import type { interestMap } from "../../types/interestTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
+import { toast } from "react-toastify";
 
 // hook for page with form to create a new group
 const useCreateGroupForm = () => {
   const username = useAppSelector(
     (store) => store.user.user?.username,
-    shallowEqual
+    shallowEqual,
   );
-
+  const notify = (message: string) => toast.error(message);
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
   const originalData = useRef<newGroup>({
@@ -44,11 +45,17 @@ const useCreateGroupForm = () => {
 
   // on initial render, returns and sets a list of all current interests for checklist
   useEffect(() => {
-    const getInterests = async () => {
-      const interests = await interestsAPI.getInterestsMap();
-      setInterestList(interests);
-    };
-    getInterests();
+    try {
+      const getInterests = async () => {
+        const interests = await interestsAPI.getInterestsMap();
+        setInterestList(interests);
+      };
+      getInterests();
+    } catch (err: any) {
+      const error = JSON.parse(err.message);
+      dispatch(setLoadError(error));
+      navigate("/error");
+    }
   }, []);
 
   // updates form data state and input value validity state when input value changes
@@ -58,7 +65,7 @@ const useCreateGroupForm = () => {
       handleInputValidity(name, value);
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
-    [formData]
+    [formData],
   );
 
   // updates form data state and input value validity state when check box is checked/unchecked
@@ -78,7 +85,7 @@ const useCreateGroupForm = () => {
 
       setFormData((prev) => ({ ...prev, interests: newInterests }));
     },
-    [formData]
+    [formData],
   );
 
   // if all form inputs are valid, submits data to backend to create a new group conversation,
@@ -95,13 +102,14 @@ const useCreateGroupForm = () => {
         } else {
           handleClientFlashError();
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
       } finally {
         dispatch(setFormLoading(false));
       }
     },
-    [formData, validInputs, dispatch]
+    [formData, validInputs, dispatch],
   );
 
   return {

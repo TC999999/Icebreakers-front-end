@@ -10,6 +10,7 @@ import type {
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import { shallowEqual } from "react-redux";
 import socket from "../../helpers/socket";
+import { toast } from "react-toastify";
 
 type input = {
   currentConversation: currentConversation;
@@ -27,6 +28,7 @@ const useEditConversation = ({
     return store.user.user?.username;
   }, shallowEqual);
   const dispatch: AppDispatch = useAppDispatch();
+  const notify = (message: string) => toast.error(message);
 
   const initialData: updateConversation = { title: "" };
 
@@ -67,9 +69,9 @@ const useEditConversation = ({
           conversation,
           to: currentConversation.recipient,
         });
-      } catch (err) {
-        console.log(err);
-        hideForm(e);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
       } finally {
         dispatch(setFormLoading(false));
       }

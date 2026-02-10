@@ -4,8 +4,13 @@ import type { AppDispatch } from "../../features/store";
 import {
   setFormLoading,
   setUnreadGroupMessages,
+  setLoadError,
 } from "../../features/slices/auth";
-import { useSearchParams } from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 import type { groupTab, selectedGroup } from "../../types/groupTypes";
 import type { groupUserTab, userTyping } from "../../types/userTypes";
 import type {
@@ -15,6 +20,7 @@ import type {
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import socket from "../../helpers/socket";
 import { shallowEqual } from "react-redux";
+import { toast } from "react-toastify";
 
 // custom react hook for group conversation page; handles all group conversation logic such as
 // retrieving initial list of conversations, getting a list of all users and messages for
@@ -24,6 +30,8 @@ const useGroupConversationPage = () => {
     return store.user.user?.username;
   }, shallowEqual);
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
+  const notify = (message: string) => toast.error(message);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -38,10 +46,10 @@ const useGroupConversationPage = () => {
   });
   const [currentUsers, setCurrentUsers] = useState<groupUserTab[]>([]);
   const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
-    []
+    [],
   );
   const [messageInput, setMessageInput] = useState<newConversationMessage>(
-    initialMessageInput.current
+    initialMessageInput.current,
   );
 
   const [usersTyping, setUsersTyping] = useState<userTyping>({});
@@ -54,7 +62,7 @@ const useGroupConversationPage = () => {
     (unreadMessages: number, id: string) => {
       if (unreadMessages > 0) {
         setGroupTabs((prev) =>
-          prev.map((g) => (g.id === id ? { ...g, unreadMessages: 0 } : g))
+          prev.map((g) => (g.id === id ? { ...g, unreadMessages: 0 } : g)),
         );
         socket.emit("clearTotalUnreadGroupMessages", {
           unreadMessages,
@@ -62,7 +70,7 @@ const useGroupConversationPage = () => {
         dispatch(setUnreadGroupMessages(unreadMessages * -1));
       }
     },
-    []
+    [],
   );
 
   // on initial render get a list of all the current user's groups and sets them in state,
@@ -93,8 +101,10 @@ const useGroupConversationPage = () => {
             if (!ignore) updateGroupMessageCount(unreadMessages, id);
           }
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
       }
@@ -119,7 +129,7 @@ const useGroupConversationPage = () => {
   useEffect(() => {
     socket.on("isOnline", ({ user, isOnline }) => {
       let newUsers = currentUsers.map((u) =>
-        u.username === user ? { ...u, isOnline } : u
+        u.username === user ? { ...u, isOnline } : u,
       );
 
       setCurrentUsers(newUsers);
@@ -142,8 +152,8 @@ const useGroupConversationPage = () => {
       } else {
         setGroupTabs((prev) =>
           prev.map((g) =>
-            g.id === id ? { ...g, unreadMessages: g.unreadMessages + 1 } : g
-          )
+            g.id === id ? { ...g, unreadMessages: g.unreadMessages + 1 } : g,
+          ),
         );
       }
     });
@@ -192,21 +202,26 @@ const useGroupConversationPage = () => {
   // any of the users are online, and sets the user list and message list in state
   const changeSelectedTab = useCallback(
     async (id: string, unreadMessages: number): Promise<void> => {
-      if (id !== selectedGroup.id) {
-        setLoadingMessages(true);
-        setSearchParams({ id });
-        setUsersTyping({});
-        if (username) {
-          const { users, messages, title, host } =
-            await groupConversationsAPI.getGroupMessages(username, id);
-          setSelectedGroup({ id, title, host });
-          socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
-            setCurrentUsers(newUsers);
-          });
-          setCurrentMessages(messages);
-          updateGroupMessageCount(unreadMessages, id);
+      try {
+        if (id !== selectedGroup.id) {
+          setLoadingMessages(true);
+          setSearchParams({ id });
+          setUsersTyping({});
+          if (username) {
+            const { users, messages, title, host } =
+              await groupConversationsAPI.getGroupMessages(username, id);
+            setSelectedGroup({ id, title, host });
+            socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
+              setCurrentUsers(newUsers);
+            });
+            setCurrentMessages(messages);
+            updateGroupMessageCount(unreadMessages, id);
+          }
         }
-
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
+      } finally {
         setLoadingMessages(false);
       }
     },
@@ -218,7 +233,7 @@ const useGroupConversationPage = () => {
       messageInput,
       currentUsers,
       dispatch,
-    ]
+    ],
   );
 
   // listens for changes in the message input on the front end and changes message input state
@@ -227,7 +242,7 @@ const useGroupConversationPage = () => {
       const { name, value } = e.target;
       setMessageInput((prev) => ({ ...prev, [name]: value }));
     },
-    [messageInput]
+    [messageInput],
   );
 
   // when user types at least one character into message input, sends socket signal to other group
@@ -243,7 +258,7 @@ const useGroupConversationPage = () => {
         });
       }
     },
-    [messageInput, selectedGroup]
+    [messageInput, selectedGroup],
   );
 
   // when user clicks off of message input, sends socket signal to other group members
@@ -258,33 +273,37 @@ const useGroupConversationPage = () => {
         });
       }
     },
-    [messageInput, selectedGroup]
+    [messageInput, selectedGroup],
   );
 
   // listens for send button click event and adds new message to db and to front end message list
   const handleSend = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-
-      const id = searchParams.get("id");
-      if (username && id) {
-        const { message, users } =
-          await groupConversationsAPI.createGroupMessage(
-            username,
+      try {
+        const id = searchParams.get("id");
+        if (username && id) {
+          const { message, users } =
+            await groupConversationsAPI.createGroupMessage(
+              username,
+              id,
+              messageInput,
+            );
+          setMessageInput(initialMessageInput.current);
+          setCurrentMessages((prev) => [...prev, message]);
+          socket.emit("groupMessage", {
+            message,
             id,
-            messageInput
-          );
-        setMessageInput(initialMessageInput.current);
-        setCurrentMessages((prev) => [...prev, message]);
-        socket.emit("groupMessage", {
-          message,
-          id,
-          group: selectedGroup.title,
-          userList: users,
-        });
+            group: selectedGroup.title,
+            userList: users,
+          });
+        }
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
       }
     },
-    [messageInput, selectedGroup, currentMessages]
+    [messageInput, selectedGroup, currentMessages],
   );
 
   return {

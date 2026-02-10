@@ -9,11 +9,16 @@ import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import userAPI from "../../apis/userAPI";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
-import { useSearchParams } from "react-router-dom";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import {
+  useSearchParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 
 const useGroupSearchPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [groupSearchParams, setGroupSearchParams] = useState<groupSearchParams>(
@@ -59,8 +64,10 @@ const useGroupSearchPage = () => {
         setGroupSearchResults(groupNames);
         setHostSearchResults(allUsernames);
         setUserSearchResults(allUsernames);
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
         initialMountComplete.current = true;

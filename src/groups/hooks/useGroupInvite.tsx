@@ -1,12 +1,15 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
 import type { simpleGroup, GroupInvitation } from "../../types/groupTypes";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
-import { useNavigate, type NavigateFunction } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
 import { toast } from "react-toastify";
@@ -28,7 +31,7 @@ const useGroupInvite = () => {
   });
 
   const [formData, setFormData] = useState<GroupInvitation>(
-    originalData.current
+    originalData.current,
   );
 
   const [groupList, setGroupList] = useState<simpleGroup[]>([]);
@@ -51,16 +54,22 @@ const useGroupInvite = () => {
   // and url params exist, also sets the group list state with a list of groups that the current
   // user is in
   useEffect(() => {
-    if (username && to) {
-      setFormData((prev) => ({ ...prev, to }));
-      originalData.current = { ...originalData.current, to };
-      const getGroups = async () => {
-        const groups = await groupConversationsAPI.getAllGroups(username, {
-          getSingle: true,
-        });
-        if (Array.isArray(groups)) setGroupList(groups);
-      };
-      getGroups();
+    try {
+      if (username && to) {
+        setFormData((prev) => ({ ...prev, to }));
+        originalData.current = { ...originalData.current, to };
+        const getGroups = async () => {
+          const groups = await groupConversationsAPI.getAllGroups(username, {
+            getSingle: true,
+          });
+          if (Array.isArray(groups)) setGroupList(groups);
+        };
+        getGroups();
+      }
+    } catch (err: any) {
+      const error = JSON.parse(err);
+      dispatch(setLoadError(error));
+      navigate("/error");
     }
   }, []);
 
@@ -71,7 +80,7 @@ const useGroupInvite = () => {
       handleInputValidity(name, value);
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
-    [formData]
+    [formData],
   );
 
   // if form data values are all valid, sends form data to backend to create new group invitation
@@ -86,7 +95,7 @@ const useGroupInvite = () => {
 
           const invitation = await groupRequestsAPI.sendGroupInvitation(
             username!,
-            formData
+            formData,
           );
           socket.emit("addRequest", {
             requestType: "group-invites-received",
@@ -104,7 +113,7 @@ const useGroupInvite = () => {
         dispatch(setFormLoading(false));
       }
     },
-    [formData, validInputs]
+    [formData, validInputs],
   );
 
   return {

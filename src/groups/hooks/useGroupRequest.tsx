@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useAppSelector } from "../../features/hooks";
+import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { groupRequestFormData } from "../../types/requestTypes";
 import type { groupName } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
@@ -8,8 +8,7 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import { useAppDispatch } from "../../features/hooks";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
@@ -30,7 +29,7 @@ const useGroupRequest = () => {
   });
 
   const [formData, setFormData] = useState<groupRequestFormData>(
-    originalData.current
+    originalData.current,
   );
   const [groupData, setGroupData] = useState<groupName>({
     title: "",
@@ -67,8 +66,10 @@ const useGroupRequest = () => {
             setFormData(newFormData);
           }
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error.mesage));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
       }
@@ -84,7 +85,7 @@ const useGroupRequest = () => {
       handleInputValidity(name, value);
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
-    [formData]
+    [formData],
   );
 
   // if all inputs are valid, creates and returns new request to join group, also emits socket signal
@@ -114,7 +115,7 @@ const useGroupRequest = () => {
         dispatch(setFormLoading(false));
       }
     },
-    [formData, validInputs, dispatch]
+    [formData, validInputs, dispatch],
   );
 
   return {

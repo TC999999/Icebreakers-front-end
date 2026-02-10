@@ -11,12 +11,14 @@ import {
 import userAPI from "../../apis/userAPI";
 import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
+import { toast } from "react-toastify";
 
 // custom hook for form to update user information
 const useEditUser = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const notify = (message: string) => toast.error(message);
 
   const originalData = useRef<UserEdit>({
     emailAddress: "",
@@ -76,7 +78,7 @@ const useEditUser = () => {
       handleInputValidity(name, value);
       setUserData((prev) => ({ ...prev, [name]: value }));
     },
-    [userData]
+    [userData],
   );
 
   // submits data to backend if all inputs are valid, and returns new data to be updated in both
@@ -89,7 +91,7 @@ const useEditUser = () => {
           if (username) {
             const { newFavoriteColor } = await userAPI.editUser(
               username,
-              userData
+              userData,
             );
             dispatch(setFavoriteColor(newFavoriteColor));
             socket.emit("updateFavoriteColor", {
@@ -100,13 +102,16 @@ const useEditUser = () => {
         } else {
           handleClientFlashError();
         }
-      } catch (err) {
+      } catch (err: any) {
         if (err === "Email Address already taken!") {
           handleServerFlashError("emailAddress");
+        } else {
+          const error = JSON.parse(err.message);
+          notify(error.message);
         }
       }
     },
-    [userData, validInputs]
+    [userData, validInputs],
   );
 
   // resets all data back to their original state
@@ -116,7 +121,7 @@ const useEditUser = () => {
       setUserData(originalData.current);
       setValidValues(originalData.current);
     },
-    [userData]
+    [userData],
   );
 
   // updates form data state and input value validity state when user checks or unchecks a checkbox
@@ -140,7 +145,7 @@ const useEditUser = () => {
         interests: newInterests,
       }));
     },
-    [userData]
+    [userData],
   );
 
   // returns a boolean if the interests id is found in the form data interest value array
@@ -148,7 +153,7 @@ const useEditUser = () => {
     (id: number): boolean => {
       return userData.interests.includes(id);
     },
-    [userData]
+    [userData],
   );
 
   return {

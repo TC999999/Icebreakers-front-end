@@ -4,7 +4,7 @@ import type { GroupPage } from "../../types/groupTypes";
 import { useParams, useNavigate, createSearchParams } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import socket from "../../helpers/socket";
 
 // custom hook for group page, handles navigating to group messages, form to request to join,
@@ -52,8 +52,10 @@ const useGroupPage = () => {
             setInvitationPendingState(invitationPending);
           }
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
       }
@@ -82,7 +84,7 @@ const useGroupPage = () => {
       e.preventDefault();
       navigate(`/groups/${group.id}/request`);
     },
-    [group.id]
+    [group.id],
   );
 
   // reusable callback automatically navigates to the page linked by the url; used for buttons
@@ -91,7 +93,7 @@ const useGroupPage = () => {
       e.preventDefault();
       navigate(`/groups/${group.id}/delete`);
     },
-    [group.id]
+    [group.id],
   );
 
   // navigates to group conversation page and injects url search params for group id

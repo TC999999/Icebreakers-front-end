@@ -1,10 +1,15 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { useSearchParams } from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 import {
   setFormLoading,
   setUnreadDirectMessages,
+  setLoadError,
 } from "../../features/slices/auth";
 import type {
   conversation,
@@ -23,6 +28,7 @@ import { toast } from "react-toastify";
 // hook for direct conversation page
 const useConversationListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
   const notify = (message: string) => toast.error(message);
   const username = useAppSelector((store) => {
     return store.user.user?.username;
@@ -107,8 +113,10 @@ const useConversationListPage = () => {
             if (!ignore) updateDirectMessageCount(unreadMessages, id);
           }
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
       }
@@ -263,42 +271,54 @@ const useConversationListPage = () => {
   // that amount from total number of unread messages, also changes online status of other user
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
-      if (conversation.id !== currentConversation.id) {
-        setLoadingMessages(true);
-        savedMessages.delete(currentConversation.id);
+      try {
+        if (conversation.id !== currentConversation.id) {
+          setLoadingMessages(true);
+          savedMessages.delete(currentConversation.id);
 
-        if (currentConversation.id && messageInput.content.length > 0) {
-          savedMessages.set(currentConversation.id, messageInput.content);
-        }
+          if (currentConversation.id && messageInput.content.length > 0) {
+            savedMessages.set(currentConversation.id, messageInput.content);
+          }
 
-        updateDirectMessageCount(conversation.unreadMessages, conversation.id);
+          updateDirectMessageCount(
+            conversation.unreadMessages,
+            conversation.id,
+          );
 
-        const { messages } = await directConversationsAPI.getMessages(
-          username!,
-          conversation.id,
-        );
+          const { messages } = await directConversationsAPI.getMessages(
+            username!,
+            conversation.id,
+          );
 
-        const convoMessage = savedMessages.get(conversation.id);
+          const convoMessage = savedMessages.get(conversation.id);
 
-        setMessageInput((prev) => ({
-          ...prev,
-          content: convoMessage ? convoMessage : "",
-        }));
-
-        socket.emit("isOnline", conversation.otherUser, (response: boolean) => {
-          setCurrentConversation((prev) => ({
+          setMessageInput((prev) => ({
             ...prev,
-            id: conversation.id,
-            title: conversation.title,
-            recipient: conversation.otherUser,
-            isOnline: response,
+            content: convoMessage ? convoMessage : "",
           }));
-        });
-        setCurrentMessages(messages);
-        setTypingMessage("");
-        setLoadingMessages(false);
-        setSearchParams({ id: conversation.id.toString() });
-        if (showTabletConversationTabs) setShowTabletConversationTabs(false);
+
+          socket.emit(
+            "isOnline",
+            conversation.otherUser,
+            (response: boolean) => {
+              setCurrentConversation((prev) => ({
+                ...prev,
+                id: conversation.id,
+                title: conversation.title,
+                recipient: conversation.otherUser,
+                isOnline: response,
+              }));
+            },
+          );
+          setCurrentMessages(messages);
+          setTypingMessage("");
+          setLoadingMessages(false);
+          setSearchParams({ id: conversation.id.toString() });
+          if (showTabletConversationTabs) setShowTabletConversationTabs(false);
+        }
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
       }
     },
     [

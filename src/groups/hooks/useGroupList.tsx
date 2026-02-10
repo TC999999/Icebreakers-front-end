@@ -7,24 +7,29 @@ import type {
 } from "../../types/groupTypes";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import { shallowEqual } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 
 type groupTabs = "hostedGroups" | "nonHostedGroups";
 
 const useGroupList = () => {
   const username = useAppSelector(
     (store) => store.user.user?.username,
-    shallowEqual
+    shallowEqual,
   );
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [hostedGroups, setHostedGroups] = useState<hostedGroupCard[]>([]);
   const [nonHostedGroups, setNonHostedGroups] = useState<nonHostedGroupCard[]>(
-    []
+    [],
   );
   const [currentGroupTab, setCurrentGroupTab] =
     useState<groupTabs>("hostedGroups");
@@ -33,23 +38,30 @@ const useGroupList = () => {
   // futhermore, also gets a list of all groups the user is a part of and sets them in state
   useEffect(() => {
     const getAllGroups = async () => {
-      if (username) {
-        dispatch(setFormLoading(true));
-        const currentType = searchParams.get("type");
-        if (
-          currentType &&
-          (currentType === "hostedGroups" || currentType === "nonHostedGroups")
-        ) {
-          setCurrentGroupTab(currentType);
-        } else {
-          setSearchParams({ type: currentGroupTab });
+      try {
+        if (username) {
+          dispatch(setFormLoading(true));
+          const currentType = searchParams.get("type");
+          if (
+            currentType &&
+            (currentType === "hostedGroups" ||
+              currentType === "nonHostedGroups")
+          ) {
+            setCurrentGroupTab(currentType);
+          } else {
+            setSearchParams({ type: currentGroupTab });
+          }
+          const groups = await groupConversationsAPI.getAllGroups(username, {});
+          if (!Array.isArray(groups)) {
+            setHostedGroups(groups.hostedGroups);
+            setNonHostedGroups(groups.nonHostedGroups);
+          }
         }
-        const groups = await groupConversationsAPI.getAllGroups(username, {});
-        if (!Array.isArray(groups)) {
-          setHostedGroups(groups.hostedGroups);
-          setNonHostedGroups(groups.nonHostedGroups);
-        }
-
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
+      } finally {
         dispatch(setFormLoading(false));
       }
     };
@@ -66,7 +78,7 @@ const useGroupList = () => {
         setSearchParams({ type: title });
       }
     },
-    [currentGroupTab]
+    [currentGroupTab],
   );
 
   return { hostedGroups, nonHostedGroups, currentGroupTab, handleGroupTab };

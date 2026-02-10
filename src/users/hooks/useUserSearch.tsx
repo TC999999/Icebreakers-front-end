@@ -1,15 +1,22 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { type UserCard, type UserSearch } from "../../types/userTypes";
-import { useSearchParams } from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import { type AppDispatch } from "../../features/store";
 import userAPI from "../../apis/userAPI";
 import filterUsernames from "../../helpers/filterUsernames";
+import { toast } from "react-toastify";
 
 // custom hook to handle user search page logic
 const useUserSearch = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
+  const notify = (message: string) => toast.error(message);
   const initialUsers = useRef<string[]>([]);
   const [searchedUsers, setSearchedUsers] = useState<UserCard[]>([]);
   const [searchResults, setSearchResults] = useState<string[]>([]);
@@ -49,8 +56,10 @@ const useUserSearch = () => {
 
         const users = await userAPI.searchForUsers(params);
         setSearchedUsers(users);
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
         initialMountComplete.current = true;
@@ -125,8 +134,9 @@ const useUserSearch = () => {
         setSearchParams((prev) => ({ ...prev, ...params }));
         let users = await userAPI.searchForUsers(params);
         setSearchedUsers(users);
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
       } finally {
         dispatch(setFormLoading(false));
       }

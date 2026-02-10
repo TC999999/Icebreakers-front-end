@@ -3,8 +3,9 @@ import blockAPI from "../../apis/blockAPI";
 import { useParams } from "react-router-dom";
 import type { blockedUser } from "../../types/userTypes";
 import { useAppDispatch } from "../../features/hooks";
-import { setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // custom hook that handles logic for user block list page; includes retrieval of a list of
 // all users blocked by current user and allows user to unblock a user on list
@@ -12,6 +13,7 @@ const useBlockedUserPage = () => {
   const { username } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const notify = (message: string) => toast.error(message);
   const [blockedUsers, setBlockedUsers] = useState<blockedUser[]>([]);
 
   // on initial render, retrieves list of all users that have been blocked by a single user;
@@ -19,6 +21,7 @@ const useBlockedUserPage = () => {
   useEffect(() => {
     const getBlockedUsers = async () => {
       try {
+        dispatch(setFormLoading(true));
         if (username) {
           const newBlockedUsers = await blockAPI.getBlockedUsers(username);
           setBlockedUsers(newBlockedUsers);
@@ -27,6 +30,8 @@ const useBlockedUserPage = () => {
         let error = JSON.parse(err.message);
         dispatch(setLoadError(error));
         navigate("/error");
+      } finally {
+        dispatch(setFormLoading(false));
       }
     };
 
@@ -38,20 +43,24 @@ const useBlockedUserPage = () => {
   const unblockUser = useCallback(
     async (
       e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-      blockedUser: string
+      blockedUser: string,
     ): Promise<void> => {
       e.preventDefault();
-      if (username) {
-        await blockAPI.unblockUser(username, blockedUser);
-
-        setBlockedUsers((prev) =>
-          prev.filter((user) => {
-            return user.username !== blockedUser;
-          })
-        );
+      try {
+        if (username) {
+          await blockAPI.unblockUser(username, blockedUser);
+          setBlockedUsers((prev) =>
+            prev.filter((user) => {
+              return user.username !== blockedUser;
+            }),
+          );
+        }
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        notify(error.message);
       }
     },
-    [blockedUsers]
+    [blockedUsers],
   );
   return { blockedUsers, unblockUser };
 };

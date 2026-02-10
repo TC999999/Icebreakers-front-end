@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useAppSelector } from "../../features/hooks";
-import { useAppDispatch } from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
 import {
   setFormLoading,
@@ -29,10 +28,15 @@ import {
   tMap,
 } from "../../helpers/maps/requestTypeMap";
 import { type titleAndDesc } from "../../types/miscTypes";
-import { useSearchParams } from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 import socket from "../../helpers/socket";
 import { shallowEqual } from "react-redux";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
+import { setLoadError } from "../../features/slices/auth";
 import {
   updateSentRequests,
   updateRequestCount,
@@ -42,6 +46,7 @@ import {
 // custom hook for request inbox page
 const useRequestListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
+  const navigate: NavigateFunction = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const username = useAppSelector((store) => {
     return store.user.user?.username;
@@ -115,8 +120,10 @@ const useRequestListPage = () => {
           const count = await requestsAPI.getRequestCount(username);
           setRequestCount(count);
         }
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        const error = JSON.parse(err.message);
+        dispatch(setLoadError(error));
+        navigate("/error");
       } finally {
         dispatch(setFormLoading(false));
         initialMountComplete.current = true;
