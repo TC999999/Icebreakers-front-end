@@ -4,40 +4,39 @@ import "../../styles/requests/RequestCard.scss";
 
 const RequestCardSkeleton = memo(() => {
   return (
-    <li>
-      <div className="request-card">
-        <h2>
+    <div className="request-card">
+      <h2>
+        <Skeleton />
+      </h2>
+
+      <div className="request-message">
+        <p>
           <Skeleton />
-        </h2>
+        </p>
+      </div>
 
-        <div className="request-message">
-          <p>
+      <div>
+        <span>
+          <small>
             <Skeleton />
-          </p>
-        </div>
-
-        <div>
-          <span>
-            <small>
-              <Skeleton />
-            </small>
-          </span>
-        </div>
-        <div>
-          <span>
-            <small>
-              <Skeleton />
-            </small>
-          </span>
-        </div>
-
-        <div id="response-list">
-          <div className="response-buttons" id="received-response">
+          </small>
+        </span>
+      </div>
+      <div>
+        <span>
+          <small>
             <Skeleton />
-          </div>
+          </small>
+        </span>
+      </div>
+
+      <div id="response-list">
+        <div className="response-buttons">
+          <Skeleton />
+          <Skeleton />
         </div>
       </div>
-    </li>
+    </div>
   );
 });
 

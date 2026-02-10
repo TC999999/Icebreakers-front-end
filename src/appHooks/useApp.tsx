@@ -28,7 +28,7 @@ const useApp = () => {
     return store.user.user;
   }, shallowEqual);
 
-  // on initial render, checks if user exists in backend session
+  // on initial render, checks if user session id exists in backend session
   useEffect((): void => {
     const getUserInfo = async () => {
       await dispatch(getCurrentUser({}));

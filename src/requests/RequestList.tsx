@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { type JSX, lazy, Suspense } from "react";
 import type { titleAndDesc } from "../types/miscTypes";
 import type {
   sentRequestCard,
@@ -10,11 +10,10 @@ import type {
   groupConversationResponse,
 } from "../types/requestTypes";
 
-// const RequestCard = lazy(() => import("./RequestCard"));
-import RequestCard from "./RequestCard";
+const RequestCard = lazy(() => import("./RequestCard"));
+// import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
 import { IoReorderThree } from "react-icons/io5";
-import { useAppSelector } from "../features/hooks";
 import RequestCardListSkeleton from "./skeletons/RequestCardListSkeleton";
 
 type Props = {
@@ -26,6 +25,7 @@ type Props = {
     | ReceivedGroupCard
     | SentGroupCard
   )[];
+  initialMountComplete: boolean;
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
@@ -48,6 +48,7 @@ const RequestList: React.FC<Props> = ({
   currentRequestType,
   currentTitleAndDesc,
   requestList,
+  initialMountComplete,
   toggleTabletTabs,
   respondToDirectRequest,
   removeDirectRequest,
@@ -62,9 +63,6 @@ const RequestList: React.FC<Props> = ({
   resendGroupInvitation,
   deleteGroupInvitation,
 }): JSX.Element => {
-  const loading = useAppSelector(
-    (store) => store.user.loading.loadingInfo.formLoading,
-  );
   return (
     <div className="request-list">
       <header id="request-list-header">
@@ -80,14 +78,15 @@ const RequestList: React.FC<Props> = ({
         <p id="request-description">{currentTitleAndDesc.description}</p>
       </header>
 
-      {loading && requestList.length === 0 && (
-        <RequestCardListSkeleton cards={2} />
-      )}
-      {!loading && requestList.length > 0 && (
-        <ul>
-          {requestList.map((request) => (
-            <li key={`request-${currentRequestType}-${request.id}`}>
+      <section id="request-card-list">
+        {!initialMountComplete && requestList.length === 0 && (
+          <RequestCardListSkeleton cards={3} />
+        )}
+        {initialMountComplete && requestList.length > 0 && (
+          <Suspense fallback={<RequestCardListSkeleton cards={3} />}>
+            {requestList.map((request) => (
               <RequestCard
+                key={`request-${request.id}`}
                 requestType={currentRequestType}
                 request={request}
                 respondToDirectRequest={respondToDirectRequest}
@@ -103,16 +102,16 @@ const RequestList: React.FC<Props> = ({
                 resendGroupInvitation={resendGroupInvitation}
                 deleteGroupInvitation={deleteGroupInvitation}
               />
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </Suspense>
+        )}
 
-      {!loading && requestList.length === 0 && (
-        <div>
-          <h3 className="message">This list is currently empty!</h3>
-        </div>
-      )}
+        {initialMountComplete && requestList.length === 0 && (
+          <div>
+            <h3 className="message">This list is currently empty!</h3>
+          </div>
+        )}
+      </section>
     </div>
   );
 };

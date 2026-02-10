@@ -16,5 +16,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    label {
+      font-family: Georgia, "Times New Roman", Times, serif;
+      color: c.$secondary;
+    }
   }
 }

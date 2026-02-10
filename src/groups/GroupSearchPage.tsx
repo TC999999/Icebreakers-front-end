@@ -3,11 +3,9 @@ import useGroupSearchPage from "./hooks/useGroupSearchPage";
 import GroupSearchCard from "./GroupSearchCard";
 import GroupSearchSkeleton from "./skeletons/GroupSearchSkeleton";
 import "../styles/groups/GroupSearchPage.scss";
-import { useAppSelector } from "../features/hooks";
 import GroupSearchFilter from "./GroupSearchFilter";
 const GroupSearchFilterTablet = lazy(() => import("./GroupSearchFilterTablet"));
 import LoadingSmall from "../LoadingSmall";
-import { shallowEqual } from "react-redux";
 import { CiFilter } from "react-icons/ci";
 
 // React component that allows user to search for groups: includes search bars for group names,
@@ -15,11 +13,6 @@ import { CiFilter } from "react-icons/ci";
 // out groups that share no similar interests with the user, and groups that the user is already a
 // member of
 const GroupSearchPage = () => {
-  const loading = useAppSelector(
-    (store) => store.user.loading.loadingInfo.formLoading,
-    shallowEqual,
-  );
-
   const {
     currentGroups,
     groupSearchParams,
@@ -28,6 +21,7 @@ const GroupSearchPage = () => {
     userSearchResults,
     showResults,
     showGroupFilterTablet,
+    initialMountComplete,
     handleChange,
     handleResults,
     handleDivFocus,
@@ -82,8 +76,10 @@ const GroupSearchPage = () => {
       </header>
       <div id="group-search-list">
         <div id="search-results">
-          {loading && <GroupSearchSkeleton cards={10} />}
-          {!loading && currentGroups.length > 0 && (
+          {!initialMountComplete.current && currentGroups.length === 0 && (
+            <GroupSearchSkeleton cards={10} />
+          )}
+          {initialMountComplete.current && currentGroups.length > 0 && (
             <>
               {currentGroups.map((group) => (
                 <GroupSearchCard
@@ -97,7 +93,7 @@ const GroupSearchPage = () => {
               ))}
             </>
           )}
-          {!loading && currentGroups.length === 0 && (
+          {initialMountComplete.current && currentGroups.length === 0 && (
             <h2 id="empty-list">There Are No Groups That Match Your Query</h2>
           )}
         </div>

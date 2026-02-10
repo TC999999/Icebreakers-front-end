@@ -22,6 +22,7 @@ const useUserSearch = () => {
   };
 
   const [searchQuery, setSearchQuery] = useState<UserSearch>(initialQuery);
+  const initialMountComplete = useRef<boolean>(false);
 
   // on initial render, gets user search parameters from url query string, retrieves a filtered
   // list of usernames based on those parameters and sets them in state; additionally, the parameter
@@ -52,6 +53,7 @@ const useUserSearch = () => {
         console.log(err);
       } finally {
         dispatch(setFormLoading(false));
+        initialMountComplete.current = true;
       }
     };
 
@@ -85,10 +87,10 @@ const useUserSearch = () => {
           value,
           initialUsers.current,
           setSearchResults,
-          setShowResults
+          setShowResults,
         );
     },
-    [searchQuery]
+    [searchQuery],
   );
 
   // when the user clicks on one of the usernames in the filtered user search dropdown list,
@@ -105,7 +107,7 @@ const useUserSearch = () => {
       setSearchResults([]);
       setShowResults(false);
     },
-    [searchQuery.username]
+    [searchQuery.username],
   );
 
   // when search form is submitted, sets current url search params with form data only if data
@@ -118,7 +120,7 @@ const useUserSearch = () => {
         let params = Object.fromEntries(
           Object.entries(searchQuery).filter((q) => {
             return q[1];
-          })
+          }),
         );
         setSearchParams((prev) => ({ ...prev, ...params }));
         let users = await userAPI.searchForUsers(params);
@@ -129,7 +131,7 @@ const useUserSearch = () => {
         dispatch(setFormLoading(false));
       }
     },
-    [searchQuery]
+    [searchQuery],
   );
 
   return {
@@ -137,6 +139,7 @@ const useUserSearch = () => {
     showResults,
     searchedUsers,
     searchQuery,
+    initialMountComplete,
     handleFocus,
     handleBlur,
     handleResults,

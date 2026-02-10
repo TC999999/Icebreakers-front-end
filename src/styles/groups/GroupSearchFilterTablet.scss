@@ -6,7 +6,14 @@
   z-index: 3;
 
   .modal-filter-content {
-    background-color: c.$primary;
+    background: linear-gradient(
+      90deg,
+      rgba(203, 45, 227, 1) 0%,
+      rgba(181, 38, 189, 1) 50%,
+      rgba(170, 83, 237, 1) 100%
+    );
+    border-top: s.$borderSettings c.$secondary;
+    box-shadow: -10px 0px 10px black;
     height: 37vh;
     position: absolute;
     bottom: 0;

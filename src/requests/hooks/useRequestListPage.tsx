@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useAppSelector } from "../../features/hooks";
 import { useAppDispatch } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
@@ -64,10 +64,10 @@ const useRequestListPage = () => {
   };
 
   const [viewedRequests, setViewedRequests] = useState<requestType>(
-    "direct-requests-received"
+    "direct-requests-received",
   );
   const [currentTitleAndDesc, setViewedTitleAndDesc] = useState<titleAndDesc>(
-    requestDesc.get("direct-requests-received") || defaultTitleAndDesc
+    requestDesc.get("direct-requests-received") || defaultTitleAndDesc,
   );
 
   const [requestCount, setRequestCount] = useState<requestCount>(initialCount);
@@ -84,6 +84,8 @@ const useRequestListPage = () => {
   const [showTabletRequestTabs, setShowTabletRequestTabs] =
     useState<boolean>(false);
 
+  const initialMountComplete = useRef<boolean>(false);
+
   // on initial render, gets url search query data and sets the initial selected request tab and
   // the initial header shown based on those params; also retrieves the initial request list to be
   // shown based on the search query and retrieves the count for each unanswered/sent/removed request
@@ -99,7 +101,7 @@ const useRequestListPage = () => {
           let currRequests = requestTypeMap[`${DoG}-${RoI}-${t}`];
           setViewedRequests(currRequests);
           setViewedTitleAndDesc(
-            requestDesc.get(currRequests) || defaultTitleAndDesc
+            requestDesc.get(currRequests) || defaultTitleAndDesc,
           );
           if (DoG && RoI && t) {
             const params: requestParams = {
@@ -117,6 +119,7 @@ const useRequestListPage = () => {
         console.log(err);
       } finally {
         dispatch(setFormLoading(false));
+        initialMountComplete.current = true;
       }
     };
 
@@ -138,7 +141,7 @@ const useRequestListPage = () => {
       | directConversationResponse
       | groupConversationResponse,
 
-    addOrRemove: addOrRemove
+    addOrRemove: addOrRemove,
   ) => {
     updateSentRequests(request, addOrRemove, setCurrentRequests);
   };
@@ -157,7 +160,7 @@ const useRequestListPage = () => {
     addOrRemove: addOrRemove,
     requestChange: requestCountChange,
     socketType: "addRequest" | "removeRequest" | "response",
-    socketRequest: socketRequest
+    socketRequest: socketRequest,
   ) => {
     setNewRequests(request, addOrRemove);
     setNewRequestCount(requestChange);
@@ -206,7 +209,7 @@ const useRequestListPage = () => {
         document.activeElement.blur();
       setShowTabletRequestTabs(!showTabletRequestTabs);
     },
-    [showTabletRequestTabs]
+    [showTabletRequestTabs],
   );
 
   // when user clicks on respective request tab, highlights tab and sets description state to respective
@@ -216,7 +219,7 @@ const useRequestListPage = () => {
       setViewedRequests(requestType);
 
       setViewedTitleAndDesc(
-        requestDesc.get(requestType) || defaultTitleAndDesc
+        requestDesc.get(requestType) || defaultTitleAndDesc,
       );
 
       if (username) {
@@ -226,7 +229,7 @@ const useRequestListPage = () => {
       }
       if (showTabletRequestTabs) setShowTabletRequestTabs(false);
     },
-    [viewedRequests, showTabletRequestTabs]
+    [viewedRequests, showTabletRequestTabs],
   );
 
   // UPDATE DIRECT REQUESTS (SENDER'S SIDE ONLY)
@@ -238,7 +241,7 @@ const useRequestListPage = () => {
         await directRequestsAPI.removeDirectConversationRequest(
           request.id,
           username!,
-          true
+          true,
         );
 
       handleRequests(
@@ -254,10 +257,10 @@ const useRequestListPage = () => {
           countType: "receivedDirectRequestCount",
           to: request.to,
           request: resentRequest,
-        }
+        },
       );
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // resend direct request to recipient's inbox
@@ -267,7 +270,7 @@ const useRequestListPage = () => {
         await directRequestsAPI.removeDirectConversationRequest(
           request.id,
           username!,
-          false
+          false,
         );
 
       handleRequests(
@@ -283,10 +286,10 @@ const useRequestListPage = () => {
           countType: "receivedDirectRequestCount",
           to: request.to,
           request: resentRequest,
-        }
+        },
       );
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // UPDATE GROUP REQUESTS (SENDER'S SIDE ONLY)
@@ -297,7 +300,7 @@ const useRequestListPage = () => {
       const removedRequest = await groupRequestsAPI.removeRequest(
         request.id,
         username!,
-        true
+        true,
       );
 
       handleRequests(
@@ -313,10 +316,10 @@ const useRequestListPage = () => {
           countType: "receivedGroupRequestCount",
           to: request.to,
           request: removedRequest,
-        }
+        },
       );
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // removes a single request from the user's removed group requests inbox, moves it to their sent
@@ -326,7 +329,7 @@ const useRequestListPage = () => {
       const resentRequest = await groupRequestsAPI.removeRequest(
         request.id,
         username!,
-        false
+        false,
       );
 
       handleRequests(
@@ -342,10 +345,10 @@ const useRequestListPage = () => {
           countType: "receivedGroupRequestCount",
           to: request.to,
           request: resentRequest,
-        }
+        },
       );
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // UPDATE GROUP INVITATIONS (SENDER'S SIDE ONLY)
@@ -356,7 +359,7 @@ const useRequestListPage = () => {
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
         username!,
-        true
+        true,
       );
 
       handleRequests(
@@ -372,10 +375,10 @@ const useRequestListPage = () => {
           countType: "receivedGroupInvitationCount",
           to: request.to,
           request: invitation,
-        }
+        },
       );
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   const resendGroupInvitation = useCallback(
@@ -383,7 +386,7 @@ const useRequestListPage = () => {
       let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
         username!,
-        false
+        false,
       );
 
       handleRequests(
@@ -399,10 +402,10 @@ const useRequestListPage = () => {
           countType: "receivedGroupInvitationCount",
           to: request.to,
           request: invitation,
-        }
+        },
       );
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // DELETION (SENDER'S SIDE ONLY)
@@ -412,12 +415,12 @@ const useRequestListPage = () => {
       await directRequestsAPI.deleteDirectConversationRequest(
         request.id,
         username!,
-        { to: request.to }
+        { to: request.to },
       );
       setNewRequests(request, "remove");
       setNewRequestCount({ subtractRequest: "removedDirectRequestCount" });
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // deletes group invitation entirely from senders's inbox
@@ -426,12 +429,12 @@ const useRequestListPage = () => {
       await groupRequestsAPI.deleteGroupConversationInvitation(
         request.id,
         username!,
-        { to: request.to, groupID: request.groupID }
+        { to: request.to, groupID: request.groupID },
       );
       setNewRequests(request, "remove");
       setNewRequestCount({ subtractRequest: "removedGroupInvitationCount" });
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // deletes group request entirely from senders's inbox
@@ -443,7 +446,7 @@ const useRequestListPage = () => {
       setNewRequests(request, "remove");
       setNewRequestCount({ subtractRequest: "removedGroupRequestCount" });
     },
-    [currentRequests, requestCount]
+    [currentRequests, requestCount],
   );
 
   // RESPONSES (RECIPIENT'S SIDE ONLY)
@@ -454,7 +457,7 @@ const useRequestListPage = () => {
       let { requestResponse } =
         await directRequestsAPI.respondToDirectConversationRequest(
           username!,
-          response
+          response,
         );
       if (requestResponse.conversation) {
         socket.emit("addConversation", {
@@ -479,12 +482,12 @@ const useRequestListPage = () => {
           requestType: "direct-requests-sent",
           countType: "sentDirectRequestCount",
           response,
-        }
+        },
       );
 
       dispatch(setUnansweredRequests(-1));
     },
-    [currentRequests, dispatch]
+    [currentRequests, dispatch],
   );
 
   // if invitation was accepted, the recipient join the group and
@@ -493,7 +496,7 @@ const useRequestListPage = () => {
     async (response: groupConversationResponse) => {
       let res = await groupRequestsAPI.respondToGroupInvitation(
         username!,
-        response
+        response,
       );
       if (res.user) {
         socket.emit("addUserToGroup", {
@@ -513,7 +516,7 @@ const useRequestListPage = () => {
           requestType: "group-invites-sent",
           countType: "sentGroupInvitationCount",
           response,
-        }
+        },
       );
 
       dispatch(setUnansweredRequests(-1));
@@ -522,7 +525,7 @@ const useRequestListPage = () => {
         socket.emit("joinGroup", { group: { id: response.groupID } });
       }
     },
-    []
+    [],
   );
 
   // if request was accepted, the sender join the group and removes
@@ -531,7 +534,7 @@ const useRequestListPage = () => {
     async (response: groupConversationResponse) => {
       let res = await groupRequestsAPI.respondToGroupRequest(
         username!,
-        response
+        response,
       );
       if (res.user) {
         socket.emit("addUserToGroup", {
@@ -556,12 +559,12 @@ const useRequestListPage = () => {
           requestType: "group-requests-sent",
           countType: "sentGroupRequestCount",
           response,
-        }
+        },
       );
 
       dispatch(setUnansweredRequests(-1));
     },
-    []
+    [],
   );
 
   return {
@@ -570,6 +573,7 @@ const useRequestListPage = () => {
     currentRequests,
     requestCount,
     showTabletRequestTabs,
+    initialMountComplete,
     toggleTabletTabs,
     changeViewedRequests,
     respondToDirectRequest,

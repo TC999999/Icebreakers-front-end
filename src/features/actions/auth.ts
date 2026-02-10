@@ -6,7 +6,7 @@ import {
   type UserState,
 } from "../../types/authTypes";
 import axios from "axios";
-import socket, { setUpSocket } from "../../helpers/socket";
+import socket from "../../helpers/socket";
 
 // redux thunk function to create a new account and return data to set in redux state
 export const RegisterUser = createAsyncThunk<UserState, Register>(
@@ -20,7 +20,7 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
       biography: "",
       interests: [],
     },
-    thunkAPI
+    thunkAPI,
   ) => {
     try {
       let res = await axios({
@@ -30,13 +30,13 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
         withCredentials: true,
       });
 
-      setUpSocket(socket);
+      socket.connect();
 
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
     }
-  }
+  },
 );
 
 // redux thunk function to retrieve user data to set in redux state
@@ -51,13 +51,13 @@ export const LogInUser = createAsyncThunk<UserState, LogIn>(
         withCredentials: true,
       });
 
-      setUpSocket(socket);
+      socket.connect();
 
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
     }
-  }
+  },
 );
 
 // redux thunk function to check backend if user session exists and add to redux state if it does
@@ -72,15 +72,13 @@ export const getCurrentUser = createAsyncThunk<UserState, any>(
         withCredentials: true,
       });
 
-      if (res.data.user) {
-        setUpSocket(socket);
-      }
+      if (res.data.user) socket.connect();
 
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
     }
-  }
+  },
 );
 
 // redux thunk function to remove user session from backend, disconnect socket, and return data to
@@ -102,5 +100,5 @@ export const LogOutUser = createAsyncThunk<UserState, any>(
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data.error.message);
     }
-  }
+  },
 );

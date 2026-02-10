@@ -1,24 +1,19 @@
 import { type JSX } from "react";
-import { useAppSelector } from "../features/hooks";
 import useUserSearch from "./hooks/useUserSearch";
 import UserSearchSkeleton from "./skeletons/UserSearchSkeleton";
 import UserSearchCard from "./UserSearchCard";
 import "../styles/users/UserSearch.scss";
-import { shallowEqual } from "react-redux";
 
 // React component page that allows users to search for other users: includes user search bar to
 // search via username, or a checkbox to filter out users who don't share similar interests with
 // the current user; shows search results below as cards
 const UserSearch = (): JSX.Element => {
-  const { formLoading } = useAppSelector((store) => {
-    return store.user.loading.loadingInfo;
-  }, shallowEqual);
-
   const {
     searchResults,
     searchedUsers,
     showResults,
     searchQuery,
+    initialMountComplete,
     handleFocus,
     handleBlur,
     handleResults,
@@ -79,19 +74,23 @@ const UserSearch = (): JSX.Element => {
               checked={searchQuery.findSimilarInterests}
               onChange={handleChange}
             />
+          </div>
+          <div className="button-div">
             <button className="submit-button">Search</button>
           </div>
         </form>
       </div>
 
       <div id="search-results">
-        {formLoading && <UserSearchSkeleton cards={10} />}
-        {!formLoading && searchedUsers.length === 0 && (
+        {!initialMountComplete.current && searchedUsers.length === 0 && (
+          <UserSearchSkeleton cards={10} />
+        )}
+        {initialMountComplete.current && searchedUsers.length === 0 && (
           <div>
             <h1 id="not-found-message">No users could be found</h1>
           </div>
         )}
-        {!formLoading &&
+        {initialMountComplete.current &&
           searchedUsers.length > 0 &&
           searchedUsers.map((u) => {
             return <UserSearchCard key={`${u.username}-card`} user={u} />;

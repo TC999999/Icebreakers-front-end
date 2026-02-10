@@ -21,9 +21,13 @@ header#page-header {
 
     .group-tab {
       padding: 20px;
-
       font-weight: bolder;
       transition: 0.2s ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        background-color: c.$primary;
+      }
 
       &.selected-group {
         background-color: rgba(246, 143, 214, 0.7);

@@ -16,6 +16,7 @@ const RequestListPage = () => {
     requestCount,
     currentTitleAndDesc,
     showTabletRequestTabs,
+    initialMountComplete,
     changeViewedRequests,
     toggleTabletTabs,
     respondToDirectRequest,
@@ -60,6 +61,7 @@ const RequestListPage = () => {
           currentRequestType={viewedRequests}
           currentTitleAndDesc={currentTitleAndDesc}
           requestList={currentRequests}
+          initialMountComplete={initialMountComplete.current}
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}
           removeDirectRequest={removeDirectRequest}

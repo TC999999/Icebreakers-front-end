@@ -14,7 +14,6 @@ import socket from "../../helpers/socket";
 type input = {
   currentConversation: currentConversation;
   hideForm: (e: React.FormEvent) => void;
-  show: boolean;
   updateConversations: (newConversation: returnUpdateConversation) => void;
 };
 
@@ -22,7 +21,6 @@ type input = {
 const useEditConversation = ({
   currentConversation,
   hideForm,
-  show,
   updateConversations,
 }: input) => {
   const username = useAppSelector((store) => {
@@ -40,7 +38,7 @@ const useEditConversation = ({
       setFormData((prev) => ({ ...prev, title: currentConversation.title }));
     };
     initialSet();
-  }, [currentConversation, show]);
+  }, [currentConversation]);
 
   // updates form data state on input value change
   const handleChange = useCallback(
@@ -48,7 +46,7 @@ const useEditConversation = ({
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
     },
-    [formData]
+    [formData],
   );
 
   // updates current conversation data in the database and returns data to update current
@@ -62,7 +60,7 @@ const useEditConversation = ({
         const conversation = await directConversationsAPI.updateConversation(
           formData,
           username!,
-          currentConversation.id
+          currentConversation.id,
         );
         updateConversations(conversation);
         socket.emit("editConversation", {
@@ -76,7 +74,7 @@ const useEditConversation = ({
         dispatch(setFormLoading(false));
       }
     },
-    [formData, show]
+    [formData],
   );
 
   // hides form if user clicks cancel button
@@ -85,7 +83,7 @@ const useEditConversation = ({
       e.preventDefault();
       hideForm(e);
     },
-    [show]
+    [],
   );
 
   return { formData, handleChange, handleSubmit, handleCancel };

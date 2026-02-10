@@ -34,6 +34,7 @@ const useGroupSearchPage = () => {
   const [currentGroups, setCurrentGroups] = useState<groupSearchCard[]>([]);
   const [showGroupFilterTablet, setShowGroupFilterTablet] =
     useState<boolean>(false);
+  const initialMountComplete = useRef<boolean>(false);
 
   // on initial render, grabs search params values from url, sets those parameter values into
   // the search query boxes, and retrieves filtered list of all groups based on those parameters;
@@ -62,6 +63,7 @@ const useGroupSearchPage = () => {
         console.log(err);
       } finally {
         dispatch(setFormLoading(false));
+        initialMountComplete.current = true;
       }
     };
     getAllGroups();
@@ -224,6 +226,7 @@ const useGroupSearchPage = () => {
     userSearchResults,
     showResults,
     showGroupFilterTablet,
+    initialMountComplete,
     handleChange,
     handleDivFocus,
     handleDivBlur,

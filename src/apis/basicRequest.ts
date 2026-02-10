@@ -9,7 +9,7 @@ async function request(
   route: string,
   endpoint: string = "",
   method: method,
-  data = {}
+  data = {},
 ): Promise<any> {
   const url = `${API_URL}/${route}/${endpoint}`;
 
@@ -17,7 +17,7 @@ async function request(
 
   try {
     let res: AxiosResponse = await axios({
-      method: method,
+      method,
       url,
       data,
       params,

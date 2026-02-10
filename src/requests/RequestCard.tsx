@@ -7,10 +7,10 @@ import type {
   ReceivedGroupCard,
   groupConversationResponse,
 } from "../types/requestTypes";
-
 import "../styles/requests/RequestCard.scss";
 import createDate from "../helpers/createDate";
 import useRequestCard from "./hooks/useRequestCard";
+import IntersectionWrapper from "../IntersectionWrapper";
 
 type Props = {
   requestType: requestType;
@@ -70,78 +70,84 @@ const RequestCard: React.FC<Props> = ({
   });
 
   return (
-    <div className="request-card">
-      {requestType === "group-invites-received" ||
-      requestType === "group-invites-sent" ||
-      requestType === "group-invites-removed" ? (
-        <h2>
-          {"from" in request
-            ? `Invitation From ${request.from}`
-            : `Invitation For ${request.to}`}
-        </h2>
-      ) : (
-        <h2>
-          {"from" in request
-            ? `Request From ${request.from}`
-            : `Request For ${request.to}`}
-        </h2>
-      )}
-
-      {"groupTitle" in request && <h3>For Group: {request.groupTitle}</h3>}
-      <div className="request-message">
-        <p>{request.content}</p>
-      </div>
-
-      <div>
-        <span>
-          <small>Made At: {createDate(request.createdAt, "long")}</small>
-        </span>
-      </div>
-      <div>
-        <span>
-          <small>
-            Status: <b>Not Yet Responded</b>
-          </small>
-        </span>
-      </div>
-
-      <div id="response-list">
-        {(requestType === "direct-requests-received" ||
-          requestType === "group-invites-received" ||
-          requestType === "group-requests-received") && (
-          <div className="response-buttons" id="received-response">
-            <button className="accept-button" onClick={() => respond(true)}>
-              Accept
-            </button>
-            <button className="decline-button" onClick={() => respond(false)}>
-              Decline
-            </button>
-          </div>
-        )}
-        {(requestType === "direct-requests-sent" ||
-          requestType === "group-invites-sent" ||
-          requestType === "group-requests-sent") && (
-          <div className="response-buttons" id="sent-response">
-            <button className="remove-button" onClick={() => remove()}>
-              Remove
-            </button>
-          </div>
+    <IntersectionWrapper
+      rootMargin="250px"
+      threshold={0.1}
+      fallback={<div style={{ height: "250px" }}></div>}
+    >
+      <div className="request-card">
+        {requestType === "group-invites-received" ||
+        requestType === "group-invites-sent" ||
+        requestType === "group-invites-removed" ? (
+          <h2>
+            {"from" in request
+              ? `Invitation From ${request.from}`
+              : `Invitation For ${request.to}`}
+          </h2>
+        ) : (
+          <h2>
+            {"from" in request
+              ? `Request From ${request.from}`
+              : `Request For ${request.to}`}
+          </h2>
         )}
 
-        {(requestType === "direct-requests-removed" ||
-          requestType === "group-invites-removed" ||
-          requestType === "group-requests-removed") && (
-          <div className="response-buttons" id="removed-response">
-            <button className="resend-button" onClick={() => resend()}>
-              Resend
-            </button>
-            <button className="delete-button" onClick={() => deleteRequest()}>
-              Delete
-            </button>
-          </div>
-        )}
+        {"groupTitle" in request && <h3>For Group: {request.groupTitle}</h3>}
+        <div className="request-message">
+          <p>{request.content}</p>
+        </div>
+
+        <div>
+          <span>
+            <small>Made At: {createDate(request.createdAt, "long")}</small>
+          </span>
+        </div>
+        <div>
+          <span>
+            <small>
+              Status: <b>Not Yet Responded</b>
+            </small>
+          </span>
+        </div>
+
+        <div id="response-list">
+          {(requestType === "direct-requests-received" ||
+            requestType === "group-invites-received" ||
+            requestType === "group-requests-received") && (
+            <div className="response-buttons" id="received-response">
+              <button className="accept-button" onClick={() => respond(true)}>
+                Accept
+              </button>
+              <button className="decline-button" onClick={() => respond(false)}>
+                Decline
+              </button>
+            </div>
+          )}
+          {(requestType === "direct-requests-sent" ||
+            requestType === "group-invites-sent" ||
+            requestType === "group-requests-sent") && (
+            <div className="response-buttons" id="sent-response">
+              <button className="remove-button" onClick={() => remove()}>
+                Remove
+              </button>
+            </div>
+          )}
+
+          {(requestType === "direct-requests-removed" ||
+            requestType === "group-invites-removed" ||
+            requestType === "group-requests-removed") && (
+            <div className="response-buttons" id="removed-response">
+              <button className="resend-button" onClick={() => resend()}>
+                Resend
+              </button>
+              <button className="delete-button" onClick={() => deleteRequest()}>
+                Delete
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </IntersectionWrapper>
   );
 };
 

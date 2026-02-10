@@ -37,7 +37,7 @@ const GroupSearchFilterTablet: React.FC<Props> = ({
   userSearchResults,
 }) => {
   return (
-    <div className="modal-transparent">
+    <div className="modal-transparent" id="group-search-filter-tablet">
       <div className="modal-filter-content">
         <div id="cancel-button-div">
           <button

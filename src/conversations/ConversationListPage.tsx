@@ -2,13 +2,10 @@ import { lazy, Suspense } from "react";
 import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
-import EditConversation from "./EditConversation";
+// import EditConversation from "./EditConversation";
+const EditConversation = lazy(() => import("./EditConversation"));
 import ConversationTabList from "./ConversationTabList";
-
 import LoadingSmall from "../LoadingSmall";
-
-// import ConversationTabListTablet from "./ConversationTabListTablet";
-
 const ConversationTabListTablet = lazy(
   () => import("./ConversationTabListTablet"),
 );
@@ -40,12 +37,15 @@ const ConversationListPage = () => {
   // component for conversation page: including tab list, message window, and message input
   return (
     <main id="conversations-list-page">
-      <EditConversation
-        show={showEditForm}
-        currentConversation={currentConversation}
-        hideForm={toggleEditForm}
-        updateConversations={updateConversations}
-      />
+      {showEditForm && (
+        <Suspense fallback={<LoadingSmall lazy={true} />}>
+          <EditConversation
+            currentConversation={currentConversation}
+            hideForm={toggleEditForm}
+            updateConversations={updateConversations}
+          />
+        </Suspense>
+      )}
 
       <header>
         <h1>Your Conversations</h1>
@@ -117,7 +117,7 @@ const ConversationListPage = () => {
                           type="button"
                           onClick={(e) => toggleEditForm(e)}
                         >
-                          Edit
+                          Change Title
                         </button>
                       </div>
                     </>
