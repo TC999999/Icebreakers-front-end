@@ -11,6 +11,10 @@
   border-radius: s.$borderRadius;
   text-align: center;
 
+  &:not(.request-card-skeleton) {
+    animation: slideFromBottom 0.2s;
+  }
+
   .request-message {
     font-weight: bold;
   }

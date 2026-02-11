@@ -33,11 +33,11 @@ const useRequestPage = () => {
             JSON.stringify({
               message: "Cannot make a chat request with yourself!",
               status: 403,
-            })
+            }),
           );
         }
       } catch (err: any) {
-        let error = JSON.parse(err.message);
+        const error = JSON.parse(err.message);
         dispatch(setLoadError(error));
         navigate("/error");
       }

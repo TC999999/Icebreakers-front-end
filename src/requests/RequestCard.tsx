@@ -71,9 +71,9 @@ const RequestCard: React.FC<Props> = ({
 
   return (
     <IntersectionWrapper
-      rootMargin="250px"
-      threshold={0.1}
-      fallback={<div style={{ height: "250px" }}></div>}
+      scrollMargin="10px"
+      threshold={0.4}
+      fallback={<div style={{ height: "150px" }}></div>}
     >
       <div className="request-card">
         {requestType === "group-invites-received" ||

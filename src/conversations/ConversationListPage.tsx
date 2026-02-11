@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import useConversationListPage from "./hooks/useConversationListPage";
 import ConversationMessageBubble from "./ConversationMessageBubble";
 import ConversationLoading from "./ConversationLoading";
-// import EditConversation from "./EditConversation";
 const EditConversation = lazy(() => import("./EditConversation"));
 import ConversationTabList from "./ConversationTabList";
 import LoadingSmall from "../LoadingSmall";
@@ -86,6 +85,7 @@ const ConversationListPage = () => {
                       <IoReorderThree />
                     </button>
                   </div>
+
                   {currentConversation.id && (
                     <h3>
                       {currentConversation.title
@@ -109,6 +109,7 @@ const ConversationListPage = () => {
                       </span>
                     </div>
                   )}
+
                   {currentConversation.id.length > 0 && (
                     <>
                       <div id="edit-conversation-button">

@@ -79,16 +79,7 @@ const useEditConversation = ({
     [formData],
   );
 
-  // hides form if user clicks cancel button
-  const handleCancel = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>): void => {
-      e.preventDefault();
-      hideForm(e);
-    },
-    [],
-  );
-
-  return { formData, handleChange, handleSubmit, handleCancel };
+  return { formData, handleChange, handleSubmit };
 };
 
 export default useEditConversation;

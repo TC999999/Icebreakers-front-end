@@ -20,12 +20,11 @@ const EditConversation: React.FC<Props> = ({
   hideForm,
   updateConversations,
 }): JSX.Element | null => {
-  const { formData, handleChange, handleSubmit, handleCancel } =
-    useEditConversation({
-      currentConversation,
-      hideForm,
-      updateConversations,
-    });
+  const { formData, handleChange, handleSubmit } = useEditConversation({
+    currentConversation,
+    hideForm,
+    updateConversations,
+  });
 
   return (
     <div className="modal-transparent modal-background">
@@ -51,7 +50,7 @@ const EditConversation: React.FC<Props> = ({
               <button
                 type="button"
                 className="cancel-button"
-                onClick={(e) => handleCancel(e)}
+                onClick={(e) => hideForm(e)}
               >
                 Cancel
               </button>

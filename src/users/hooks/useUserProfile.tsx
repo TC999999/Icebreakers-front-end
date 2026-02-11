@@ -44,7 +44,7 @@ const useUserProfile = () => {
           }));
         }
       } catch (err: any) {
-        let error = JSON.parse(err.message);
+        const error = JSON.parse(err.message);
         dispatch(setLoadError(error));
         navigate("/error");
       } finally {
@@ -60,7 +60,7 @@ const useUserProfile = () => {
     if (currentUser && username) {
       let res = await directConversationsAPI.getConversationID(
         currentUser,
-        username
+        username,
       );
 
       navigate({
@@ -76,7 +76,7 @@ const useUserProfile = () => {
       e.preventDefault();
       setShowBlockForm(!showBlockForm);
     },
-    [showBlockForm]
+    [showBlockForm],
   );
 
   // sends data to backend that prevents the current user and this user from contacting each
@@ -92,7 +92,7 @@ const useUserProfile = () => {
         setUserState((prev) => ({ ...prev, blockedOtherUser: true }));
       }
     },
-    [currentUser, userState]
+    [currentUser, userState],
   );
 
   return {

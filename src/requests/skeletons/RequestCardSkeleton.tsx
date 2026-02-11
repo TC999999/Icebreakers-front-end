@@ -4,7 +4,7 @@ import "../../styles/requests/RequestCard.scss";
 
 const RequestCardSkeleton = memo(() => {
   return (
-    <div className="request-card">
+    <div className="request-card request-card-skeleton">
       <h2>
         <Skeleton />
       </h2>
