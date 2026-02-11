@@ -29,7 +29,7 @@ const UserProfile = () => {
     return store.user;
   }, shallowEqual);
   const loading = useAppSelector(
-    (store) => store.user.loading.loadingInfo.formLoading
+    (store) => store.loading.loadingInfo.formLoading,
   );
   return !loading ? (
     <main id="user-profile-page">

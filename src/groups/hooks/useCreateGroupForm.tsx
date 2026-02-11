@@ -7,7 +7,7 @@ import type { newGroup } from "../../types/groupTypes";
 import interestsAPI from "../../apis/interestsAPI";
 import type { interestMap } from "../../types/interestTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
 import { toast } from "react-toastify";
 

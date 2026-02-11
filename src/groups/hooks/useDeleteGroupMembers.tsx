@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { shallowEqual } from "react-redux";
 import type { groupUser } from "../../types/userTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import socket from "../../helpers/socket";
@@ -11,7 +11,7 @@ import socket from "../../helpers/socket";
 const useDeleteGroupMembers = () => {
   const username = useAppSelector(
     (store) => store.user.user?.username,
-    shallowEqual
+    shallowEqual,
   );
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -52,7 +52,7 @@ const useDeleteGroupMembers = () => {
       setShowRemoveWindow(!showRemoveWindow);
       setCurrentRemovedUser(showRemoveWindow ? "" : username);
     },
-    [showRemoveWindow, currentRemovedUser]
+    [showRemoveWindow, currentRemovedUser],
   );
 
   const handleRemoveUser = useCallback(
@@ -66,7 +66,7 @@ const useDeleteGroupMembers = () => {
             await groupConversationsAPI.removeGroupMember(
               username,
               id,
-              removedUser
+              removedUser,
             );
 
           setShowRemoveWindow(false);
@@ -84,7 +84,7 @@ const useDeleteGroupMembers = () => {
         dispatch(setFormLoading(false));
       }
     },
-    [showRemoveWindow, currentRemovedUser]
+    [showRemoveWindow, currentRemovedUser],
   );
 
   return {

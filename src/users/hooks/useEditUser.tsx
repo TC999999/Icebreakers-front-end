@@ -3,11 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import type { UserEdit } from "../../types/userTypes";
 import type { interestMap } from "../../types/interestTypes";
 import { useAppDispatch } from "../../features/hooks";
-import {
-  setFormLoading,
-  setLoadError,
-  setFavoriteColor,
-} from "../../features/slices/auth";
+import { setFavoriteColor } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import userAPI from "../../apis/userAPI";
 import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";

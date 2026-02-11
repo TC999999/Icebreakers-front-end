@@ -9,7 +9,7 @@ import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import userAPI from "../../apis/userAPI";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import {
   useSearchParams,
   useNavigate,

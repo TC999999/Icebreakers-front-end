@@ -1,11 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import {
-  setFormLoading,
-  setUnreadGroupMessages,
-  setLoadError,
-} from "../../features/slices/auth";
+import { setUnreadGroupMessages } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import {
   useSearchParams,
   useNavigate,

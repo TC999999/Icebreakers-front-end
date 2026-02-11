@@ -1,10 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
-import {
-  setFormLoading,
-  setUnansweredRequests,
-} from "../../features/slices/auth";
+import { setUnansweredRequests } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import directRequestsAPI from "../../apis/directRequestsAPI";
 import requestsAPI from "../../apis/requestsAPI";
 import type {
@@ -36,7 +34,7 @@ import {
 import socket from "../../helpers/socket";
 import { shallowEqual } from "react-redux";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
-import { setLoadError } from "../../features/slices/auth";
+
 import {
   updateSentRequests,
   updateRequestCount,
@@ -100,10 +98,10 @@ const useRequestListPage = () => {
       try {
         dispatch(setFormLoading(true));
         if (username) {
-          let DoG = searchParams.get("directOrGroup");
-          let RoI = searchParams.get("requestOrInvitation");
-          let t = searchParams.get("type");
-          let currRequests = requestTypeMap[`${DoG}-${RoI}-${t}`];
+          const DoG = searchParams.get("directOrGroup");
+          const RoI = searchParams.get("requestOrInvitation");
+          const t = searchParams.get("type");
+          const currRequests = requestTypeMap[`${DoG}-${RoI}-${t}`];
           setViewedRequests(currRequests);
           setViewedTitleAndDesc(
             requestDesc.get(currRequests) || defaultTitleAndDesc,

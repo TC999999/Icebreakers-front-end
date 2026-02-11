@@ -12,7 +12,7 @@ const LoadingSmall: React.FC<Props> = ({
   lazy = false,
 }): JSX.Element | null => {
   const loading: boolean = useAppSelector(
-    (store) => store.user.loading.loadingInfo.formLoading,
+    (store) => store.loading.loadingInfo.formLoading,
     shallowEqual,
   );
   return loading || lazy ? (

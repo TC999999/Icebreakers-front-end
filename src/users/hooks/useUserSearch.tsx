@@ -6,7 +6,7 @@ import {
   type NavigateFunction,
 } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { type AppDispatch } from "../../features/store";
 import userAPI from "../../apis/userAPI";
 import filterUsernames from "../../helpers/filterUsernames";

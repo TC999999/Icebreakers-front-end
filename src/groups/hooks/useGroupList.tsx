@@ -7,7 +7,7 @@ import type {
 } from "../../types/groupTypes";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { shallowEqual } from "react-redux";
 import {
   useSearchParams,

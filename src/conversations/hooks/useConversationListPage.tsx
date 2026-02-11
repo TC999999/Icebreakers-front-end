@@ -6,11 +6,8 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import {
-  setFormLoading,
-  setUnreadDirectMessages,
-  setLoadError,
-} from "../../features/slices/auth";
+import { setUnreadDirectMessages } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import type {
   conversation,
   conversationMessage,

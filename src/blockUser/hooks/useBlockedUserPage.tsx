@@ -3,7 +3,7 @@ import blockAPI from "../../apis/blockAPI";
 import { useParams } from "react-router-dom";
 import type { blockedUser } from "../../types/userTypes";
 import { useAppDispatch } from "../../features/hooks";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 

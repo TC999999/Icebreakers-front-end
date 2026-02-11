@@ -5,7 +5,7 @@ import { shallowEqual } from "react-redux";
 // error page for server side errors
 const Error = (): JSX.Element => {
   const loadingError = useAppSelector((store) => {
-    return store.user.loading.loadingError;
+    return store.loading.loadingError;
   }, shallowEqual);
 
   return (

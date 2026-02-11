@@ -3,7 +3,7 @@ import { useNavigate, type NavigateFunction } from "react-router-dom";
 import type { directConversationRequest } from "../../types/requestTypes";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading } from "../../features/slices/loading";
 import socket from "../../helpers/socket";
 import directRequestsAPI from "../../apis/directRequestsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
@@ -21,7 +21,7 @@ const useRequestForm = (to: string, from: string) => {
   });
 
   const [requestData, setRequestData] = useState<directConversationRequest>(
-    originalData.current
+    originalData.current,
   );
 
   // reusable custom validator hook for setting and checking input value validity
@@ -43,7 +43,7 @@ const useRequestForm = (to: string, from: string) => {
       handleInputValidity(name, value);
       setRequestData((prev) => ({ ...prev, [name]: value }));
     },
-    [requestData]
+    [requestData],
   );
 
   // submits request data to backend to create and return a new direct conversation request; emits
@@ -57,7 +57,7 @@ const useRequestForm = (to: string, from: string) => {
           const { request } =
             await directRequestsAPI.makeDirectConversationRequest(
               from,
-              requestData
+              requestData,
             );
 
           socket.emit("addRequest", {
@@ -76,7 +76,7 @@ const useRequestForm = (to: string, from: string) => {
         dispatch(setFormLoading(false));
       }
     },
-    [requestData, validInputs]
+    [requestData, validInputs],
   );
 
   return {

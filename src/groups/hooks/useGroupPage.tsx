@@ -4,7 +4,7 @@ import type { GroupPage } from "../../types/groupTypes";
 import { useParams, useNavigate, createSearchParams } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import socket from "../../helpers/socket";
 
 // custom hook for group page, handles navigating to group messages, form to request to join,

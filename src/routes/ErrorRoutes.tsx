@@ -6,8 +6,8 @@ import { type loadingError } from "../types/authTypes";
 // protects route to error page to only allow access if error exists in redux state
 const ErrorRoutes = () => {
   const { status }: loadingError = useAppSelector(
-    (store) => store.user.loading.loadingError,
-    shallowEqual
+    (store) => store.loading.loadingError,
+    shallowEqual,
   );
 
   return status ? <Outlet /> : <Navigate to="/" />;

@@ -7,7 +7,7 @@ import {
   type NavigateFunction,
   createSearchParams,
 } from "react-router-dom";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { type UserProfile } from "../../types/userTypes";
 import userAPI from "../../apis/userAPI";
 import createDate from "../../helpers/createDate";

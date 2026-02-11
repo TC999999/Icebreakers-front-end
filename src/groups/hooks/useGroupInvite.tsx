@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import type { simpleGroup, GroupInvitation } from "../../types/groupTypes";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import {

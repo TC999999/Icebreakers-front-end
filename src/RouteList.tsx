@@ -34,7 +34,7 @@ import { shallowEqual } from "react-redux";
 const RouteList = (): JSX.Element | null => {
   const location = useLocation();
   const loading: boolean = useAppSelector(
-    (store) => store.user.loading.loadingInfo.pageLoading,
+    (store) => store.loading.loadingInfo.pageLoading,
     shallowEqual,
   );
 

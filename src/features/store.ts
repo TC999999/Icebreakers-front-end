@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth.ts";
+import loadReducer from "./slices/loading.ts";
 
 const rootReducer = combineReducers({
   user: authReducer,
+  loading: loadReducer,
 });
 
 export function setUpStore(preloadedState?: Partial<RootState>) {

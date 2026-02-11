@@ -10,7 +10,7 @@ type Props = {
 // loading screen for getting user info (upon refresh)
 const LoadingLarge: React.FC<Props> = ({ lazy }): JSX.Element | null => {
   const loading: boolean = useAppSelector(
-    (store) => store.user.loading.loadingInfo.pageLoading,
+    (store) => store.loading.loadingInfo.pageLoading,
     shallowEqual,
   );
 

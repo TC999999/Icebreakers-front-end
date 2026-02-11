@@ -11,18 +11,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState: AUTH_INITIAL_STATE,
   reducers: {
-    //sets state for errors involving failure to submit data
-    setLoadError: (state, action) => {
-      state.loading.loadingError = action.payload;
-    },
-    // changes on page loading state when submitting a form
-    setFormLoading: (state, action) => {
-      state.loading.loadingInfo.formLoading = action.payload;
-    },
-    // changes on page loading state for when getting data
-    setPageLoading: (state, action) => {
-      state.loading.loadingInfo.pageLoading = action.payload;
-    },
     // updates number of unanswered requests on client side
     setUnansweredRequests: (state, action) => {
       state.user!.unansweredRequests += action.payload;
@@ -42,63 +30,35 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(RegisterUser.pending, (state) => {
-        state.loading.loadingInfo.formLoading = true;
-      })
+
       .addCase(RegisterUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
-        state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError.message = "";
       })
-      .addCase(RegisterUser.rejected, (state, action: any) => {
+      .addCase(RegisterUser.rejected, (state) => {
         state.user = AUTH_INITIAL_STATE.user;
-        state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError.message = action.payload;
       })
-      .addCase(LogInUser.pending, (state) => {
-        state.loading.loadingInfo.formLoading = true;
-      })
+
       .addCase(LogInUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
-        state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError.message = "";
       })
-      .addCase(LogInUser.rejected, (state, action: any) => {
+      .addCase(LogInUser.rejected, (state) => {
         state.user = AUTH_INITIAL_STATE.user;
-        state.loading.loadingInfo.formLoading = false;
-        state.loading.loadingError.message = action.payload;
       })
-      .addCase(getCurrentUser.pending, (state) => {
-        state.loading.loadingInfo.pageLoading = true;
-      })
+
       .addCase(getCurrentUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
-        state.loading.loadingInfo.pageLoading = false;
       })
-      .addCase(getCurrentUser.rejected, (state, action: any) => {
+      .addCase(getCurrentUser.rejected, (state) => {
         state.user = AUTH_INITIAL_STATE.user;
-        state.loading.loadingInfo.pageLoading = false;
-        state.loading.loadingError.message = action.payload;
       })
-      .addCase(LogOutUser.pending, (state) => {
-        state.loading.loadingInfo.pageLoading = true;
-      })
+
       .addCase(LogOutUser.fulfilled, (state) => {
         state.user = AUTH_INITIAL_STATE.user;
-        state.loading.loadingInfo.pageLoading = false;
-        state.loading.loadingError.message = "";
-      })
-      .addCase(LogOutUser.rejected, (state, action: any) => {
-        state.loading.loadingInfo.pageLoading = false;
-        state.loading.loadingError.message = action.payload;
       });
   },
 });
 
 export const {
-  setFormLoading,
-  setPageLoading,
-  setLoadError,
   setUnansweredRequests,
   setUnreadDirectMessages,
   setUnreadGroupMessages,

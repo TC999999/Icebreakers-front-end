@@ -3,7 +3,6 @@ import useRequestListPage from "./hooks/useRequestListPage";
 import RequestList from "./RequestList";
 import RequestTabList from "./RequestTabList";
 const RequestTabListTablet = lazy(() => import("./RequestTabListTablet"));
-// import RequestTabListTablet from "./RequestTabListTablet";
 import "../styles/requests/RequestListPage.scss";
 import LoadingSmall from "../LoadingSmall";
 

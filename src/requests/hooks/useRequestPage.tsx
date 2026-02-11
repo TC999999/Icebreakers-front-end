@@ -6,9 +6,8 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-
 import { useAppDispatch } from "../../features/hooks";
-import { setLoadError } from "../../features/slices/auth";
+import { setLoadError } from "../../features/slices/loading";
 import { type AppDispatch } from "../../features/store";
 import { shallowEqual } from "react-redux";
 

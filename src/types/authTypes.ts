@@ -39,5 +39,4 @@ export type LoadingContext = {
 
 export type ReduxAuthState = {
   user: UserState | null;
-  loading: LoadingContext;
 };

@@ -8,7 +8,7 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import { setFormLoading, setLoadError } from "../../features/slices/auth";
+import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import socket from "../../helpers/socket";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";

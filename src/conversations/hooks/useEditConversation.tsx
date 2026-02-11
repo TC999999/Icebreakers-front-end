@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/auth";
+import { setFormLoading } from "../../features/slices/loading";
 import type {
   currentConversation,
   updateConversation,
