@@ -20,7 +20,6 @@ const RequestListPage = () => {
     toggleTabletTabs,
     respondToDirectRequest,
     removeDirectRequest,
-    resendDirectRequest,
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
@@ -64,7 +63,6 @@ const RequestListPage = () => {
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}
           removeDirectRequest={removeDirectRequest}
-          resendDirectRequest={resendDirectRequest}
           deleteDirectRequest={deleteDirectRequest}
           respondToGroupRequest={respondToGroupRequest}
           removeGroupRequest={removeGroupRequest}

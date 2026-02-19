@@ -22,7 +22,6 @@ type Props = {
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
-  resendDirectRequest: (request: sentRequestCard) => void;
   deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
@@ -42,7 +41,6 @@ const RequestCard: React.FC<Props> = ({
   request,
   respondToDirectRequest,
   removeDirectRequest,
-  resendDirectRequest,
   deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
@@ -53,12 +51,11 @@ const RequestCard: React.FC<Props> = ({
   resendGroupInvitation,
   deleteGroupInvitation,
 }) => {
-  const { respond, remove, resend, deleteRequest } = useRequestCard({
+  const { respond, remove, deleteRequest } = useRequestCard({
     requestType,
     request,
     respondToDirectRequest,
     removeDirectRequest,
-    resendDirectRequest,
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
@@ -138,9 +135,6 @@ const RequestCard: React.FC<Props> = ({
             requestType === "group-invites-removed" ||
             requestType === "group-requests-removed") && (
             <div className="response-buttons" id="removed-response">
-              <button className="resend-button" onClick={() => resend()}>
-                Resend
-              </button>
               <button className="delete-button" onClick={() => deleteRequest()}>
                 Delete
               </button>

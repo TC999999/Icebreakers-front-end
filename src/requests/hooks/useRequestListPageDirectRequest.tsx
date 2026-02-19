@@ -50,24 +50,9 @@ const useRequestListPageDirectRequests = ({
       await directRequestsAPI.removeDirectConversationRequest(
         request.id,
         username!,
-        true,
       );
       setNewRequestCount();
       refetchRequests(request.id, "sent");
-    },
-    [requests, requestCount],
-  );
-
-  // resend direct request to recipient's inbox
-  const resendDirectRequest = useCallback(
-    async (request: sentRequestCard) => {
-      await directRequestsAPI.removeDirectConversationRequest(
-        request.id,
-        username!,
-        false,
-      );
-      setNewRequestCount();
-      refetchRequests(request.id, "removed");
     },
     [requests, requestCount],
   );
@@ -107,7 +92,7 @@ const useRequestListPageDirectRequests = ({
   return {
     respondToDirectRequest,
     removeDirectRequest,
-    resendDirectRequest,
+
     deleteDirectRequest,
   };
 };

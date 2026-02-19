@@ -90,10 +90,21 @@ const useRequestListPage = () => {
     retry: 0,
   });
 
+  useEffect(() => {
+    if (requests) {
+      const requestType: requestType = buildRequestType();
+      setViewedRequests(requestType);
+      setViewedTitleAndDesc(
+        requestDesc.get(requestType) || defaultTitleAndDesc,
+      );
+
+      if (showTabletRequestTabs) setShowTabletRequestTabs(false);
+    }
+  }, [requests]);
+
   const {
     respondToDirectRequest,
     removeDirectRequest,
-    resendDirectRequest,
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
@@ -142,18 +153,6 @@ const useRequestListPage = () => {
     [searchParams],
   );
 
-  useEffect(() => {
-    if (requests) {
-      const requestType: requestType = buildRequestType();
-      setViewedRequests(requestType);
-      setViewedTitleAndDesc(
-        requestDesc.get(requestType) || defaultTitleAndDesc,
-      );
-
-      if (showTabletRequestTabs) setShowTabletRequestTabs(false);
-    }
-  }, [requests]);
-
   return {
     viewedRequests,
     currentTitleAndDesc,
@@ -165,7 +164,6 @@ const useRequestListPage = () => {
     changeViewedRequests,
     respondToDirectRequest,
     removeDirectRequest,
-    resendDirectRequest,
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,

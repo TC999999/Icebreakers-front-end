@@ -29,7 +29,6 @@ type Props = {
   ) => Promise<void>;
   respondToDirectRequest: (response: directConversationResponse) => void;
   removeDirectRequest: (request: sentRequestCard) => void;
-  resendDirectRequest: (request: sentRequestCard) => void;
   deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
@@ -50,7 +49,6 @@ const RequestList: React.FC<Props> = ({
   toggleTabletTabs,
   respondToDirectRequest,
   removeDirectRequest,
-  resendDirectRequest,
   deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
@@ -76,30 +74,30 @@ const RequestList: React.FC<Props> = ({
         <p id="request-description">{currentTitleAndDesc.description}</p>
       </header>
 
-      <section id="request-card-list">
+      <section id="request-card-window">
         {isLoading && !requestList && <RequestCardListSkeleton cards={3} />}
-        {!isLoading &&
-          requestList &&
-          requestList.length > 0 &&
-          requestList.map((request) => (
-            <RequestCard
-              key={`request-${request.id}`}
-              requestType={currentRequestType}
-              request={request}
-              respondToDirectRequest={respondToDirectRequest}
-              removeDirectRequest={removeDirectRequest}
-              resendDirectRequest={resendDirectRequest}
-              deleteDirectRequest={deleteDirectRequest}
-              respondToGroupRequest={respondToGroupRequest}
-              removeGroupRequest={removeGroupRequest}
-              resendGroupRequest={resendGroupRequest}
-              deleteGroupRequest={deleteGroupRequest}
-              respondToGroupInvitation={respondToGroupInvitation}
-              removeGroupInvitation={removeGroupInvitation}
-              resendGroupInvitation={resendGroupInvitation}
-              deleteGroupInvitation={deleteGroupInvitation}
-            />
-          ))}
+        {!isLoading && requestList && requestList.length > 0 && (
+          <div>
+            {requestList.map((request) => (
+              <RequestCard
+                key={`request-${request.id}`}
+                requestType={currentRequestType}
+                request={request}
+                respondToDirectRequest={respondToDirectRequest}
+                removeDirectRequest={removeDirectRequest}
+                deleteDirectRequest={deleteDirectRequest}
+                respondToGroupRequest={respondToGroupRequest}
+                removeGroupRequest={removeGroupRequest}
+                resendGroupRequest={resendGroupRequest}
+                deleteGroupRequest={deleteGroupRequest}
+                respondToGroupInvitation={respondToGroupInvitation}
+                removeGroupInvitation={removeGroupInvitation}
+                resendGroupInvitation={resendGroupInvitation}
+                deleteGroupInvitation={deleteGroupInvitation}
+              />
+            ))}
+          </div>
+        )}
 
         {!isLoading && requestList && requestList.length === 0 && (
           <div>

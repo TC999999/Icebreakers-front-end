@@ -63,16 +63,12 @@ const useRequestListPageSockets = ({
     };
   }, [viewedRequests, requestCount]);
 
-  const {
-    respondToDirectRequest,
-    removeDirectRequest,
-    resendDirectRequest,
-    deleteDirectRequest,
-  } = useRequestListPageDirectRequests({
-    requests,
-    requestCount,
-    setNewRequestCount,
-  });
+  const { respondToDirectRequest, removeDirectRequest, deleteDirectRequest } =
+    useRequestListPageDirectRequests({
+      requests,
+      requestCount,
+      setNewRequestCount,
+    });
   const {
     respondToGroupRequest,
     removeGroupRequest,
@@ -91,7 +87,6 @@ const useRequestListPageSockets = ({
   return {
     respondToDirectRequest,
     removeDirectRequest,
-    resendDirectRequest,
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,

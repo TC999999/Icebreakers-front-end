@@ -15,7 +15,7 @@ class directRequestsAPI extends requestsAPI {
   // creates and returns a new direct conversation request
   public static async makeDirectConversationRequest(
     username: string,
-    request: directConversationRequest
+    request: directConversationRequest,
   ): Promise<any> {
     let res = await this.postRequest(`new/${username}`, request);
     return res;
@@ -25,9 +25,8 @@ class directRequestsAPI extends requestsAPI {
   public static async removeDirectConversationRequest(
     id: string,
     username: string,
-    remove: boolean
   ): Promise<any> {
-    let res = await this.patchRequest(`update/${id}/${username}`, { remove });
+    let res = await this.patchRequest(`remove/${id}/${username}`);
     return res.request;
   }
 
@@ -35,7 +34,7 @@ class directRequestsAPI extends requestsAPI {
   public static async deleteDirectConversationRequest(
     id: string,
     username: string,
-    request: directConversationDelete
+    request: directConversationDelete,
   ): Promise<any> {
     let res = await this.deleteRequest(`delete/${id}/${username}`, request);
     return res;
@@ -45,11 +44,11 @@ class directRequestsAPI extends requestsAPI {
   // if receiving user accepts request
   public static async respondToDirectConversationRequest(
     username: string,
-    response: directConversationResponse
+    response: directConversationResponse,
   ): Promise<any> {
     let res = await this.postRequest(
       `response/${response.id}/${username}`,
-      response
+      response,
     );
     return res;
   }

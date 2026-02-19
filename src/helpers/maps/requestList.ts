@@ -24,7 +24,7 @@ const requestDesc = new Map<string, titleAndDesc>([
     {
       title: "Removed Requests",
       description:
-        "Requests that you have sent to other users, but removed afterwards. The recipient will not be able to see this request. You can either delete this request permanently, or resend it to the requested user.",
+        "Requests that you have sent to other users, but removed afterwards. The recipient will not be able to see this request. Once a request is removed, it cannot be resent, and you must delete this request permanently after the fact.",
     },
   ],
   [
