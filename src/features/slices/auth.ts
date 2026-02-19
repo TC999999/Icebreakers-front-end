@@ -27,10 +27,12 @@ const authSlice = createSlice({
     setFavoriteColor: (state, action) => {
       state.user!.favoriteColor = action.payload;
     },
+    clearUser: (state) => {
+      state.user = AUTH_INITIAL_STATE.user;
+    },
   },
   extraReducers: (builder) => {
     builder
-
       .addCase(RegisterUser.fulfilled, (state, action: any) => {
         state.user = action.payload.user;
       })
@@ -63,6 +65,7 @@ export const {
   setUnreadDirectMessages,
   setUnreadGroupMessages,
   setFavoriteColor,
+  clearUser,
 } = authSlice.actions;
 
 export default authSlice.reducer;

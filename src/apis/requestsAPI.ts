@@ -1,4 +1,5 @@
 import API from "./api";
+// import type { requestList } from "../types/requestTypes";
 
 // API for basic request actions
 // extends from the requests API class
@@ -8,8 +9,8 @@ class requestsAPI extends API {
 
   // gets all requests for a single user based on search params
   // (for example:
-  // {directOrGroup:"direct", requestOrInvitation:"request", type:"received"}
-  // returns all direct conversation request the user received that have not been removed)
+  // {directOrGroup:"direct", requestOrInvitation:"requests", type:"received"}
+  // returns all direct conversation requests the user received that have not been removed)
   public static async getRequests(username: string, params: any): Promise<any> {
     let res = await this.getRequest(username, params);
     return res.requests;

@@ -1,7 +1,6 @@
 import { type JSX, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import HomePage from "./home/HomePage";
-import NotFound from "./NotFound";
 import Error from "./Error";
 const LogIn = lazy(() => import("./auth/LogIn"));
 const SignUp = lazy(() => import("./auth/SignUp"));
@@ -79,7 +78,10 @@ const RouteList = (): JSX.Element | null => {
             <Route path="/error" element={<Error />} />
           </Route>
         </Route>
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="*"
+          element={<Error error={{ status: 404, message: "Page Not Found" }} />}
+        />
       </Routes>
     </Suspense>
   ) : null;

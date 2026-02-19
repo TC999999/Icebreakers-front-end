@@ -4,16 +4,14 @@ import type { directConversationRequest } from "../../types/requestTypes";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/loading";
-import socket from "../../helpers/socket";
 import directRequestsAPI from "../../apis/directRequestsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
-import { toast } from "react-toastify";
+import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 // custom hook for form to create a new request to chat with another user
 const useRequestForm = (to: string, from: string) => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
-  const notify = (message: string) => toast.error(message);
 
   const originalData = useRef<directConversationRequest>({
     to,
@@ -36,6 +34,8 @@ const useRequestForm = (to: string, from: string) => {
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
+  const { handleSubmitRequestError } = useRequestErrorHandler();
+
   // changes form data state and input value validity state when input value is changed by user
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
@@ -54,24 +54,18 @@ const useRequestForm = (to: string, from: string) => {
       try {
         if (handleSubmitValidity()) {
           dispatch(setFormLoading(true));
-          const { request } =
-            await directRequestsAPI.makeDirectConversationRequest(
-              from,
-              requestData,
-            );
 
-          socket.emit("addRequest", {
-            requestType: "direct-requests-received",
-            countType: "receivedDirectRequestCount",
-            to,
-            request,
-          });
+          await directRequestsAPI.makeDirectConversationRequest(
+            from,
+            requestData,
+          );
+
           navigate(`/user/${to}`);
         } else {
           handleClientFlashError();
         }
       } catch (err: any) {
-        notify(JSON.parse(err.message).message);
+        handleSubmitRequestError(err);
       } finally {
         dispatch(setFormLoading(false));
       }

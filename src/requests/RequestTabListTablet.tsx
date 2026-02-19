@@ -9,10 +9,7 @@ import { FaArrowLeft } from "react-icons/fa";
 type Props = {
   viewedRequests: requestType;
   requestCount: requestCount;
-  changeViewedRequests: (
-    requestType: requestType,
-    params: requestParams,
-  ) => Promise<void>;
+  changeViewedRequests: (params: requestParams) => Promise<void>;
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;

@@ -11,11 +11,11 @@ import LoadingSmall from "../LoadingSmall";
 const RequestListPage = () => {
   const {
     viewedRequests,
-    currentRequests,
+    requests,
     requestCount,
     currentTitleAndDesc,
     showTabletRequestTabs,
-    initialMountComplete,
+    isFetching,
     changeViewedRequests,
     toggleTabletTabs,
     respondToDirectRequest,
@@ -59,8 +59,8 @@ const RequestListPage = () => {
         <RequestList
           currentRequestType={viewedRequests}
           currentTitleAndDesc={currentTitleAndDesc}
-          requestList={currentRequests}
-          initialMountComplete={initialMountComplete.current}
+          requestList={requests}
+          isLoading={isFetching}
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}
           removeDirectRequest={removeDirectRequest}

@@ -7,10 +7,7 @@ type Props = {
   params: requestParams;
   requestType: requestType;
   viewedRequests: requestType;
-  changeViewedRequests: (
-    requestType: requestType,
-    requestParams: requestParams
-  ) => void;
+  changeViewedRequests: (requestParams: requestParams) => void;
   requestAmount: number;
 };
 
@@ -29,7 +26,7 @@ const RequestTab: React.FC<Props> = ({
       className={`request-tab ${
         viewedRequests === requestType ? "selected-tab" : ""
       }`}
-      onClick={() => changeViewedRequests(requestType, params)}
+      onClick={() => changeViewedRequests(params)}
     >
       <span>{title}</span>{" "}
       {requestAmount > 0 && (

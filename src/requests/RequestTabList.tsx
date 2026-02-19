@@ -9,10 +9,7 @@ import "../styles/requests/RequestTabList.scss";
 type Props = {
   viewedRequests: requestType;
   requestCount: requestCount;
-  changeViewedRequests: (
-    requestType: requestType,
-    params: requestParams
-  ) => Promise<void>;
+  changeViewedRequests: (params: requestParams) => Promise<void>;
 };
 
 // Reusable React component for tab list in request list page that separates requests of

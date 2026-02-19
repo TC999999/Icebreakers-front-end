@@ -1,5 +1,5 @@
-import axios, { type AxiosResponse } from "axios";
-import { API_URL } from "../config";
+import { type AxiosResponse } from "axios";
+import axiosInstance from "./axiosInstance";
 
 export type method = "get" | "post" | "patch" | "delete";
 
@@ -11,17 +11,16 @@ async function request(
   method: method,
   data = {},
 ): Promise<any> {
-  const url = `${API_URL}/${route}/${endpoint}`;
+  const url = `${route}/${endpoint}`;
 
   const params = method === "get" ? data : {};
 
   try {
-    let res: AxiosResponse = await axios({
+    let res: AxiosResponse = await axiosInstance({
       method,
       url,
       data,
       params,
-      withCredentials: true,
     });
     return res.data;
   } catch (err: any) {

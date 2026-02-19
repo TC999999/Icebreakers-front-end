@@ -1,3 +1,5 @@
+// import { type addOrRemove } from "../helpers/updateRequests";
+
 export type requestType =
   | "direct-requests-received"
   | "direct-requests-sent"
@@ -7,7 +9,8 @@ export type requestType =
   | "group-invites-removed"
   | "group-requests-received"
   | "group-requests-sent"
-  | "group-requests-removed";
+  | "group-requests-removed"
+  | "none";
 
 export type directConversationRequest = {
   to: string;
@@ -139,7 +142,7 @@ export interface SentGroupCard extends GroupCardTemplate {
 
 export type socketRequest = {
   requestType: requestType;
-  countType: requestCountSTR;
+  // countType: requestCountSTR;
   to: string;
   request?: any;
   response?: any;
@@ -149,4 +152,49 @@ export type groupRequestFormData = {
   to: string;
   from: string;
   content: string;
+};
+
+export type requestList = (
+  | sentRequestCard
+  | receivedRequestCard
+  | SentGroupCard
+  | ReceivedGroupCard
+)[];
+export type requestSocketHookProps = {
+  requests: requestList;
+  // setCurrentRequests: React.Dispatch<
+  //   React.SetStateAction<
+  //     (
+  //       | sentRequestCard
+  //       | receivedRequestCard
+  //       | SentGroupCard
+  //       | ReceivedGroupCard
+  //     )[]
+  //   >
+  // >;
+  setNewRequestCount: () => void;
+  // handleRequests: (
+  //   // request:
+  //   //   | sentRequestCard
+  //   //   | receivedRequestCard
+  //   //   | SentGroupCard
+  //   //   | ReceivedGroupCard
+  //   //   | directConversationResponse
+  //   //   | groupConversationResponse,
+  //   // addOrRemove: addOrRemove,
+  //   // requestChange: requestCountChange,
+  //   socketType: "addRequest" | "removeRequest" | "response",
+  //   socketRequest: socketRequest,
+  // ) => Promise<void>;
+  requestCount: requestCount;
+  // setNewRequests: (
+  //   request:
+  //     | sentRequestCard
+  //     | receivedRequestCard
+  //     | SentGroupCard
+  //     | ReceivedGroupCard
+  //     | directConversationResponse
+  //     | groupConversationResponse,
+  //   addOrRemove: addOrRemove,
+  // ) => void;
 };

@@ -1,11 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { API_URL } from "../../config";
 import {
   type Register,
   type LogIn,
   type UserState,
 } from "../../types/authTypes";
-import axios from "axios";
+import axiosInstance from "../../apis/axiosInstance";
 import socket from "../../helpers/socket";
 
 // redux thunk function to create a new account and return data to set in redux state
@@ -23,11 +22,10 @@ export const RegisterUser = createAsyncThunk<UserState, Register>(
     thunkAPI,
   ) => {
     try {
-      let res = await axios({
+      let res = await axiosInstance({
         method: "post",
-        url: `${API_URL}/auth/register`,
+        url: `auth/register`,
         data: userInfo,
-        withCredentials: true,
       });
 
       socket.connect();
@@ -44,11 +42,10 @@ export const LogInUser = createAsyncThunk<UserState, LogIn>(
   "auth/login",
   async (userInfo: LogIn = { username: "", password: "" }, thunkAPI) => {
     try {
-      let res = await axios({
+      let res = await axiosInstance({
         method: "post",
-        url: `${API_URL}/auth/login`,
+        url: `auth/login`,
         data: userInfo,
-        withCredentials: true,
       });
 
       socket.connect();
@@ -65,11 +62,10 @@ export const getCurrentUser = createAsyncThunk<UserState, any>(
   "auth/currentUser",
   async (data = {}, thunkAPI) => {
     try {
-      let res = await axios({
+      let res = await axiosInstance({
         method: "get",
-        url: `${API_URL}/auth/currentUser`,
+        url: `auth/currentUser`,
         data: data,
-        withCredentials: true,
       });
 
       if (res.data.user) socket.connect();
@@ -87,11 +83,10 @@ export const LogOutUser = createAsyncThunk<UserState, any>(
   "auth/logout",
   async (data = {}, thunkAPI) => {
     try {
-      let res = await axios({
+      let res = await axiosInstance({
         method: "get",
-        url: `${API_URL}/auth/logout`,
+        url: `/auth/logout`,
         data: data,
-        withCredentials: true,
       });
 
       socket.disconnect();

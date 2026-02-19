@@ -11,6 +11,7 @@ import "../styles/requests/RequestCard.scss";
 import createDate from "../helpers/createDate";
 import useRequestCard from "./hooks/useRequestCard";
 import IntersectionWrapper from "../IntersectionWrapper";
+import RequestCardSkeleton from "./skeletons/RequestCardSkeleton";
 
 type Props = {
   requestType: requestType;
@@ -71,9 +72,9 @@ const RequestCard: React.FC<Props> = ({
 
   return (
     <IntersectionWrapper
-      scrollMargin="10px"
-      threshold={0.4}
-      fallback={<div style={{ height: "150px" }}></div>}
+      rootMargin="50px"
+      threshold={0.9}
+      fallback={<RequestCardSkeleton />}
     >
       <div className="request-card">
         {requestType === "group-invites-received" ||

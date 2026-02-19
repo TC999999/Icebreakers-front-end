@@ -1,4 +1,4 @@
-import { type JSX, lazy, Suspense } from "react";
+import { type JSX } from "react";
 import type { titleAndDesc } from "../types/miscTypes";
 import type {
   sentRequestCard,
@@ -9,9 +9,7 @@ import type {
   requestType,
   groupConversationResponse,
 } from "../types/requestTypes";
-
-const RequestCard = lazy(() => import("./RequestCard"));
-// import RequestCard from "./RequestCard";
+import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
 import { IoReorderThree } from "react-icons/io5";
 import RequestCardListSkeleton from "./skeletons/RequestCardListSkeleton";
@@ -25,7 +23,7 @@ type Props = {
     | ReceivedGroupCard
     | SentGroupCard
   )[];
-  initialMountComplete: boolean;
+  isLoading: boolean;
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
@@ -48,7 +46,7 @@ const RequestList: React.FC<Props> = ({
   currentRequestType,
   currentTitleAndDesc,
   requestList,
-  initialMountComplete,
+  isLoading,
   toggleTabletTabs,
   respondToDirectRequest,
   removeDirectRequest,
@@ -79,34 +77,31 @@ const RequestList: React.FC<Props> = ({
       </header>
 
       <section id="request-card-list">
-        {!initialMountComplete && requestList.length === 0 && (
-          <RequestCardListSkeleton cards={3} />
-        )}
-        {initialMountComplete && requestList.length > 0 && (
-          <Suspense fallback={<RequestCardListSkeleton cards={3} />}>
-            {requestList.map((request) => (
-              <RequestCard
-                key={`request-${request.id}`}
-                requestType={currentRequestType}
-                request={request}
-                respondToDirectRequest={respondToDirectRequest}
-                removeDirectRequest={removeDirectRequest}
-                resendDirectRequest={resendDirectRequest}
-                deleteDirectRequest={deleteDirectRequest}
-                respondToGroupRequest={respondToGroupRequest}
-                removeGroupRequest={removeGroupRequest}
-                resendGroupRequest={resendGroupRequest}
-                deleteGroupRequest={deleteGroupRequest}
-                respondToGroupInvitation={respondToGroupInvitation}
-                removeGroupInvitation={removeGroupInvitation}
-                resendGroupInvitation={resendGroupInvitation}
-                deleteGroupInvitation={deleteGroupInvitation}
-              />
-            ))}
-          </Suspense>
-        )}
+        {isLoading && !requestList && <RequestCardListSkeleton cards={3} />}
+        {!isLoading &&
+          requestList &&
+          requestList.length > 0 &&
+          requestList.map((request) => (
+            <RequestCard
+              key={`request-${request.id}`}
+              requestType={currentRequestType}
+              request={request}
+              respondToDirectRequest={respondToDirectRequest}
+              removeDirectRequest={removeDirectRequest}
+              resendDirectRequest={resendDirectRequest}
+              deleteDirectRequest={deleteDirectRequest}
+              respondToGroupRequest={respondToGroupRequest}
+              removeGroupRequest={removeGroupRequest}
+              resendGroupRequest={resendGroupRequest}
+              deleteGroupRequest={deleteGroupRequest}
+              respondToGroupInvitation={respondToGroupInvitation}
+              removeGroupInvitation={removeGroupInvitation}
+              resendGroupInvitation={resendGroupInvitation}
+              deleteGroupInvitation={deleteGroupInvitation}
+            />
+          ))}
 
-        {initialMountComplete && requestList.length === 0 && (
+        {!isLoading && requestList && requestList.length === 0 && (
           <div>
             <h3 className="message">This list is currently empty!</h3>
           </div>
