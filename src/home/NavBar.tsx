@@ -121,6 +121,7 @@ const NavBar = (): JSX.Element => {
                 name="userProfile"
                 value={`/user/${user?.username}`}
                 onClick={move}
+                aria-label="userProfile"
                 className={selectedNav === "userProfile" ? "selectedUser" : ""}
               >
                 <MdPerson />

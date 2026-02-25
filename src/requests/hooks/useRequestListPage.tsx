@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useAppSelector } from "../../features/hooks";
 import requestsAPI from "../../apis/requestsAPI";
 import type {
@@ -18,6 +18,8 @@ import { type titleAndDesc } from "../../types/miscTypes";
 import { useSearchParams } from "react-router-dom";
 import { shallowEqual } from "react-redux";
 import useRequestListPageSockets from "./useRequestListPageSockets";
+import queryClient from "../../helpers/queryClient";
+import requestTabs from "../../helpers/maps/requestTabs";
 
 // custom hook for request inbox page
 const useRequestListPage = () => {
@@ -43,6 +45,9 @@ const useRequestListPage = () => {
     removedGroupRequestCount: 0,
   };
 
+  // builds a reusable requestType type string for currently viewed requests by pulling the values from
+  // the url search parameters and returning the correct value from the requestType map; used for getting
+  // correct title and description shown in the component
   const buildRequestType = (): requestType => {
     return (
       requestTypeMap[`${directOrGroup}-${requestOrInvitation}-${type}`] ||
@@ -50,6 +55,9 @@ const useRequestListPage = () => {
     );
   };
 
+  // builds a reusable request parameters type object for the currently viewed requests by pulling the values
+  // from the url search parameters and retrieving the correct value from their respective maps; used for
+  // fetching data
   const buildRequestParams = (): requestParams => {
     return {
       directOrGroup: DoGMap[directOrGroup] || "direct",
@@ -67,22 +75,37 @@ const useRequestListPage = () => {
   const [showTabletRequestTabs, setShowTabletRequestTabs] =
     useState<boolean>(false);
 
-  // on initial render, gets url search query data and sets the initial selected request tab and
-  // the initial header shown based on those params; also retrieves the initial request list to be
-  // shown based on the search query and retrieves the count for each unanswered/sent/removed request
-  // in each category
-  const { data: requests, isFetching } = useQuery({
+  // use infinite query initially receives a single request, but continuously receives new requests as user
+  // calls fetchNextPage function until hasNextPage boolean is false; also fetches new requests whenever query
+  // key parameters are changed (which in this case is the url search parameters)
+  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: ["requests", { directOrGroup, requestOrInvitation, type }],
-    queryFn: async () =>
+    queryFn: async ({ pageParam }) =>
       await requestsAPI.getRequests(username!, {
         directOrGroup,
         requestOrInvitation,
         type,
+        ...pageParam,
       }),
     retry: 0,
-    placeholderData: [],
+    initialPageParam: { offset: 0 },
+    getNextPageParam: (lastPage, allPages, lastPageParams) => {
+      if (lastPage.length > 0 && lastPage[0].next)
+        return { offset: lastPageParams.offset + 1 };
+      return undefined;
+    },
   });
 
+  // flattens infinite query data to an array of request cards
+  const requests = useMemo(() => {
+    return (
+      data?.pages.flatMap((r) => {
+        return r;
+      }) || []
+    );
+  }, [data]);
+
+  // retrieves data from server containing total count of all request types a user currently has
   const { data: requestCount } = useQuery({
     queryKey: ["requestCount"],
     queryFn: () => requestsAPI.getRequestCount(username!),
@@ -90,29 +113,30 @@ const useRequestListPage = () => {
     retry: 0,
   });
 
+  // when new requests are being loaded in, updates viewed request type and description:
+  // highlights the respective tab on the left and changes current description being shown;
+  // if tablet request tabs being shown, they are hidden afterwards
   useEffect(() => {
-    if (requests) {
+    if (isLoading) {
       const requestType: requestType = buildRequestType();
       setViewedRequests(requestType);
       setViewedTitleAndDesc(
         requestDesc.get(requestType) || defaultTitleAndDesc,
       );
-
       if (showTabletRequestTabs) setShowTabletRequestTabs(false);
     }
-  }, [requests]);
+  }, [isLoading]);
 
+  // custom hook that listens for socket signals from server for when a new request is being added or removed
   const {
     respondToDirectRequest,
     removeDirectRequest,
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
   } = useRequestListPageSockets({
     requests,
@@ -144,11 +168,49 @@ const useRequestListPage = () => {
     [showTabletRequestTabs],
   );
 
-  // when user clicks on respective request tab, highlights tab and sets description state to respective
-  // text, and retrieves the correct request list from the backend database
+  // when user clicks on respective request tab, clears previous request cache and updates url search
+  // parameters
   const changeViewedRequests = useCallback(
     async (params: requestParams) => {
+      queryClient.removeQueries({
+        queryKey: ["requests", { directOrGroup, requestOrInvitation, type }],
+      });
       setSearchParams(params);
+    },
+    [searchParams],
+  );
+
+  // when user presses left or right arrow keys when focused on request tabs,
+  // changes viewed request type to the next or previous request type respectively,
+  // updates url search parameters, and clears previous request cache; if user is on
+  // the very top or very bottom tab and presses the right or left arrow key respectively,
+  // viewed request type changes to the very bottom or very top request type respectively
+  // (i.e. it loops around)
+  const handleKeydown = useCallback(
+    (e: React.KeyboardEvent, requestType: requestType) => {
+      let params: requestParams | null = null;
+      if (e.key === "ArrowRight") {
+        const next =
+          requestTabs.get(requestType)?.next || "direct-requests-sent";
+        const nextParams = requestTabs.get(next)?.params;
+        if (next && nextParams) {
+          params = nextParams;
+        }
+      } else if (e.key === "ArrowLeft") {
+        const prev =
+          requestTabs.get(requestType)?.prev || "group-invites-removed";
+        const prevParams = requestTabs.get(prev)?.params;
+        if (prev && prevParams) {
+          params = prevParams;
+        }
+      }
+
+      if (params) {
+        queryClient.removeQueries({
+          queryKey: ["requests", { directOrGroup, requestOrInvitation, type }],
+        });
+        setSearchParams(params);
+      }
     },
     [searchParams],
   );
@@ -159,7 +221,8 @@ const useRequestListPage = () => {
     requests,
     requestCount,
     showTabletRequestTabs,
-    isFetching,
+    isLoading,
+    hasNextPage,
     toggleTabletTabs,
     changeViewedRequests,
     respondToDirectRequest,
@@ -167,12 +230,12 @@ const useRequestListPage = () => {
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
+    fetchNextPage,
+    handleKeydown,
   };
 };
 

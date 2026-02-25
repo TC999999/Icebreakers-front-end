@@ -22,7 +22,7 @@ const SignUp = (): JSX.Element => {
   } = useSignUp();
   return (
     <div id="signup-page">
-      <div id="signup-form">
+      <div id="signup-form" className="form-block">
         <form onSubmit={handleSubmit}>
           <h1>Sign Up Here!</h1>
           <h3>(Hover your cursor over a required field to see requirements)</h3>
@@ -31,7 +31,11 @@ const SignUp = (): JSX.Element => {
               <div id="username-div" className="form-div">
                 <label htmlFor="username">
                   Username:{" "}
-                  <span title="required field" className="required">
+                  <span
+                    title="required field"
+                    aria-label="required"
+                    className="required"
+                  >
                     *
                   </span>
                 </label>
@@ -59,7 +63,11 @@ const SignUp = (): JSX.Element => {
               <div id="password-div" className="form-div">
                 <label htmlFor="password">
                   Password:{" "}
-                  <span title="required field" className="required">
+                  <span
+                    title="required field"
+                    aria-label="required"
+                    className="required"
+                  >
                     *
                   </span>
                 </label>
@@ -87,7 +95,11 @@ const SignUp = (): JSX.Element => {
               <div id="email-address-div" className="form-div">
                 <label htmlFor="emailAddress">
                   Email Address:{" "}
-                  <span title="required field" className="required">
+                  <span
+                    title="required field"
+                    aria-label="required"
+                    className="required"
+                  >
                     *
                   </span>
                 </label>
@@ -130,7 +142,11 @@ const SignUp = (): JSX.Element => {
               <div id="biography-div" className="form-div">
                 <label htmlFor="biography">
                   Write a short paragraph about yourself:{" "}
-                  <span title="required field" className="required">
+                  <span
+                    title="required field"
+                    aria-label="required"
+                    className="required"
+                  >
                     *
                   </span>
                 </label>
@@ -169,7 +185,11 @@ const SignUp = (): JSX.Element => {
                 >
                   <legend>
                     Interests
-                    <span title="required field" className="required">
+                    <span
+                      title="required field"
+                      aria-label="required"
+                      className="required"
+                    >
                       *
                     </span>
                   </legend>
@@ -203,7 +223,7 @@ const SignUp = (): JSX.Element => {
               </div>
             </div>
           </div>
-          <div id="submit-button">
+          <div id="button-div">
             <button className="submit-button">Register!</button>
           </div>
 

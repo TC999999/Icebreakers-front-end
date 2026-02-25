@@ -1,32 +1,39 @@
 import React, { type ReactNode } from "react";
 import useIntersection from "./appHooks/useIntersection";
+import type {
+  FetchNextPageOptions,
+  InfiniteQueryObserverResult,
+  InfiniteData,
+} from "@tanstack/react-query";
+import type { requestList } from "./types/requestTypes";
+
 import "./styles/IntersectionWrapper.scss";
 
 type Props = {
-  threshold?: number;
-  scrollMargin?: string;
-  rootMargin?: string;
-  children: ReactNode;
-  fallback: ReactNode;
+  fallback?: ReactNode;
+  hasNextPage: boolean;
+  fetchNextPage: (
+    options?: FetchNextPageOptions | undefined,
+  ) => Promise<
+    InfiniteQueryObserverResult<InfiniteData<requestList, unknown>, Error>
+  >;
 };
 
+// intersection wrapper component; used for infinite scroll lists; when no new data can be fetched,
+// returns null
 const IntersectionWrapper: React.FC<Props> = ({
-  threshold,
-  scrollMargin,
-  rootMargin,
-  children,
   fallback,
+  hasNextPage,
+  fetchNextPage,
 }) => {
-  const { targetRef, isIntersecting } = useIntersection({
-    threshold,
-    scrollMargin,
-    rootMargin,
+  const { targetRef } = useIntersection({
+    fetchNextPage,
   });
-  return (
-    <div className="intersection-wrapper" ref={targetRef}>
-      {isIntersecting ? children : fallback}
+  return hasNextPage ? (
+    <div id="intersection-wrapper" ref={targetRef}>
+      {fallback}
     </div>
-  );
+  ) : null;
 };
 
 export default IntersectionWrapper;

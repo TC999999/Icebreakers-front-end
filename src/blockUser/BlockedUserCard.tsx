@@ -8,7 +8,7 @@ type Props = {
   blockedUser: blockedUser;
   unblockUser: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    blockedUser: string
+    blockedUser: string,
   ) => Promise<void>;
 };
 

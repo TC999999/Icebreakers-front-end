@@ -3,6 +3,7 @@ import { API_URL } from "../config";
 
 const URL: string = API_URL;
 
+// socket instance that listens for signals from backend server
 const socket = io(URL, { autoConnect: false, withCredentials: true });
 
 //socket connects

@@ -70,6 +70,7 @@ const GroupConversationMessages: React.FC<Props> = ({
           <div id="send">
             <button
               className="submit-button"
+              aria-label="Send Message to Group"
               title={
                 messageInput.content
                   ? "Send"

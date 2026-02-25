@@ -32,6 +32,15 @@ export const setUpInterceptors = (
       } else if (error.response && error.response.status === 403) {
         dispatch(setLoadError(error.response.data.error));
         navigate("/error");
+      } else if (error.response && error.response.status === 500) {
+        dispatch(
+          setLoadError({
+            status: 500,
+            message:
+              "An unexpected error occurred on the server. Please try again later.",
+          }),
+        );
+        navigate("/error");
       }
       return Promise.reject(error);
     },

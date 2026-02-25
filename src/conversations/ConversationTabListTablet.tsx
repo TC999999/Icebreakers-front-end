@@ -28,6 +28,7 @@ const ConversationTabListTablet: React.FC<Props> = ({
           type="button"
           title="Cancel"
           className="cancel-button"
+          aria-label="Cancel and Go Back"
           onClick={toggleTabletConversationTabs}
         >
           <FaArrowLeft />

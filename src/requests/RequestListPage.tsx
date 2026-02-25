@@ -15,7 +15,8 @@ const RequestListPage = () => {
     requestCount,
     currentTitleAndDesc,
     showTabletRequestTabs,
-    isFetching,
+    isLoading,
+    hasNextPage,
     changeViewedRequests,
     toggleTabletTabs,
     respondToDirectRequest,
@@ -23,12 +24,12 @@ const RequestListPage = () => {
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
+    fetchNextPage,
+    handleKeydown,
   } = useRequestListPage();
 
   return (
@@ -46,6 +47,7 @@ const RequestListPage = () => {
             requestCount={requestCount}
             changeViewedRequests={changeViewedRequests}
             toggleTabletTabs={toggleTabletTabs}
+            handleKeydown={handleKeydown}
           />
         </Suspense>
       )}
@@ -54,24 +56,25 @@ const RequestListPage = () => {
           viewedRequests={viewedRequests}
           requestCount={requestCount}
           changeViewedRequests={changeViewedRequests}
+          handleKeydown={handleKeydown}
         />
         <RequestList
           currentRequestType={viewedRequests}
           currentTitleAndDesc={currentTitleAndDesc}
           requestList={requests}
-          isLoading={isFetching}
+          isLoading={isLoading}
+          hasNextPage={hasNextPage}
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}
           removeDirectRequest={removeDirectRequest}
           deleteDirectRequest={deleteDirectRequest}
           respondToGroupRequest={respondToGroupRequest}
           removeGroupRequest={removeGroupRequest}
-          resendGroupRequest={resendGroupRequest}
           deleteGroupRequest={deleteGroupRequest}
           respondToGroupInvitation={respondToGroupInvitation}
           removeGroupInvitation={removeGroupInvitation}
-          resendGroupInvitation={resendGroupInvitation}
           deleteGroupInvitation={deleteGroupInvitation}
+          fetchNextPage={fetchNextPage}
         />
       </div>
     </main>

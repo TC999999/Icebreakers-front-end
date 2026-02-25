@@ -7,12 +7,14 @@ const LogIn = (): JSX.Element => {
   const { formData, error, handleChange, handleSubmit } = useLogIn();
   return (
     <div id="login-page">
-      <div id="login-form">
+      <div id="login-form" className="form-block">
         <form onSubmit={handleSubmit}>
           <h1>Log In Here!</h1>
           <small>
-            For security purposes, you will be unable to log in if you are
-            already logged in on another browser.
+            <b>
+              You will be unable to log in if you are already logged in on
+              another browser.
+            </b>
           </small>
           <div id="username-div" className="form-div">
             <label htmlFor="username">

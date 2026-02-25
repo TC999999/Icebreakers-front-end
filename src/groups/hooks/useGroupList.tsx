@@ -69,6 +69,11 @@ const useGroupList = () => {
     getAllGroups();
   }, []);
 
+  // navigates to group page with the corresponding id when a card is clicked
+  const navigateGroup = useCallback((id: string): void => {
+    navigate(`/groups/${id}`);
+  }, []);
+
   // when clicking on either group tab, switches the type of groups shown on the page
   const handleGroupTab = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -81,7 +86,38 @@ const useGroupList = () => {
     [currentGroupTab],
   );
 
-  return { hostedGroups, nonHostedGroups, currentGroupTab, handleGroupTab };
+  // when either group tab is focused, allows user to switch between them using left and right
+  // arrow keys on their keyboard
+  const handleKeyDownGroupTab = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const nextTab =
+          e.key === "ArrowLeft" ? "hostedGroups" : "nonHostedGroups";
+        setCurrentGroupTab(nextTab);
+        setSearchParams({ type: nextTab });
+      }
+    },
+    [currentGroupTab],
+  );
+
+  const handleKeyDownGroupCard = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>, id: string) => {
+      if (e.key === "Enter") {
+        navigate(`/groups/${id}`);
+      }
+    },
+    [],
+  );
+
+  return {
+    hostedGroups,
+    nonHostedGroups,
+    currentGroupTab,
+    navigateGroup,
+    handleGroupTab,
+    handleKeyDownGroupTab,
+    handleKeyDownGroupCard,
+  };
 };
 
 export default useGroupList;

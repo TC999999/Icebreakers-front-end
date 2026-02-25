@@ -65,7 +65,7 @@ const UserSearch = (): JSX.Element => {
           </div>
           <div>
             <label htmlFor="findSimilarInterests">
-              Search only users with similar interests?
+              Only include users with similar interests
             </label>
             <input
               type="checkbox"

@@ -6,18 +6,17 @@ import type {
   SentGroupCard,
   groupConversationResponse,
   requestSocketHookProps,
+  requestList,
 } from "../../types/requestTypes";
-import socket from "../../helpers/socket";
 import { shallowEqual } from "react-redux";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
+import queryClient from "../../helpers/queryClient";
 
 // custom hook for group request/invitation inboxes in request inbox page
 const useRequestListPageGroupRequests = ({
   requests,
   requestCount,
   setNewRequestCount,
-  // handleRequests,
-  // setNewRequests,
 }: requestSocketHookProps) => {
   const dispatch: AppDispatch = useAppDispatch();
 
@@ -25,61 +24,36 @@ const useRequestListPageGroupRequests = ({
     return store.user.user?.username;
   }, shallowEqual);
 
+  const refetchRequests = (
+    id: string,
+    requestOrInvitation: string,
+    type: string,
+  ) => {
+    queryClient.setQueryData(
+      [
+        "requests",
+        {
+          directOrGroup: "group",
+          requestOrInvitation,
+          type,
+        },
+      ],
+      (prev: requestList[]) => {
+        return prev.filter((r) => {
+          return r[0].id !== id;
+        });
+      },
+    );
+  };
+
   // UPDATE GROUP REQUESTS (SENDER'S SIDE ONLY)
   // removes request from recipient's received group requests inbox and moves it from
   // senders sent group request inbox to their removed group request inbox
   const removeGroupRequest = useCallback(
     async (request: SentGroupCard) => {
-      const removedRequest = await groupRequestsAPI.removeRequest(
-        request.id,
-        username!,
-        true,
-      );
-
-      // handleRequests(
-      //   request,
-      //   "remove",
-      //   // {
-      //   //   addRequest: "removedGroupRequestCount",
-      //   //   subtractRequest: "sentGroupRequestCount",
-      //   // },
-      //   "removeRequest",
-      //   {
-      //     requestType: "group-requests-received",
-      //     countType: "receivedGroupRequestCount",
-      //     to: request.to,
-      //     request: removedRequest,
-      //   },
-      // );
-    },
-    [requests, requestCount],
-  );
-
-  // removes a single request from the user's removed group requests inbox, moves it to their sent
-  // group requests inbox, and sends request to its intended recipient via websocket
-  const resendGroupRequest = useCallback(
-    async (request: SentGroupCard) => {
-      const resentRequest = await groupRequestsAPI.removeRequest(
-        request.id,
-        username!,
-        false,
-      );
-
-      // handleRequests(
-      //   request,
-      //   "remove",
-      //   // {
-      //   //   addRequest: "sentGroupRequestCount",
-      //   //   subtractRequest: "removedGroupRequestCount",
-      //   // },
-      //   "addRequest",
-      //   {
-      //     requestType: "group-requests-received",
-      //     countType: "receivedGroupRequestCount",
-      //     to: request.to,
-      //     request: resentRequest,
-      //   },
-      // );
+      await groupRequestsAPI.removeRequest(request.id, username!, true);
+      setNewRequestCount();
+      refetchRequests(request.id, "requests", "sent");
     },
     [requests, requestCount],
   );
@@ -89,54 +63,13 @@ const useRequestListPageGroupRequests = ({
   // senders sent group invitation inbox to their removed group invitation inbox
   const removeGroupInvitation = useCallback(
     async (request: SentGroupCard) => {
-      let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
+      await groupRequestsAPI.removeGroupConversationInvitation(
         request.id,
         username!,
         true,
       );
-
-      // handleRequests(
-      //   request,
-      //   "remove",
-      //   // {
-      //   //   addRequest: "removedGroupInvitationCount",
-      //   //   subtractRequest: "sentGroupInvitationCount",
-      //   // },
-      //   "removeRequest",
-      //   {
-      //     requestType: "group-invites-received",
-      //     countType: "receivedGroupInvitationCount",
-      //     to: request.to,
-      //     request: invitation,
-      //   },
-      // );
-    },
-    [requests, requestCount],
-  );
-
-  const resendGroupInvitation = useCallback(
-    async (request: SentGroupCard) => {
-      let invitation = await groupRequestsAPI.removeGroupConversationInvitation(
-        request.id,
-        username!,
-        false,
-      );
-
-      // handleRequests(
-      //   request,
-      //   "remove",
-      //   // {
-      //   //   addRequest: "sentGroupInvitationCount",
-      //   //   subtractRequest: "removedGroupInvitationCount",
-      //   // },
-      //   "addRequest",
-      //   {
-      //     requestType: "group-invites-received",
-      //     countType: "receivedGroupInvitationCount",
-      //     to: request.to,
-      //     request: invitation,
-      //   },
-      // );
+      setNewRequestCount();
+      refetchRequests(request.id, "invitations", "sent");
     },
     [requests, requestCount],
   );
@@ -150,8 +83,8 @@ const useRequestListPageGroupRequests = ({
         username!,
         { to: request.to, groupID: request.groupID },
       );
-      // setNewRequests(request, "remove");
       setNewRequestCount();
+      refetchRequests(request.id, "invitations", "removed");
     },
     [requests, requestCount],
   );
@@ -162,8 +95,8 @@ const useRequestListPageGroupRequests = ({
       await groupRequestsAPI.deleteGroupRequest(request.id, username!, {
         groupID: request.groupID,
       });
-      // setNewRequests(request, "remove");
       setNewRequestCount();
+      refetchRequests(request.id, "requests", "removed");
     },
     [requests, requestCount],
   );
@@ -173,36 +106,10 @@ const useRequestListPageGroupRequests = ({
   // removes invitation from both users' inboxes
   const respondToGroupInvitation = useCallback(
     async (response: groupConversationResponse) => {
-      let res = await groupRequestsAPI.respondToGroupInvitation(
-        username!,
-        response,
-      );
-      if (res.user) {
-        socket.emit("addUserToGroup", {
-          user: res.user,
-          groupID: response.groupID,
-        });
-      }
-      // handleRequests(
-      //   response,
-      //   "remove",
-      //   // {
-      //   //   subtractRequest: "receivedGroupInvitationCount",
-      //   // },
-      //   "response",
-      //   {
-      //     to: response.from,
-      //     requestType: "group-invites-sent",
-      //     countType: "sentGroupInvitationCount",
-      //     response,
-      //   },
-      // );
-
+      await groupRequestsAPI.respondToGroupInvitation(username!, response);
+      setNewRequestCount();
+      refetchRequests(response.id, "invitations", "received");
       dispatch(setUnansweredRequests(-1));
-
-      if (res.user) {
-        socket.emit("joinGroup", { group: { id: response.groupID } });
-      }
     },
     [],
   );
@@ -211,36 +118,9 @@ const useRequestListPageGroupRequests = ({
   // request from both users' inboxes
   const respondToGroupRequest = useCallback(
     async (response: groupConversationResponse) => {
-      let res = await groupRequestsAPI.respondToGroupRequest(
-        username!,
-        response,
-      );
-      if (res.user) {
-        socket.emit("addUserToGroup", {
-          user: res.user,
-          groupID: response.groupID,
-        });
-
-        socket.emit("bringIntoGroup", {
-          to: response.from,
-          group: { id: response.groupID },
-        });
-      }
-      // handleRequests(
-      //   response,
-      //   "remove",
-      //   // {
-      //   //   subtractRequest: "receivedGroupRequestCount",
-      //   // },
-      //   "response",
-      //   {
-      //     to: response.from,
-      //     requestType: "group-requests-sent",
-      //     countType: "sentGroupRequestCount",
-      //     response,
-      //   },
-      // );
-
+      await groupRequestsAPI.respondToGroupRequest(username!, response);
+      setNewRequestCount();
+      refetchRequests(response.id, "requests", "received");
       dispatch(setUnansweredRequests(-1));
     },
     [],
@@ -249,11 +129,9 @@ const useRequestListPageGroupRequests = ({
   return {
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
   };
 };

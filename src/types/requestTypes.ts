@@ -1,5 +1,3 @@
-// import { type addOrRemove } from "../helpers/updateRequests";
-
 export type requestType =
   | "direct-requests-received"
   | "direct-requests-sent"
@@ -9,8 +7,7 @@ export type requestType =
   | "group-invites-removed"
   | "group-requests-received"
   | "group-requests-sent"
-  | "group-requests-removed"
-  | "none";
+  | "group-requests-removed";
 
 export type directConversationRequest = {
   to: string;
@@ -28,12 +25,18 @@ export type sentRequest = {
   createdAt: string;
 };
 
-export type sentRequestCard = {
+interface requestCard {
   id: string;
-  to: string;
   content: string;
   createdAt: string;
-};
+  next: boolean;
+  hasResponded: boolean;
+  hasAccepted: boolean;
+}
+
+export interface sentRequestCard extends requestCard {
+  to: string;
+}
 
 export type receivedRequest = {
   from: string;
@@ -41,12 +44,9 @@ export type receivedRequest = {
   createdAt: string;
 };
 
-export type receivedRequestCard = {
-  id: string;
+export interface receivedRequestCard extends requestCard {
   from: string;
-  content: string;
-  createdAt: string;
-};
+}
 
 export type directRequestCard = {
   id: string;
@@ -130,6 +130,9 @@ interface GroupCardTemplate {
   content: string;
   createdAt: string;
   id: string;
+  next: boolean;
+  hasResponded: boolean;
+  hasAccepted: boolean;
 }
 
 export interface ReceivedGroupCard extends GroupCardTemplate {
@@ -142,7 +145,6 @@ export interface SentGroupCard extends GroupCardTemplate {
 
 export type socketRequest = {
   requestType: requestType;
-  // countType: requestCountSTR;
   to: string;
   request?: any;
   response?: any;
@@ -162,39 +164,12 @@ export type requestList = (
 )[];
 export type requestSocketHookProps = {
   requests: requestList;
-  // setCurrentRequests: React.Dispatch<
-  //   React.SetStateAction<
-  //     (
-  //       | sentRequestCard
-  //       | receivedRequestCard
-  //       | SentGroupCard
-  //       | ReceivedGroupCard
-  //     )[]
-  //   >
-  // >;
   setNewRequestCount: () => void;
-  // handleRequests: (
-  //   // request:
-  //   //   | sentRequestCard
-  //   //   | receivedRequestCard
-  //   //   | SentGroupCard
-  //   //   | ReceivedGroupCard
-  //   //   | directConversationResponse
-  //   //   | groupConversationResponse,
-  //   // addOrRemove: addOrRemove,
-  //   // requestChange: requestCountChange,
-  //   socketType: "addRequest" | "removeRequest" | "response",
-  //   socketRequest: socketRequest,
-  // ) => Promise<void>;
   requestCount: requestCount;
-  // setNewRequests: (
-  //   request:
-  //     | sentRequestCard
-  //     | receivedRequestCard
-  //     | SentGroupCard
-  //     | ReceivedGroupCard
-  //     | directConversationResponse
-  //     | groupConversationResponse,
-  //   addOrRemove: addOrRemove,
-  // ) => void;
+};
+
+export type requestTab = {
+  params: requestParams;
+  next: requestType;
+  prev: requestType;
 };

@@ -116,10 +116,10 @@
           border: none;
           font-weight: bold;
           text-decoration: underline;
-          color: c.$thirdly;
+          color: c.$linkPrimary;
 
           &:hover {
-            color: c.$secondary;
+            color: c.$linkHover;
           }
         }
       }

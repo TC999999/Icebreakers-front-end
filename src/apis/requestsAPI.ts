@@ -1,5 +1,5 @@
 import API from "./api";
-// import type { requestList } from "../types/requestTypes";
+import type { requestList } from "../types/requestTypes";
 
 // API for basic request actions
 // extends from the requests API class
@@ -9,11 +9,14 @@ class requestsAPI extends API {
 
   // gets all requests for a single user based on search params
   // (for example:
-  // {directOrGroup:"direct", requestOrInvitation:"requests", type:"received"}
-  // returns all direct conversation requests the user received that have not been removed)
-  public static async getRequests(username: string, params: any): Promise<any> {
+  // {directOrGroup:"direct", requestOrInvitation:"requests", type:"received", limit:1, offset:0}
+  // returns the first direct conversation request the user received that has not been removed)
+  public static async getRequests(
+    username: string,
+    params: any,
+  ): Promise<requestList> {
     let res = await this.getRequest(username, params);
-    return res.requests;
+    return res.request;
   }
 
   // returns a map of the count of requests currently in request inbox

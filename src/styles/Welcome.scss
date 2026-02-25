@@ -5,7 +5,7 @@
   h1 {
     text-align: center;
     font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-    color: c.$primary;
+    color: c.$secondary;
     font-weight: bold;
   }
 
@@ -14,7 +14,7 @@
     padding: 20px;
     margin: 10px;
     border-radius: s.$borderRadius;
-    border: solid 2px rgb(232, 60, 232);
+    border: solid 2px c.$fourthly;
 
     #welcome-message {
       background-color: c.$primary;
@@ -31,8 +31,8 @@
       background-color: rgb(235, 164, 210);
       padding: 20px;
       border-radius: 10px;
-      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
-        sans-serif;
+      font-family:
+        "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
       text-align: center;
     }
   }

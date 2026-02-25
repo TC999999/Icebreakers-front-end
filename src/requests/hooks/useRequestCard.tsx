@@ -21,11 +21,9 @@ type input = {
   deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
-  resendGroupRequest: (request: SentGroupCard) => void;
   deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
-  resendGroupInvitation: (request: SentGroupCard) => void;
   deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
@@ -38,11 +36,9 @@ const useRequestCard = ({
   deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
-  resendGroupRequest,
   deleteGroupRequest,
   respondToGroupInvitation,
   removeGroupInvitation,
-  resendGroupInvitation,
   deleteGroupInvitation,
 }: input) => {
   // callback function that allows user to respond to the requests that they have received; works for

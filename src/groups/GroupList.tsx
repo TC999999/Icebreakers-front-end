@@ -7,13 +7,16 @@ import "../styles/groups/GroupList.scss";
 // React component for a list of groups that user is a member of; either in which they are hosting
 // and those that they are non hosting; they are separated by a tablist above
 const GroupList = () => {
-  const { hostedGroups, nonHostedGroups, currentGroupTab, handleGroupTab } =
-    useGroupList();
+  const {
+    hostedGroups,
+    nonHostedGroups,
+    currentGroupTab,
+    handleGroupTab,
+    handleKeyDownGroupTab,
+    navigateGroup,
+    handleKeyDownGroupCard,
+  } = useGroupList();
   const navigate: NavigateFunction = useNavigate();
-
-  const goToGroup = (id: string): void => {
-    navigate(`/groups/${id}`);
-  };
 
   return (
     <main>
@@ -21,12 +24,20 @@ const GroupList = () => {
         <h1>Your Groups</h1>
       </header>
       <section id="group-tab-window">
-        <header id="group-tabs">
+        <header
+          id="group-tabs"
+          role="tablist"
+          aria-label="Group Tabs"
+          onKeyDown={handleKeyDownGroupTab}
+        >
           <div
             className={`group-tab ${
               currentGroupTab === "hostedGroups" ? "selected-group" : ""
             }`}
             title="hostedGroups"
+            role="tab"
+            aria-selected={currentGroupTab === "hostedGroups"}
+            tabIndex={currentGroupTab === "hostedGroups" ? 0 : -1}
             onClick={handleGroupTab}
           >
             Groups You Host
@@ -36,6 +47,9 @@ const GroupList = () => {
               currentGroupTab === "nonHostedGroups" ? "selected-group" : ""
             }`}
             title="nonHostedGroups"
+            role="tab"
+            aria-selected={currentGroupTab === "nonHostedGroups"}
+            tabIndex={currentGroupTab === "nonHostedGroups" ? 0 : -1}
             onClick={handleGroupTab}
           >
             Groups You Do Not Host
@@ -45,7 +59,11 @@ const GroupList = () => {
         <Activity
           mode={currentGroupTab === "hostedGroups" ? "visible" : "hidden"}
         >
-          <div className="groups-list-div" id="hosted-groups-list-div">
+          <div
+            className="groups-list-div"
+            id="hosted-groups-list-div"
+            role="tabpanel"
+          >
             <header>
               <h2>Groups That You Host</h2>
               <p>These are groups that you have created yourself.</p>
@@ -63,7 +81,8 @@ const GroupList = () => {
                     <GroupCard
                       key={`hosted-group-${g.id}`}
                       group={g}
-                      goToGroup={goToGroup}
+                      navigateGroup={navigateGroup}
+                      handleKeyDownGroupCard={handleKeyDownGroupCard}
                     />
                   );
                 })}
@@ -78,7 +97,11 @@ const GroupList = () => {
         <Activity
           mode={currentGroupTab === "nonHostedGroups" ? "visible" : "hidden"}
         >
-          <div className="groups-list-div" id="non-hosted-groups-list-div">
+          <div
+            className="groups-list-div"
+            id="non-hosted-groups-list-div"
+            role="tabpanel"
+          >
             <header>
               <h2>Groups Where You Are a Member</h2>
               <p>
@@ -94,7 +117,8 @@ const GroupList = () => {
                     <GroupCard
                       key={`group-${g.id}`}
                       group={g}
-                      goToGroup={goToGroup}
+                      navigateGroup={navigateGroup}
+                      handleKeyDownGroupCard={handleKeyDownGroupCard}
                     />
                   );
                 })}

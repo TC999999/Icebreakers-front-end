@@ -22,11 +22,14 @@ const RequestTab: React.FC<Props> = ({
 }) => {
   return (
     <div
-      id={`${requestType}-request-tab`}
+      key={requestType}
       className={`request-tab ${
         viewedRequests === requestType ? "selected-tab" : ""
       }`}
       onClick={() => changeViewedRequests(params)}
+      aria-selected={viewedRequests === requestType}
+      role="tab"
+      tabIndex={viewedRequests === requestType ? 0 : -1}
     >
       <span>{title}</span>{" "}
       {requestAmount > 0 && (

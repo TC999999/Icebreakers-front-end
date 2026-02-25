@@ -37,9 +37,15 @@
     font-style: italic;
   }
 
-  #request-card-window {
+  #request-list-window {
     width: 100%;
     height: 498px;
     overflow-y: scroll;
+
+    #request-card-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }

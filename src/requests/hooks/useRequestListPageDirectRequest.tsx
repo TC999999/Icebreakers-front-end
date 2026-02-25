@@ -11,6 +11,7 @@ import type {
 } from "../../types/requestTypes";
 import { shallowEqual } from "react-redux";
 import queryClient from "../../helpers/queryClient";
+import type { InfiniteData } from "@tanstack/react-query";
 
 // custom hook for direct request inbox in request inbox page
 const useRequestListPageDirectRequests = ({
@@ -24,7 +25,8 @@ const useRequestListPageDirectRequests = ({
     return store.user.user?.username;
   }, shallowEqual);
 
-  const refetchRequests = (id: string, type: string) => {
+  // updates current request list
+  const refetchRequests = (id: string, type: string, accepted?: boolean) => {
     queryClient.setQueryData(
       [
         "requests",
@@ -34,10 +36,15 @@ const useRequestListPageDirectRequests = ({
           type,
         },
       ],
-      (prev: requestList) => {
-        return prev.filter((r) => {
-          return r.id !== id;
+      (prev: InfiniteData<requestList, unknown>) => {
+        const newMap = prev.pages.map((r) => {
+          if (r[0].id === id && type === "received" && accepted !== undefined) {
+            return [{ ...r[0], hasAccepted: accepted, hasResponded: true }];
+          }
+          return r;
         });
+
+        return { ...prev, pages: newMap };
       },
     );
   };
@@ -77,14 +84,14 @@ const useRequestListPageDirectRequests = ({
   // removes request from both users' inboxes
   const respondToDirectRequest = useCallback(
     async (response: directConversationResponse) => {
-      await directRequestsAPI.respondToDirectConversationRequest(
-        username!,
-        response,
-      );
-      setNewRequestCount();
-      refetchRequests(response.id, "received");
+      // await directRequestsAPI.respondToDirectConversationRequest(
+      //   username!,
+      //   response,
+      // );
+      // setNewRequestCount();
+      refetchRequests(response.id, "received", response.accepted);
 
-      dispatch(setUnansweredRequests(-1));
+      // dispatch(setUnansweredRequests(-1));
     },
     [requests, dispatch],
   );
@@ -92,7 +99,6 @@ const useRequestListPageDirectRequests = ({
   return {
     respondToDirectRequest,
     removeDirectRequest,
-
     deleteDirectRequest,
   };
 };

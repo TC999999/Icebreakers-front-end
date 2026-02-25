@@ -56,9 +56,9 @@ const GroupSearchPage = () => {
           id="filter-groups-on-tablet"
           className="submit-button"
           onClick={(e) => toggleShowTabletGroupFilter(e)}
+          aria-label="Filter Results"
         >
           <CiFilter />
-          Filter Results
         </button>
 
         <GroupSearchFilter

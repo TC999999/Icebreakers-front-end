@@ -62,6 +62,27 @@
   }
 }
 
+.form-block {
+  background-color: c.$primary;
+  border: s.$borderSettings c.$secondary;
+  border-radius: s.$borderRadius;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin: 0 10rem;
+
+  h1,
+  small {
+    font-family: Georgia, "Times New Roman", Times, serif;
+  }
+
+  h1,
+  h3,
+  small {
+    color: c.$secondary;
+  }
+}
+
 .form-div {
   text-align: center;
   display: flex;
@@ -88,10 +109,10 @@
       font-size: medium;
     }
 
-    background-color: #f2eaed;
-    border: s.$borderSettings rgb(79, 0, 37);
+    background-color: c.$inputBackground;
+    border: s.$borderSettings c.$secondary;
     outline: none;
-    color: rgb(223, 88, 135);
+    color: c.$secondary;
 
     &:hover {
       border: s.$borderSettings c.$primary;
@@ -110,10 +131,10 @@
     width: 100%;
     border-radius: s.$borderRadius;
     margin: auto;
-    background-color: #f2eaed;
+    background-color: c.$inputBackground;
     border: s.$borderSettings rgb(79, 0, 37);
     outline: none;
-    color: rgb(223, 88, 135);
+    color: c.$secondary;
 
     &:hover {
       border: s.$borderSettings c.$primary;
@@ -127,7 +148,7 @@
   }
 
   #interests-div {
-    background-color: c.$fourthly;
+    background-color: c.$inputBackground;
     border: s.$borderSettings c.$secondary;
     border-radius: s.$borderRadius;
     height: 200px;
@@ -167,7 +188,7 @@ form {
     height: 50px;
     font-size: 20px;
     border: s.$borderSettings;
-    background-color: c.$fourthly;
+    background-color: c.$inputBackground;
     border-color: c.$secondary;
 
     &:hover {
@@ -188,7 +209,7 @@ form {
   legend,
   label {
     .required {
-      color: rgb(182, 33, 33);
+      color: rgb(150, 20, 20);
     }
   }
 
@@ -255,6 +276,12 @@ form {
     &:active {
       background-color: c.$fourthly;
     }
+  }
+
+  #button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .input-directions {

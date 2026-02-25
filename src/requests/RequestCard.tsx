@@ -10,8 +10,6 @@ import type {
 import "../styles/requests/RequestCard.scss";
 import createDate from "../helpers/createDate";
 import useRequestCard from "./hooks/useRequestCard";
-import IntersectionWrapper from "../IntersectionWrapper";
-import RequestCardSkeleton from "./skeletons/RequestCardSkeleton";
 
 type Props = {
   requestType: requestType;
@@ -25,11 +23,9 @@ type Props = {
   deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
-  resendGroupRequest: (request: SentGroupCard) => void;
   deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
-  resendGroupInvitation: (request: SentGroupCard) => void;
   deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
@@ -44,11 +40,9 @@ const RequestCard: React.FC<Props> = ({
   deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
-  resendGroupRequest,
   deleteGroupRequest,
   respondToGroupInvitation,
   removeGroupInvitation,
-  resendGroupInvitation,
   deleteGroupInvitation,
 }) => {
   const { respond, remove, deleteRequest } = useRequestCard({
@@ -59,55 +53,58 @@ const RequestCard: React.FC<Props> = ({
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
   });
 
   return (
-    <IntersectionWrapper
-      rootMargin="50px"
-      threshold={0.9}
-      fallback={<RequestCardSkeleton />}
-    >
-      <div className="request-card">
-        {requestType === "group-invites-received" ||
-        requestType === "group-invites-sent" ||
-        requestType === "group-invites-removed" ? (
-          <h2>
-            {"from" in request
-              ? `Invitation From ${request.from}`
-              : `Invitation For ${request.to}`}
-          </h2>
-        ) : (
-          <h2>
-            {"from" in request
-              ? `Request From ${request.from}`
-              : `Request For ${request.to}`}
-          </h2>
-        )}
+    <div className="request-card">
+      {requestType === "group-invites-received" ||
+      requestType === "group-invites-sent" ||
+      requestType === "group-invites-removed" ? (
+        <h2>
+          {"from" in request
+            ? `Invitation From ${request.from}`
+            : `Invitation For ${request.to}`}
+        </h2>
+      ) : (
+        <h2>
+          {"from" in request
+            ? `Request From ${request.from}`
+            : `Request For ${request.to}`}
+        </h2>
+      )}
 
-        {"groupTitle" in request && <h3>For Group: {request.groupTitle}</h3>}
-        <div className="request-message">
-          <p>{request.content}</p>
-        </div>
+      {"groupTitle" in request && <h3>For Group: {request.groupTitle}</h3>}
+      <div className="request-message">
+        <p>{request.content}</p>
+      </div>
 
-        <div>
-          <span>
-            <small>Made At: {createDate(request.createdAt, "long")}</small>
-          </span>
-        </div>
-        <div>
-          <span>
-            <small>
-              Status: <b>Not Yet Responded</b>
-            </small>
-          </span>
-        </div>
+      <div>
+        <span>
+          <small>Made At: {createDate(request.createdAt, "long")}</small>
+        </span>
+      </div>
+      <div>
+        <span>
+          <small>
+            Status:{" "}
+            {!request.hasResponded && !request.hasAccepted && (
+              <b>Not Yet Responded</b>
+            )}
+            {request.hasResponded && request.hasAccepted && (
+              <b>Request Accepted</b>
+            )}
+            {request.hasResponded && !request.hasAccepted && (
+              <b>Request Declined</b>
+            )}
+          </small>
+        </span>
+      </div>
 
+      {!request.hasResponded && (
         <div id="response-list">
           {(requestType === "direct-requests-received" ||
             requestType === "group-invites-received" ||
@@ -121,7 +118,7 @@ const RequestCard: React.FC<Props> = ({
               </button>
             </div>
           )}
-          {(requestType === "direct-requests-sent" ||
+          {/* {(requestType === "direct-requests-sent" ||
             requestType === "group-invites-sent" ||
             requestType === "group-requests-sent") && (
             <div className="response-buttons" id="sent-response">
@@ -129,9 +126,9 @@ const RequestCard: React.FC<Props> = ({
                 Remove
               </button>
             </div>
-          )}
+          )} */}
 
-          {(requestType === "direct-requests-removed" ||
+          {/* {(requestType === "direct-requests-removed" ||
             requestType === "group-invites-removed" ||
             requestType === "group-requests-removed") && (
             <div className="response-buttons" id="removed-response">
@@ -139,10 +136,10 @@ const RequestCard: React.FC<Props> = ({
                 Delete
               </button>
             </div>
-          )}
+          )} */}
         </div>
-      </div>
-    </IntersectionWrapper>
+      )}
+    </div>
   );
 };
 

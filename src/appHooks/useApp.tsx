@@ -44,15 +44,6 @@ const useApp = () => {
     getUserInfo();
   }, []);
 
-  // useEffect(() => {
-  //   const message = localStorage.getItem("session-expiration");
-  //   console.log(message);
-  //   if (message) {
-  //     notifyError(message);
-  //     setTimeout(() => localStorage.removeItem("session-expiration"), 500);
-  //   }
-  // }, []);
-
   // allows users to receive real time notifications from server when another user sends them a
   // message or request; if user is already in location specified in path name, will not give
   // notification to prevent redundancy

@@ -42,6 +42,7 @@ const GroupSearchFilterTablet: React.FC<Props> = ({
         <div id="cancel-button-div">
           <button
             type="button"
+            aria-label="Cancel Filter and Go Back"
             className="cancel-button"
             onClick={(e) => toggleShowTabletGroupFilter(e)}
           >

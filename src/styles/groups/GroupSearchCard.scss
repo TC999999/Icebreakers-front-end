@@ -13,13 +13,6 @@
   box-shadow: s.$boxShadowSettings;
   cursor: pointer;
 
-  &:hover {
-    background-color: c.$primary;
-    color: white;
-    transform: scale(1.05);
-    box-shadow: s.$boxShadowHover;
-  }
-
   @include s.tablet {
     width: 400px;
   }
@@ -61,6 +54,21 @@
           list-style-type: none;
           display: flex;
           justify-content: center;
+        }
+      }
+    }
+  }
+
+  &:hover {
+    background-color: c.$secondary;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: s.$boxShadowHover;
+    .group-info {
+      .data-list {
+        ul {
+          background-color: c.$primary;
+          color: c.$secondary;
         }
       }
     }

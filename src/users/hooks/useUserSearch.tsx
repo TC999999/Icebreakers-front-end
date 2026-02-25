@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { type UserCard, type UserSearch } from "../../types/userTypes";
 import {
   useSearchParams,
@@ -19,7 +19,6 @@ const useUserSearch = () => {
   const notify = (message: string) => toast.error(message);
   const initialUsers = useRef<string[]>([]);
   const [searchedUsers, setSearchedUsers] = useState<UserCard[]>([]);
-  const [searchResults, setSearchResults] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [showResults, setShowResults] = useState<boolean>(false);
 
@@ -30,6 +29,12 @@ const useUserSearch = () => {
 
   const [searchQuery, setSearchQuery] = useState<UserSearch>(initialQuery);
   const initialMountComplete = useRef<boolean>(false);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.username) return [];
+
+    return filterUsernames(searchQuery.username, initialUsers.current);
+  }, [searchQuery.username]);
 
   // on initial render, gets user search parameters from url query string, retrieves a filtered
   // list of usernames based on those parameters and sets them in state; additionally, the parameter
@@ -52,7 +57,7 @@ const useUserSearch = () => {
         }
         const allUsernames = await userAPI.getUserNames();
         initialUsers.current = allUsernames;
-        setSearchResults(allUsernames);
+        // setSearchResults(allUsernames);
 
         const users = await userAPI.searchForUsers(params);
         setSearchedUsers(users);
@@ -91,13 +96,16 @@ const useUserSearch = () => {
         ...prev,
         [name]: type === "search" ? value : checked,
       }));
-      if (type === "search")
-        filterUsernames(
-          value,
-          initialUsers.current,
-          setSearchResults,
-          setShowResults,
-        );
+
+      if (!showResults) setShowResults(true);
+      else if (!value && type === "search") setShowResults(false);
+      // if (type === "search")
+      //   filterUsernames(
+      //     value,
+      //     initialUsers.current,
+      //     setSearchResults,
+      //     setShowResults,
+      //   );
     },
     [searchQuery],
   );
@@ -113,7 +121,7 @@ const useUserSearch = () => {
         ...prev,
         username: s,
       }));
-      setSearchResults([]);
+      // setSearchResults([]);
       setShowResults(false);
     },
     [searchQuery.username],

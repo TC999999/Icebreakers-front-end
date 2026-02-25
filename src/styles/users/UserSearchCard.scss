@@ -12,12 +12,6 @@
   width: 200px;
   box-shadow: s.$boxShadowSettings;
 
-  &:hover {
-    background-color: c.$cardHover;
-    box-shadow: s.$boxShadowHover;
-    transition: 0.1s ease-in-out;
-  }
-
   .header {
     display: flex;
     justify-content: start;
@@ -25,7 +19,7 @@
 
     h3 {
       margin-left: 5px;
-      color: c.$fourthly;
+      color: c.$secondary;
       font-family: Verdana, Geneva, Tahoma, sans-serif;
       font-weight: bold;
       overflow-x: scroll;
@@ -49,7 +43,7 @@
     border-radius: s.$borderRadius;
 
     h3 {
-      color: c.$fourthly;
+      color: c.$secondary;
       text-decoration: underline;
       text-align: center;
       margin: 0;
@@ -63,9 +57,25 @@
       border-radius: 0 0 18px 18px;
 
       li {
-        color: c.$fourthly;
+        color: c.$thirdly;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
     }
+  }
+
+  &:hover {
+    background-color: c.$cardHover;
+    box-shadow: s.$boxShadowHover;
+    transition: 0.1s ease-in-out;
+    h3 {
+      color: white;
+    }
+
+    // .header,
+    // .interest-list {
+    //   .h3 {
+    //     color: white;
+    //   }
+    // }
   }
 }

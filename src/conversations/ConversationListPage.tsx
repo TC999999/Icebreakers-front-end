@@ -79,7 +79,8 @@ const ConversationListPage = () => {
                     <button
                       type="button"
                       className="tab-button"
-                      title="Show Conversations"
+                      // title="Show Conversations"
+                      aria-label="Show Conversations"
                       onClick={(e) => toggleTabletConversationTabs(e)}
                     >
                       <IoReorderThree />
@@ -185,6 +186,7 @@ const ConversationListPage = () => {
                   <button
                     title="Send Message"
                     className="send-button"
+                    aria-label="Send Message"
                     disabled={currentConversation.id.length === 0}
                   >
                     <FaArrowUp />

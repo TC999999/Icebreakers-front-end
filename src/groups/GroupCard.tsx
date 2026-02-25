@@ -5,17 +5,29 @@ import "../styles/groups/GroupCard.scss";
 
 type Props = {
   group: hostedGroupCard | nonHostedGroupCard;
-  goToGroup: (id: string) => void;
+  navigateGroup: (id: string) => void;
+  handleKeyDownGroupCard: (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    id: string,
+  ) => void;
 };
 
 // reusable React component for card with simple group data for groups the user is already a member
 // of
-const GroupCard: React.FC<Props> = ({ group, goToGroup }) => {
+const GroupCard: React.FC<Props> = ({
+  group,
+  navigateGroup,
+  handleKeyDownGroupCard,
+}) => {
   return (
     <div
-      onClick={() => goToGroup(group.id)}
+      onClick={() => navigateGroup(group.id)}
+      onKeyDown={(e) => handleKeyDownGroupCard(e, group.id)}
       className="group-card"
       id={`group-${group.id}`}
+      tabIndex={0}
+      role="Group Card"
+      aria-label="Group Card"
     >
       <h3>{group.title}</h3>
       {"host" in group && <h4>Hosted By: {group.host}</h4>}

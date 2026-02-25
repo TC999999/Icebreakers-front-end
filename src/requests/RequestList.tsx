@@ -8,11 +8,19 @@ import type {
   directConversationResponse,
   requestType,
   groupConversationResponse,
+  requestList,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
 import { IoReorderThree } from "react-icons/io5";
 import RequestCardListSkeleton from "./skeletons/RequestCardListSkeleton";
+import RequestCardSkeleton from "./skeletons/RequestCardSkeleton";
+import IntersectionWrapper from "../IntersectionWrapper";
+import type {
+  FetchNextPageOptions,
+  InfiniteQueryObserverResult,
+  InfiniteData,
+} from "@tanstack/react-query";
 
 type Props = {
   currentRequestType: requestType;
@@ -24,6 +32,7 @@ type Props = {
     | SentGroupCard
   )[];
   isLoading: boolean;
+  hasNextPage: boolean;
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
@@ -32,12 +41,15 @@ type Props = {
   deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
-  resendGroupRequest: (request: SentGroupCard) => void;
   deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
   removeGroupInvitation: (request: SentGroupCard) => void;
-  resendGroupInvitation: (request: SentGroupCard) => void;
   deleteGroupInvitation: (request: SentGroupCard) => void;
+  fetchNextPage: (
+    options?: FetchNextPageOptions | undefined,
+  ) => Promise<
+    InfiniteQueryObserverResult<InfiniteData<requestList, unknown>, Error>
+  >;
 };
 
 // React Component with a list of Request Cards to be viewed in any of the the request inbox
@@ -46,26 +58,26 @@ const RequestList: React.FC<Props> = ({
   currentTitleAndDesc,
   requestList,
   isLoading,
+  hasNextPage,
   toggleTabletTabs,
   respondToDirectRequest,
   removeDirectRequest,
   deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
-  resendGroupRequest,
   deleteGroupRequest,
   respondToGroupInvitation,
   removeGroupInvitation,
-  resendGroupInvitation,
   deleteGroupInvitation,
+  fetchNextPage,
 }): JSX.Element => {
   return (
     <div className="request-list">
       <header id="request-list-header">
         <button
-          title="Change Request Category"
           type="button"
           className="tab-button"
+          aria-label="changeViewedRequests"
           onClick={toggleTabletTabs}
         >
           <IoReorderThree />
@@ -74,10 +86,10 @@ const RequestList: React.FC<Props> = ({
         <p id="request-description">{currentTitleAndDesc.description}</p>
       </header>
 
-      <section id="request-card-window">
+      <section id="request-list-window">
         {isLoading && !requestList && <RequestCardListSkeleton cards={3} />}
         {!isLoading && requestList && requestList.length > 0 && (
-          <div>
+          <div id="request-card-list">
             {requestList.map((request) => (
               <RequestCard
                 key={`request-${request.id}`}
@@ -88,14 +100,17 @@ const RequestList: React.FC<Props> = ({
                 deleteDirectRequest={deleteDirectRequest}
                 respondToGroupRequest={respondToGroupRequest}
                 removeGroupRequest={removeGroupRequest}
-                resendGroupRequest={resendGroupRequest}
                 deleteGroupRequest={deleteGroupRequest}
                 respondToGroupInvitation={respondToGroupInvitation}
                 removeGroupInvitation={removeGroupInvitation}
-                resendGroupInvitation={resendGroupInvitation}
                 deleteGroupInvitation={deleteGroupInvitation}
               />
             ))}
+            <IntersectionWrapper
+              fallback={<RequestCardSkeleton />}
+              hasNextPage={hasNextPage}
+              fetchNextPage={fetchNextPage}
+            />
           </div>
         )}
 

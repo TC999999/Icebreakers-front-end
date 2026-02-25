@@ -31,16 +31,8 @@ const useRequestListPageSockets = ({
 
   // sets up socket listeners on initial render
   useEffect(() => {
-    socket.on("addRequest", ({ request, requestType }) => {
+    socket.on("addRequest", () => {
       setNewRequestCount();
-      if (viewedRequests === requestType) {
-        queryClient.setQueryData(
-          ["requests", requestParams],
-          (prev: requestList) => {
-            return [...prev, request];
-          },
-        );
-      }
     });
 
     socket.on("removeRequest", ({ request, requestType }) => {
@@ -48,9 +40,9 @@ const useRequestListPageSockets = ({
       if (viewedRequests === requestType) {
         queryClient.setQueryData(
           ["requests", requestParams],
-          (prev: requestList) => {
+          (prev: requestList[]) => {
             return prev.filter((r) => {
-              return r.id !== request.id;
+              return r[0].id !== request.id;
             });
           },
         );
@@ -63,20 +55,20 @@ const useRequestListPageSockets = ({
     };
   }, [viewedRequests, requestCount]);
 
+  // custom hook for updating direct request list (after responding to a request or deleting a request)
   const { respondToDirectRequest, removeDirectRequest, deleteDirectRequest } =
     useRequestListPageDirectRequests({
       requests,
       requestCount,
       setNewRequestCount,
     });
+
   const {
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
   } = useRequestListPageGroupRequests({
     requests,
@@ -90,11 +82,9 @@ const useRequestListPageSockets = ({
     deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
-    resendGroupRequest,
     deleteGroupRequest,
     respondToGroupInvitation,
     removeGroupInvitation,
-    resendGroupInvitation,
     deleteGroupInvitation,
   };
 };

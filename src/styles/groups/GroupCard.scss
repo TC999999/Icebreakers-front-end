@@ -21,11 +21,13 @@
     height: 150px;
   }
 
-  &:hover {
-    background-color: c.$fourthly;
+  &:hover,
+  &:focus-visible {
+    background-color: c.$secondary;
     color: c.$primary;
-    border-color: c.$primary;
+    border-color: c.$thirdly;
     transform: scale(1.05);
+    box-shadow: 3px 3px 3px c.$fourthly;
   }
 
   &:active {
