@@ -19,6 +19,7 @@ const UserSearch = (): JSX.Element => {
     handleResults,
     handleChange,
     handleSubmit,
+    handleUserCardKeyDown,
   } = useUserSearch();
   return (
     <main id="users-search-page">
@@ -93,7 +94,13 @@ const UserSearch = (): JSX.Element => {
         {initialMountComplete.current &&
           searchedUsers.length > 0 &&
           searchedUsers.map((u) => {
-            return <UserSearchCard key={`${u.username}-card`} user={u} />;
+            return (
+              <UserSearchCard
+                key={`${u.username}-card`}
+                user={u}
+                handleUserCardKeyDown={handleUserCardKeyDown}
+              />
+            );
           })}
       </div>
     </main>

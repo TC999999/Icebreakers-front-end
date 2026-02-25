@@ -57,7 +57,6 @@ const useUserSearch = () => {
         }
         const allUsernames = await userAPI.getUserNames();
         initialUsers.current = allUsernames;
-        // setSearchResults(allUsernames);
 
         const users = await userAPI.searchForUsers(params);
         setSearchedUsers(users);
@@ -99,13 +98,6 @@ const useUserSearch = () => {
 
       if (!showResults) setShowResults(true);
       else if (!value && type === "search") setShowResults(false);
-      // if (type === "search")
-      //   filterUsernames(
-      //     value,
-      //     initialUsers.current,
-      //     setSearchResults,
-      //     setShowResults,
-      //   );
     },
     [searchQuery],
   );
@@ -121,7 +113,7 @@ const useUserSearch = () => {
         ...prev,
         username: s,
       }));
-      // setSearchResults([]);
+
       setShowResults(false);
     },
     [searchQuery.username],
@@ -152,6 +144,18 @@ const useUserSearch = () => {
     [searchQuery],
   );
 
+  // keyboard friendly call back; when user focuses on a user card with tab key, clicking the
+  // enter button navigates to the correct user profile page based on the username in the
+  // parameters
+  const handleUserCardKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>, username: string) => {
+      if (e.key === "Enter") {
+        navigate(`/user/${username}`);
+      }
+    },
+    [],
+  );
+
   return {
     searchResults,
     showResults,
@@ -163,6 +167,7 @@ const useUserSearch = () => {
     handleResults,
     handleChange,
     handleSubmit,
+    handleUserCardKeyDown,
   };
 };
 

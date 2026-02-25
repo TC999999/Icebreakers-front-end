@@ -63,19 +63,13 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: c.$cardHover;
     box-shadow: s.$boxShadowHover;
     transition: 0.1s ease-in-out;
     h3 {
       color: white;
     }
-
-    // .header,
-    // .interest-list {
-    //   .h3 {
-    //     color: white;
-    //   }
-    // }
   }
 }
