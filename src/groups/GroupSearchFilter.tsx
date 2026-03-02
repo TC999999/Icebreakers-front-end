@@ -1,4 +1,3 @@
-import React from "react";
 import type {
   showResults,
   groupName,
@@ -10,8 +9,23 @@ type Props = {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleResults: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   handleSubmit: (e: React.FormEvent<Element>) => Promise<void>;
-  handleDivFocus: (e: React.FocusEvent<HTMLDivElement, Element>) => void;
-  handleDivBlur: (e: React.FocusEvent<HTMLDivElement, Element>) => void;
+  handleInputBlur: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
+  handleGroupSearchInputKeyDown: (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => void;
+  handleGroupSearchResultsKeyDown: (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => void;
+  handleGroupSearchResultsFocus: (
+    e: React.FocusEvent<HTMLDivElement, Element>,
+  ) => void;
+  handleGroupSearchResultsBlur: (
+    e: React.FocusEvent<HTMLDivElement, Element>,
+  ) => void;
+  handleGroupSearchResultsMouseOver: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => void;
+  handleCheckBoxClick: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   showResults: showResults;
   groupSearchResults: groupName[];
   groupSearchParams: groupSearchParams;
@@ -23,8 +37,13 @@ const GroupSearchFilter: React.FC<Props> = ({
   handleChange,
   handleResults,
   handleSubmit,
-  handleDivFocus,
-  handleDivBlur,
+  handleInputBlur,
+  handleGroupSearchInputKeyDown,
+  handleGroupSearchResultsKeyDown,
+  handleGroupSearchResultsFocus,
+  handleGroupSearchResultsBlur,
+  handleGroupSearchResultsMouseOver,
+  handleCheckBoxClick,
   showResults,
   groupSearchResults,
   groupSearchParams,
@@ -35,14 +54,7 @@ const GroupSearchFilter: React.FC<Props> = ({
     <div id="group-search-box">
       <form onSubmit={handleSubmit}>
         <div id="inputs">
-          <div
-            title="title"
-            id="group-search-title-div"
-            className="input-div"
-            onFocus={handleDivFocus}
-            onBlur={handleDivBlur}
-            tabIndex={0}
-          >
+          <div title="title" id="group-search-title-div" className="input-div">
             <input
               className={
                 showResults === "title" && groupSearchResults.length > 0
@@ -55,13 +67,24 @@ const GroupSearchFilter: React.FC<Props> = ({
               type="search"
               value={groupSearchParams.title}
               onChange={handleChange}
+              onKeyDown={handleGroupSearchInputKeyDown}
+              onBlur={handleInputBlur}
+              autoComplete="off"
             />
+
             <div
               className={`search-bar-results ${
                 showResults === "title" ? "show-results" : ""
               }`}
               id="group-name-search-results"
+              role="listbox"
+              tabIndex={-1}
               hidden={showResults !== "title"}
+              aria-hidden={showResults !== "title"}
+              onFocus={handleGroupSearchResultsFocus}
+              onBlur={handleGroupSearchResultsBlur}
+              onKeyDown={handleGroupSearchResultsKeyDown}
+              onMouseEnter={handleGroupSearchResultsMouseOver}
             >
               {groupSearchResults.map((g) => {
                 return (
@@ -70,6 +93,7 @@ const GroupSearchFilter: React.FC<Props> = ({
                     className="search-result"
                     key={`group-${g.title}-host-${g.host}`}
                     title={g.title}
+                    role="option"
                   >
                     {g.title}: <small>Hosted By {g.host}</small>
                   </div>
@@ -77,14 +101,7 @@ const GroupSearchFilter: React.FC<Props> = ({
               })}
             </div>
           </div>
-          <div
-            title="host"
-            id="group-host-title-div"
-            className="input-div"
-            onFocus={handleDivFocus}
-            onBlur={handleDivBlur}
-            tabIndex={0}
-          >
+          <div title="host" id="group-host-title-div" className="input-div">
             <input
               className={
                 showResults === "host" && hostSearchResults.length > 0
@@ -96,14 +113,25 @@ const GroupSearchFilter: React.FC<Props> = ({
               placeholder="Search for group hosts here"
               type="search"
               value={groupSearchParams.host}
+              onBlur={handleInputBlur}
               onChange={handleChange}
+              onKeyDown={handleGroupSearchInputKeyDown}
+              autoComplete="off"
             />
+
             <div
               className={`search-bar-results ${
                 showResults === "host" ? "show-results" : ""
               }`}
               id="group-host-search-results"
+              role="listbox"
+              tabIndex={-1}
               hidden={showResults !== "host"}
+              aria-hidden={showResults !== "host"}
+              onFocus={handleGroupSearchResultsFocus}
+              onBlur={handleGroupSearchResultsBlur}
+              onKeyDown={handleGroupSearchResultsKeyDown}
+              onMouseEnter={handleGroupSearchResultsMouseOver}
             >
               {hostSearchResults.map((h) => {
                 return (
@@ -111,6 +139,7 @@ const GroupSearchFilter: React.FC<Props> = ({
                     onClickCapture={handleResults}
                     className="search-result"
                     key={`host-${h}`}
+                    role="option"
                     title={h}
                   >
                     {h}
@@ -119,14 +148,8 @@ const GroupSearchFilter: React.FC<Props> = ({
               })}
             </div>
           </div>
-          <div
-            title="user"
-            id="user-search-title-div"
-            className="input-div"
-            onFocus={handleDivFocus}
-            onBlur={handleDivBlur}
-            tabIndex={0}
-          >
+
+          <div title="user" id="user-search-title-div" className="input-div">
             <input
               className={
                 showResults === "user" && userSearchResults.length > 0
@@ -138,14 +161,25 @@ const GroupSearchFilter: React.FC<Props> = ({
               placeholder="Search for group members here"
               type="search"
               value={groupSearchParams.user}
+              onBlur={handleInputBlur}
               onChange={handleChange}
+              onKeyDown={handleGroupSearchInputKeyDown}
+              autoComplete="off"
             />
+
             <div
               className={`search-bar-results ${
                 showResults === "user" ? "show-results" : ""
               }`}
               id="group-user-search-results"
+              role="listbox"
+              tabIndex={-1}
               hidden={showResults !== "user"}
+              aria-hidden={showResults !== "user"}
+              onFocus={handleGroupSearchResultsFocus}
+              onBlur={handleGroupSearchResultsBlur}
+              onKeyDown={handleGroupSearchResultsKeyDown}
+              onMouseEnter={handleGroupSearchResultsMouseOver}
             >
               {userSearchResults.map((u) => {
                 return (
@@ -154,6 +188,7 @@ const GroupSearchFilter: React.FC<Props> = ({
                     className="search-result"
                     key={`user-${u}`}
                     title={u}
+                    role="option"
                   >
                     {u}
                   </div>
@@ -164,7 +199,7 @@ const GroupSearchFilter: React.FC<Props> = ({
         </div>
 
         <div id="search-footer">
-          <fieldset>
+          <fieldset role="group">
             <legend>Only Include Groups That: </legend>
             <div>
               <label htmlFor="similarInterests">
@@ -174,8 +209,10 @@ const GroupSearchFilter: React.FC<Props> = ({
                 name="similarInterests"
                 id="similarInterests"
                 type="checkbox"
+                role="checkbox"
                 checked={groupSearchParams.similarInterests}
                 onChange={handleChange}
+                onKeyDown={handleCheckBoxClick}
               />
             </div>
             <div>
@@ -184,8 +221,10 @@ const GroupSearchFilter: React.FC<Props> = ({
                 name="newGroups"
                 id="newGroups"
                 type="checkbox"
+                role="checkbox"
                 checked={groupSearchParams.newGroups}
                 onChange={handleChange}
+                onKeyDown={handleCheckBoxClick}
               />
             </div>
           </fieldset>

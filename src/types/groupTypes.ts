@@ -7,18 +7,25 @@ export type newGroup = {
   interests: number[];
 };
 
+export type showResults = "" | "title" | "host" | "user";
+
 export type groupSearchCard = {
   id: string;
   title: string;
   host: string;
   interests: string[];
   users: groupUser[];
+  handleGroupSearchCardKeyDown: (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    id: string,
+  ) => void;
+  handleGroupSearchCardKeyUp: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 };
 
 export type groupSearchParams = {
-  title: string;
-  host: string;
-  user: string;
+  title: showResults extends "title" ? string : "";
+  host: showResults extends "host" ? string : "";
+  user: showResults extends "user" ? string : "";
   similarInterests: boolean;
   newGroups: boolean;
 };
@@ -80,5 +87,3 @@ export type groupMessageInfo = {
   host: string;
   unreadMessages: number;
 };
-
-export type showResults = "" | "title" | "host" | "user";

@@ -9,6 +9,7 @@ $boxShadowSettings: 5px 5px 5px black;
 $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 
 // mixins
+// media queries
 // only allow at larger widths
 @mixin tablet {
   @media (min-width: 1000px) {

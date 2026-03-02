@@ -151,6 +151,16 @@ const useUserSearch = () => {
     (e: React.KeyboardEvent<HTMLDivElement>, username: string) => {
       if (e.key === "Enter") {
         navigate(`/user/${username}`);
+      } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        const list =
+          e.currentTarget.querySelector<HTMLUListElement>(".interest-list ul");
+
+        if (list && e.key) {
+          const currScroll = list.scrollTop;
+          const nextScroll =
+            e.key === "ArrowDown" ? currScroll + 10 : currScroll - 10;
+          list.scrollTo({ top: nextScroll, behavior: "smooth" });
+        }
       }
     },
     [],

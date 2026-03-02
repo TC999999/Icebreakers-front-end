@@ -59,7 +59,8 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: c.$secondary;
     color: white;
     transform: scale(1.05);

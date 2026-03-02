@@ -11,11 +11,26 @@ type Props = {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleResults: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   handleSubmit: (e: React.FormEvent<Element>) => Promise<void>;
-  handleDivFocus: (e: React.FocusEvent<HTMLDivElement, Element>) => void;
-  handleDivBlur: (e: React.FocusEvent<HTMLDivElement, Element>) => void;
+  handleInputBlur: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
+  handleGroupSearchResultsKeyDown: (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => void;
+  handleGroupSearchInputKeyDown: (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => void;
+  handleGroupSearchResultsFocus: (
+    e: React.FocusEvent<HTMLDivElement, Element>,
+  ) => void;
+  handleGroupSearchResultsBlur: (
+    e: React.FocusEvent<HTMLDivElement, Element>,
+  ) => void;
   toggleShowTabletGroupFilter: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
+  handleGroupSearchResultsMouseOver: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => void;
+  handleCheckBoxClick: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   showResults: showResults;
   groupSearchResults: groupName[];
   groupSearchParams: groupSearchParams;
@@ -27,9 +42,14 @@ const GroupSearchFilterTablet: React.FC<Props> = ({
   handleChange,
   handleResults,
   handleSubmit,
-  handleDivFocus,
-  handleDivBlur,
+  handleInputBlur,
   toggleShowTabletGroupFilter,
+  handleGroupSearchResultsKeyDown,
+  handleGroupSearchInputKeyDown,
+  handleGroupSearchResultsFocus,
+  handleGroupSearchResultsBlur,
+  handleGroupSearchResultsMouseOver,
+  handleCheckBoxClick,
   showResults,
   groupSearchResults,
   groupSearchParams,
@@ -54,8 +74,13 @@ const GroupSearchFilterTablet: React.FC<Props> = ({
           handleChange={handleChange}
           handleResults={handleResults}
           handleSubmit={handleSubmit}
-          handleDivFocus={handleDivFocus}
-          handleDivBlur={handleDivBlur}
+          handleInputBlur={handleInputBlur}
+          handleGroupSearchResultsKeyDown={handleGroupSearchResultsKeyDown}
+          handleGroupSearchInputKeyDown={handleGroupSearchInputKeyDown}
+          handleGroupSearchResultsFocus={handleGroupSearchResultsFocus}
+          handleGroupSearchResultsBlur={handleGroupSearchResultsBlur}
+          handleGroupSearchResultsMouseOver={handleGroupSearchResultsMouseOver}
+          handleCheckBoxClick={handleCheckBoxClick}
           showResults={showResults}
           groupSearchResults={groupSearchResults}
           groupSearchParams={groupSearchParams}

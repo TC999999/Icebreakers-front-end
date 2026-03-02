@@ -14,6 +14,8 @@ const GroupSearchCard: React.FC<Props> = ({
   host,
   interests,
   users,
+  handleGroupSearchCardKeyDown,
+  handleGroupSearchCardKeyUp,
 }) => {
   const navigate: NavigateFunction = useNavigate();
 
@@ -22,24 +24,19 @@ const GroupSearchCard: React.FC<Props> = ({
       onClick={() => navigate(`/groups/${id}`)}
       className="group-search-card"
       id={`group-${id}`}
+      role="option"
+      onKeyDown={(e) => handleGroupSearchCardKeyDown(e, id)}
+      onKeyUp={handleGroupSearchCardKeyUp}
+      tabIndex={0}
     >
       <header>
         <h2>{title}</h2>
         <h4>Hosted By: {host}</h4>
       </header>
       <div className="group-info">
-        <div className="data-list interest-list">
-          <h3>Interests</h3>
-          <ul>
-            {interests.map((v, i) => {
-              return <li key={`group-${id}-interests-${i}`}>{v}</li>;
-            })}
-          </ul>
-        </div>
-
         <div className="data-list user-list">
           <h3>Users</h3>
-          <ul>
+          <ul tabIndex={-1} role="region" aria-label="Group Users List">
             {users.map((v, i) => {
               return (
                 <li key={`group-${id}-users-${i}`}>
@@ -48,6 +45,15 @@ const GroupSearchCard: React.FC<Props> = ({
                 </li>
               );
             })}
+          </ul>
+        </div>
+
+        <div className="data-list interest-list">
+          <h3>Interests</h3>
+          <ul tabIndex={-1} role="region" aria-label="Group Interests List">
+            {interests.map((v, i) => (
+              <li key={`group-${id}-interests-${i}`}>{v}</li>
+            ))}
           </ul>
         </div>
       </div>

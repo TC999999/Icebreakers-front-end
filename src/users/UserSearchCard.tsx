@@ -37,9 +37,13 @@ const UserSearchCard: React.FC<Props> = memo(
 
         <div className="interest-list">
           <h3>Interests</h3>
-          <ul>
+          <ul tabIndex={-1} role="region" aria-label="User Interest List">
             {user.interests.map((i, index) => {
-              return <li key={`${user.username}-interest-${index}`}>{i}</li>;
+              return (
+                <li key={`${user.username}-interest-${index}`} role="option">
+                  {i}
+                </li>
+              );
             })}
           </ul>
         </div>

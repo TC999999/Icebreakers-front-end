@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import type {
   groupSearchCard,
   groupSearchParams,
@@ -16,6 +16,8 @@ import {
   type NavigateFunction,
 } from "react-router-dom";
 
+type keyPress = { [key: string]: boolean };
+
 const useGroupSearchPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
@@ -31,15 +33,14 @@ const useGroupSearchPage = () => {
     },
   );
   const originalGroups = useRef<groupName[]>([]);
-  const [showResults, setShowResults] = useState<showResults>("");
-  const [groupSearchResults, setGroupSearchResults] = useState<groupName[]>([]);
   const initialUsers = useRef<string[]>([]);
-  const [hostSearchResults, setHostSearchResults] = useState<string[]>([]);
-  const [userSearchResults, setUserSearchResults] = useState<string[]>([]);
+  const [showResults, setShowResults] = useState<showResults>("");
+
   const [currentGroups, setCurrentGroups] = useState<groupSearchCard[]>([]);
   const [showGroupFilterTablet, setShowGroupFilterTablet] =
     useState<boolean>(false);
   const initialMountComplete = useRef<boolean>(false);
+  const keyDown: keyPress = {};
 
   // on initial render, grabs search params values from url, sets those parameter values into
   // the search query boxes, and retrieves filtered list of all groups based on those parameters;
@@ -61,9 +62,6 @@ const useGroupSearchPage = () => {
         const allUsernames = await userAPI.getUserNames();
         initialUsers.current = allUsernames;
         setCurrentGroups(groups);
-        setGroupSearchResults(groupNames);
-        setHostSearchResults(allUsernames);
-        setUserSearchResults(allUsernames);
       } catch (err: any) {
         const error = JSON.parse(err.message);
         dispatch(setLoadError(error));
@@ -87,52 +85,98 @@ const useGroupSearchPage = () => {
     window.addEventListener("resize", handleResize);
   }, [showGroupFilterTablet]);
 
-  // when the group name search query value changes, filters list of group names with names that
-  // begins with the query value and sets the filtered list in state
-  const handleGroupSearchResults = (value: string) => {
-    setGroupSearchResults(
-      originalGroups.current.filter((g) => {
-        return g.title.startsWith(value);
-      }),
-    );
-  };
+  // memo for when when the group name search query value changes, creates a new list of groups
+  // with names that begin with the query value
+  const groupSearchResults: groupName[] = useMemo(() => {
+    return groupSearchParams.title && showResults === "title"
+      ? originalGroups.current.filter((g) => {
+          return g.title.startsWith(groupSearchParams.title);
+        })
+      : [];
+  }, [groupSearchParams.title, showResults]);
 
-  // when either the host user or member user search query value changes, filters list
-  // of usernames with names that begins with query value and sets the filtered list in
-  // the respective state
-  const handleUserSearchResults = (
-    setter: React.Dispatch<React.SetStateAction<string[]>>,
-    value: string,
-  ) => {
-    setter(
-      initialUsers.current.filter((u) => {
-        return u.startsWith(value);
-      }),
-    );
-  };
+  // memo for when when the group host name search query value changes, creates a new list of
+  // group hosts with usernames that begin with the query value
+  const hostSearchResults: string[] = useMemo(() => {
+    return groupSearchParams.host && showResults === "host"
+      ? initialUsers.current.filter((u) => {
+          return u.startsWith(groupSearchParams.host);
+        })
+      : [];
+  }, [groupSearchParams.host, showResults]);
 
-  // when user focues their curson on a search query input div, shows dropdown search query
-  // options for that respective input
-  const handleDivFocus = useCallback(
-    (e: React.FocusEvent<HTMLDivElement>) => {
-      let s = e.currentTarget.title;
-      if (s === "title" || s === "host" || s === "user") {
-        setShowResults(s);
+  // memo for when when the group member name search query value changes, creates a new list of
+  // group members with usernames that begin with the query value
+  const userSearchResults: string[] = useMemo(() => {
+    return groupSearchParams.user && showResults === "user"
+      ? initialUsers.current.filter((u) => {
+          return u.startsWith(groupSearchParams.user);
+        })
+      : [];
+  }, [groupSearchParams.user, showResults]);
+
+  // when user unfocuses their cursor on a search query input div, hides dropdown search
+  // query options for that respective input
+  const handleInputBlur = useCallback(
+    (e: React.FocusEvent<HTMLInputElement | HTMLDivElement>) => {
+      e.preventDefault();
+      if (
+        !(
+          e.relatedTarget?.role === "listbox" ||
+          e.relatedTarget?.role === "option"
+        )
+      ) {
+        setShowResults("");
       }
     },
     [showResults],
   );
 
-  // when user unfocuses their curson on a search query input div, hides dropdown search
-  // query options for that respective input
-  const handleDivBlur = useCallback(
+  // when the list of search result suggestions is focused on by the keyboard, the first
+  // suggestion is automatically selected and the list is automatically scrolled to the top
+  const handleGroupSearchResultsFocus = useCallback(
     (e: React.FocusEvent<HTMLDivElement>) => {
       e.preventDefault();
-      setShowResults("");
+      e.currentTarget.scroll({ top: 0, behavior: "smooth" });
+
+      const firstResult = e.currentTarget.querySelector(
+        "div[role='option']",
+      ) as HTMLDivElement;
+
+      if (firstResult) firstResult.classList.add("selected");
+    },
+    [],
+  );
+
+  // when the list of search result suggestions loses keyboard focus, unless the new focused
+  // element is the respective search input, hides the list of search result suggestions
+  const handleGroupSearchResultsBlur = useCallback(
+    (e: React.FocusEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.currentTarget.scroll({ top: 0, behavior: "smooth" });
+
+      if (
+        !(
+          e.relatedTarget?.role === "listbox" ||
+          e.relatedTarget?.role === "option" ||
+          (e.relatedTarget?.tagName === "INPUT" &&
+            showResults === e.relatedTarget?.getAttribute("name"))
+        )
+      ) {
+        const selectedTarget = e.currentTarget.querySelector(
+          "div.selected[role='option']",
+        );
+
+        if (selectedTarget) selectedTarget.classList.remove("selected");
+
+        setShowResults("");
+      }
     },
     [showResults],
   );
 
+  // toggle state that shows group filter window at smaller screen sizes when filter button
+  // is pressed
   const toggleShowTabletGroupFilter = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e.preventDefault();
@@ -149,23 +193,11 @@ const useGroupSearchPage = () => {
   const handleResults = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
-      let s = e.currentTarget.title;
+      const s = e.currentTarget.title;
       setGroupSearchParams((prev) => ({
         ...prev,
         [showResults]: s,
       }));
-
-      switch (showResults) {
-        case "title":
-          handleGroupSearchResults(s);
-          break;
-        case "host":
-          handleUserSearchResults(setHostSearchResults, s);
-          break;
-        case "user":
-          handleUserSearchResults(setUserSearchResults, s);
-          break;
-      }
 
       setShowResults("");
     },
@@ -177,27 +209,24 @@ const useGroupSearchPage = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value, checked, type } = e.target;
-      switch (name) {
-        case "title":
-          value ? handleGroupSearchResults(value) : setGroupSearchResults([]);
-          break;
-        case "host":
-          value
-            ? handleUserSearchResults(setHostSearchResults, value)
-            : setHostSearchResults([]);
-          break;
-        case "user":
-          value
-            ? handleUserSearchResults(setUserSearchResults, value)
-            : setUserSearchResults([]);
-          break;
+
+      if (
+        (name === "title" || name === "host" || name === "user") &&
+        !showResults
+      )
+        setShowResults(name);
+
+      const results = e.currentTarget.nextElementSibling as HTMLDivElement;
+      if (results && results.scrollTop !== 0) {
+        results.scroll({ top: 0 });
       }
+
       setGroupSearchParams((prev) => ({
         ...prev,
         [name]: type === "search" ? value : checked,
       }));
     },
-    [groupSearchParams],
+    [groupSearchParams, showResults],
   );
 
   // sends params to backend to retrieve filtered group list from database, which is then set in
@@ -225,6 +254,153 @@ const useGroupSearchPage = () => {
     [groupSearchParams],
   );
 
+  // keyboard friendly function: when a group search card is focused on using
+  // the tab key, if the user presses the enter key when also focused a card;
+  // the browser redirects them to the correct group page based on the id;
+  // additionally, if the user pressed either the u or i key and either the
+  // left or right key at the same time, the user or interest list scrolls up
+  // or down respectively
+  const handleGroupSearchCardKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>, id: string) => {
+      if (e.key !== "Tab") e.preventDefault();
+      if (
+        (e.key === "u" ||
+          e.key === "i" ||
+          e.key === "ArrowLeft" ||
+          e.key === "ArrowRight") &&
+        !keyDown[e.key] &&
+        Object.keys(keyDown).length < 2
+      )
+        keyDown[e.key] = true;
+
+      if (e.key === "Enter") {
+        navigate(`/groups/${id}`);
+      } else if (
+        (keyDown.u || keyDown.i) &&
+        (keyDown.ArrowLeft || keyDown.ArrowRight)
+      ) {
+        const list = e.currentTarget.querySelector<HTMLUListElement>(
+          `.${keyDown.u ? "user" : "interest"}-list ul`,
+        );
+        if (list) {
+          const currScroll = list.scrollTop;
+          const newScroll = keyDown.ArrowRight
+            ? currScroll + 20
+            : currScroll - 20;
+          list.scrollTo({ top: newScroll, behavior: "smooth" });
+        }
+      }
+    },
+    [],
+  );
+
+  // when a key is released when focused on a group card, removes the key from
+  // the key down object
+  const handleGroupSearchCardKeyUp = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (keyDown[e.key]) delete keyDown[e.key];
+    },
+    [],
+  );
+
+  // keyboard friendly input handler: when pressing down when focused on a search input,
+  // if a list of search results are present below the input, the keyboard focuses on that list
+  // instead
+  const handleGroupSearchInputKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const results = e.currentTarget.nextElementSibling as HTMLDivElement;
+
+        const resultsAreShown =
+          results.querySelectorAll("div[role='option']").length > 0;
+
+        if (resultsAreShown) {
+          results.focus();
+          e.currentTarget.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+    },
+    [hostSearchResults, userSearchResults, groupSearchResults],
+  );
+
+  // keyboard friendly search result suggestion handler: when either up or down arrow keys are pressed
+  // when search result suggestion box is focused on by keyboard, list scrolls up or down respectively
+  // and selects next item in list by adding selected class to element; if enter key is pressed when
+  // on a selected list item, fills correct search input with value in list item and hides list; if
+  // escape key is pressed, returns to focus on correct search input; if at the top of the list and
+  // up arrow key is pressed, focuses on correct search input instead; if there is no selected target
+  // and down arrow key is pressed, scrolls to top of list and selects first item
+  const handleGroupSearchResultsKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      e.preventDefault();
+
+      const selectedTarget = e.currentTarget.querySelector(
+        "div.selected[role='option']",
+      ) as HTMLDivElement;
+
+      const previousInput = e.currentTarget
+        .previousElementSibling as HTMLInputElement;
+
+      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && selectedTarget) {
+        const nextItem =
+          e.key === "ArrowDown"
+            ? (selectedTarget.nextElementSibling as HTMLDivElement)
+            : (selectedTarget.previousElementSibling as HTMLDivElement);
+
+        const currScroll = e.currentTarget.scrollTop;
+        const newScroll =
+          e.key === "ArrowDown" ? currScroll + 20 : currScroll - 20;
+        e.currentTarget.scrollTo({ top: newScroll, behavior: "smooth" });
+
+        if (nextItem) {
+          nextItem?.classList.add("selected");
+          selectedTarget.classList.remove("selected");
+        } else if (!nextItem && e.key === "ArrowUp") {
+          previousInput.focus();
+          selectedTarget.classList.remove("selected");
+        }
+      } else if (e.key === "Enter" && selectedTarget) {
+        selectedTarget.click();
+      } else if (e.key === "Escape" && selectedTarget) {
+        previousInput.focus();
+        selectedTarget.classList.remove("selected");
+      } else if (!selectedTarget && e.key === "ArrowDown") {
+        const newTarget = e.currentTarget.querySelector(
+          "div[role='option']",
+        ) as HTMLDivElement;
+
+        if (newTarget) newTarget.classList.add("selected");
+        e.currentTarget.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+    [],
+  );
+
+  // when hovering over list of search suggestions with an item already selected,
+  // removes the selected class from that item
+  const handleGroupSearchResultsMouseOver = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const selectedTarget = e.currentTarget.querySelector(
+        "div.selected[role='option']",
+      );
+      if (selectedTarget) {
+        selectedTarget.classList.remove("selected");
+      }
+    },
+    [],
+  );
+
+  const handleCheckBoxClick = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        e.currentTarget.click();
+      }
+    },
+    [groupSearchParams],
+  );
+
   return {
     currentGroups,
     groupSearchParams,
@@ -235,11 +411,18 @@ const useGroupSearchPage = () => {
     showGroupFilterTablet,
     initialMountComplete,
     handleChange,
-    handleDivFocus,
-    handleDivBlur,
+    handleInputBlur,
     handleResults,
     handleSubmit,
     toggleShowTabletGroupFilter,
+    handleGroupSearchCardKeyDown,
+    handleGroupSearchCardKeyUp,
+    handleGroupSearchInputKeyDown,
+    handleGroupSearchResultsFocus,
+    handleGroupSearchResultsBlur,
+    handleGroupSearchResultsKeyDown,
+    handleGroupSearchResultsMouseOver,
+    handleCheckBoxClick,
   };
 };
 

@@ -24,10 +24,17 @@ const GroupSearchPage = () => {
     initialMountComplete,
     handleChange,
     handleResults,
-    handleDivFocus,
-    handleDivBlur,
+    handleInputBlur,
     handleSubmit,
     toggleShowTabletGroupFilter,
+    handleGroupSearchCardKeyDown,
+    handleGroupSearchCardKeyUp,
+    handleGroupSearchResultsKeyDown,
+    handleGroupSearchInputKeyDown,
+    handleGroupSearchResultsFocus,
+    handleGroupSearchResultsBlur,
+    handleGroupSearchResultsMouseOver,
+    handleCheckBoxClick,
   } = useGroupSearchPage();
 
   return (
@@ -38,9 +45,16 @@ const GroupSearchPage = () => {
             handleChange={handleChange}
             handleResults={handleResults}
             handleSubmit={handleSubmit}
-            handleDivFocus={handleDivFocus}
-            handleDivBlur={handleDivBlur}
+            handleInputBlur={handleInputBlur}
             toggleShowTabletGroupFilter={toggleShowTabletGroupFilter}
+            handleGroupSearchResultsKeyDown={handleGroupSearchResultsKeyDown}
+            handleGroupSearchInputKeyDown={handleGroupSearchInputKeyDown}
+            handleGroupSearchResultsFocus={handleGroupSearchResultsFocus}
+            handleGroupSearchResultsBlur={handleGroupSearchResultsBlur}
+            handleGroupSearchResultsMouseOver={
+              handleGroupSearchResultsMouseOver
+            }
+            handleCheckBoxClick={handleCheckBoxClick}
             showResults={showResults}
             groupSearchResults={groupSearchResults}
             groupSearchParams={groupSearchParams}
@@ -65,8 +79,13 @@ const GroupSearchPage = () => {
           handleChange={handleChange}
           handleResults={handleResults}
           handleSubmit={handleSubmit}
-          handleDivFocus={handleDivFocus}
-          handleDivBlur={handleDivBlur}
+          handleInputBlur={handleInputBlur}
+          handleGroupSearchResultsKeyDown={handleGroupSearchResultsKeyDown}
+          handleGroupSearchInputKeyDown={handleGroupSearchInputKeyDown}
+          handleGroupSearchResultsFocus={handleGroupSearchResultsFocus}
+          handleGroupSearchResultsBlur={handleGroupSearchResultsBlur}
+          handleGroupSearchResultsMouseOver={handleGroupSearchResultsMouseOver}
+          handleCheckBoxClick={handleCheckBoxClick}
           showResults={showResults}
           groupSearchResults={groupSearchResults}
           groupSearchParams={groupSearchParams}
@@ -74,8 +93,8 @@ const GroupSearchPage = () => {
           userSearchResults={userSearchResults}
         />
       </header>
-      <div id="group-search-list">
-        <div id="search-results">
+      <div id="group-search-list" role="Group Search List">
+        <div id="search-results" role="Group Search Results">
           {!initialMountComplete.current && currentGroups.length === 0 && (
             <GroupSearchSkeleton cards={10} />
           )}
@@ -89,6 +108,8 @@ const GroupSearchPage = () => {
                   host={group.host}
                   interests={group.interests}
                   users={group.users}
+                  handleGroupSearchCardKeyDown={handleGroupSearchCardKeyDown}
+                  handleGroupSearchCardKeyUp={handleGroupSearchCardKeyUp}
                 />
               ))}
             </>
