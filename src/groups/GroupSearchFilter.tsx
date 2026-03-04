@@ -71,11 +71,8 @@ const GroupSearchFilter: React.FC<Props> = ({
               onBlur={handleInputBlur}
               autoComplete="off"
             />
-
             <div
-              className={`search-bar-results ${
-                showResults === "title" ? "show-results" : ""
-              }`}
+              className="search-bar-results"
               id="group-name-search-results"
               role="listbox"
               tabIndex={-1}
@@ -118,11 +115,8 @@ const GroupSearchFilter: React.FC<Props> = ({
               onKeyDown={handleGroupSearchInputKeyDown}
               autoComplete="off"
             />
-
             <div
-              className={`search-bar-results ${
-                showResults === "host" ? "show-results" : ""
-              }`}
+              className="search-bar-results"
               id="group-host-search-results"
               role="listbox"
               tabIndex={-1}
@@ -148,7 +142,6 @@ const GroupSearchFilter: React.FC<Props> = ({
               })}
             </div>
           </div>
-
           <div title="user" id="user-search-title-div" className="input-div">
             <input
               className={
@@ -166,11 +159,8 @@ const GroupSearchFilter: React.FC<Props> = ({
               onKeyDown={handleGroupSearchInputKeyDown}
               autoComplete="off"
             />
-
             <div
-              className={`search-bar-results ${
-                showResults === "user" ? "show-results" : ""
-              }`}
+              className="search-bar-results"
               id="group-user-search-results"
               role="listbox"
               tabIndex={-1}
@@ -197,7 +187,6 @@ const GroupSearchFilter: React.FC<Props> = ({
             </div>
           </div>
         </div>
-
         <div id="search-footer">
           <fieldset role="group">
             <legend>Only Include Groups That: </legend>
@@ -228,7 +217,6 @@ const GroupSearchFilter: React.FC<Props> = ({
               />
             </div>
           </fieldset>
-
           <div className="form-div">
             <button type="submit" className="submit-button">
               Search

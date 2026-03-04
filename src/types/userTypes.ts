@@ -21,6 +21,11 @@ export type UserSearch = {
   findSimilarInterests: boolean;
 };
 
+export type UserSearchParams = {
+  username: string | null;
+  findSimilarInterests: boolean | null;
+};
+
 export type groupUser = { favoriteColor: string; username: string };
 
 export type UserEdit = {

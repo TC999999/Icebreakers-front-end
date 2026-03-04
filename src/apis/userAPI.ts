@@ -1,5 +1,10 @@
 import API from "./api";
-import type { UserProfile, UserCard, UserEdit } from "../types/userTypes";
+import type {
+  UserProfile,
+  UserCard,
+  UserEdit,
+  UserSearchParams,
+} from "../types/userTypes";
 import type { interestMap } from "../types/interestTypes";
 
 type EditReturn = {
@@ -31,8 +36,16 @@ class userAPI extends API {
     return res.users;
   }
 
+  // returns a list of initial usernames to use for search bar dropdowns
+  public static async getUserSuggestions(input: string): Promise<string[]> {
+    let res = await this.getRequest("search/suggestions", { input });
+    return res.users;
+  }
+
   // returns a list of users based on inputted search params
-  public static async searchForUsers(params: any): Promise<UserCard[]> {
+  public static async searchForUsers(
+    params: UserSearchParams,
+  ): Promise<UserCard[]> {
     let res = await this.getRequest("search/all", params);
     return res.users;
   }

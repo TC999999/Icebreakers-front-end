@@ -231,16 +231,13 @@ form {
     resize: none;
   }
 
-  .show-results {
-    max-height: 100px;
-    height: auto;
-    overflow: scroll;
-  }
-
   .search-bar-results {
     position: absolute;
     width: 310px;
     z-index: 1;
+    max-height: 100px;
+    height: auto;
+    overflow: scroll;
   }
 
   .search-result {
@@ -249,11 +246,19 @@ form {
     font-family: Arial, Helvetica, sans-serif;
     border: solid 1px;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     &:hover,
     &.selected {
       background-color: rgb(240, 135, 240);
       color: c.$secondary;
       cursor: pointer;
+    }
+
+    #loading-spinner {
+      animation: spinner 0.5s infinite;
     }
   }
 
