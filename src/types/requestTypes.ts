@@ -29,7 +29,6 @@ interface requestCard {
   id: string;
   content: string;
   createdAt: string;
-  next: boolean;
   hasResponded: boolean;
   hasAccepted: boolean;
 }
@@ -168,8 +167,7 @@ export type requestSocketHookProps = {
   requestCount: requestCount;
 };
 
-export type requestTab = {
-  params: requestParams;
-  next: requestType;
-  prev: requestType;
+export type requestInfiniteQueryRes = {
+  requestList: requestList;
+  next: boolean;
 };

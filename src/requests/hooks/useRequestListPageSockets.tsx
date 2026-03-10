@@ -56,12 +56,11 @@ const useRequestListPageSockets = ({
   }, [viewedRequests, requestCount]);
 
   // custom hook for updating direct request list (after responding to a request or deleting a request)
-  const { respondToDirectRequest, removeDirectRequest, deleteDirectRequest } =
-    useRequestListPageDirectRequests({
-      requests,
-      requestCount,
-      setNewRequestCount,
-    });
+  const { respondToDirectRequest } = useRequestListPageDirectRequests({
+    requests,
+    requestCount,
+    setNewRequestCount,
+  });
 
   const {
     respondToGroupRequest,
@@ -78,8 +77,6 @@ const useRequestListPageSockets = ({
 
   return {
     respondToDirectRequest,
-    removeDirectRequest,
-    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     deleteGroupRequest,

@@ -4,13 +4,16 @@ import type {
   InfiniteQueryObserverResult,
   InfiniteData,
 } from "@tanstack/react-query";
-import type { requestList } from "../types/requestTypes";
+import type { requestInfiniteQueryRes } from "../types/requestTypes";
 
 type options = {
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined,
   ) => Promise<
-    InfiniteQueryObserverResult<InfiniteData<requestList, unknown>, Error>
+    InfiniteQueryObserverResult<
+      InfiniteData<requestInfiniteQueryRes, unknown>,
+      Error
+    >
   >;
 };
 

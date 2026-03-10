@@ -8,7 +8,7 @@ import type {
   directConversationResponse,
   requestType,
   groupConversationResponse,
-  requestList,
+  requestInfiniteQueryRes,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
@@ -37,8 +37,7 @@ type Props = {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
   respondToDirectRequest: (response: directConversationResponse) => void;
-  removeDirectRequest: (request: sentRequestCard) => void;
-  deleteDirectRequest: (request: sentRequestCard) => void;
+
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   deleteGroupRequest: (request: SentGroupCard) => void;
@@ -48,7 +47,10 @@ type Props = {
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined,
   ) => Promise<
-    InfiniteQueryObserverResult<InfiniteData<requestList, unknown>, Error>
+    InfiniteQueryObserverResult<
+      InfiniteData<requestInfiniteQueryRes, unknown>,
+      Error
+    >
   >;
 };
 
@@ -61,8 +63,7 @@ const RequestList: React.FC<Props> = ({
   hasNextPage,
   toggleTabletTabs,
   respondToDirectRequest,
-  removeDirectRequest,
-  deleteDirectRequest,
+
   respondToGroupRequest,
   removeGroupRequest,
   deleteGroupRequest,
@@ -96,8 +97,6 @@ const RequestList: React.FC<Props> = ({
                 requestType={currentRequestType}
                 request={request}
                 respondToDirectRequest={respondToDirectRequest}
-                removeDirectRequest={removeDirectRequest}
-                deleteDirectRequest={deleteDirectRequest}
                 respondToGroupRequest={respondToGroupRequest}
                 removeGroupRequest={removeGroupRequest}
                 deleteGroupRequest={deleteGroupRequest}

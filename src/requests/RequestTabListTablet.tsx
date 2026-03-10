@@ -13,10 +13,6 @@ type Props = {
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
-  handleKeydown: (
-    e: React.KeyboardEvent<Element>,
-    requestType: requestType,
-  ) => void;
 };
 
 const RequestTabListTablet: React.FC<Props> = ({
@@ -24,7 +20,6 @@ const RequestTabListTablet: React.FC<Props> = ({
   requestCount,
   changeViewedRequests,
   toggleTabletTabs,
-  handleKeydown,
 }) => {
   return (
     <div className="modal-transparent" id="tab-list-tablet">
@@ -43,7 +38,6 @@ const RequestTabListTablet: React.FC<Props> = ({
         viewedRequests={viewedRequests}
         requestCount={requestCount}
         changeViewedRequests={changeViewedRequests}
-        handleKeydown={handleKeydown}
       />
     </div>
   );

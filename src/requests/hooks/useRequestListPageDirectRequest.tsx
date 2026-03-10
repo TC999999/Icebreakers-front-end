@@ -7,7 +7,7 @@ import type {
   sentRequestCard,
   directConversationResponse,
   requestSocketHookProps,
-  requestList,
+  requestInfiniteQueryRes,
 } from "../../types/requestTypes";
 import { shallowEqual } from "react-redux";
 import queryClient from "../../helpers/queryClient";
@@ -27,6 +27,7 @@ const useRequestListPageDirectRequests = ({
 
   // updates current request list
   const refetchRequests = (id: string, type: string, accepted?: boolean) => {
+    console.log(id, accepted);
     queryClient.setQueryData(
       [
         "requests",
@@ -36,12 +37,16 @@ const useRequestListPageDirectRequests = ({
           type,
         },
       ],
-      (prev: InfiniteData<requestList, unknown>) => {
+      (prev: InfiniteData<requestInfiniteQueryRes, unknown>) => {
+        console.log(prev.pages);
         const newMap = prev.pages.map((r) => {
-          if (r[0].id === id && type === "received" && accepted !== undefined) {
-            return [{ ...r[0], hasAccepted: accepted, hasResponded: true }];
-          }
-          return r;
+          const newRequests = r.requestList.map((request) => {
+            if (request.id === id)
+              return { ...request, hasAccepted: accepted, hasResponded: true };
+            return request;
+          });
+
+          return { ...r, requestList: newRequests };
         });
 
         return { ...prev, pages: newMap };
@@ -49,57 +54,24 @@ const useRequestListPageDirectRequests = ({
     );
   };
 
-  // UPDATE DIRECT REQUESTS (SENDER'S SIDE ONLY)
-  // removes request from recipient's inbox and moves it from senders sent request inbox
-  // to their removed request inbox
-  const removeDirectRequest = useCallback(
-    async (request: sentRequestCard) => {
-      await directRequestsAPI.removeDirectConversationRequest(
-        request.id,
-        username!,
-      );
-      setNewRequestCount();
-      refetchRequests(request.id, "sent");
-    },
-    [requests, requestCount],
-  );
-
-  // DELETION (SENDER'S SIDE ONLY)
-  // deletes direct request entirely from senders's inbox
-  const deleteDirectRequest = useCallback(
-    async (request: sentRequestCard) => {
-      await directRequestsAPI.deleteDirectConversationRequest(
-        request.id,
-        username!,
-        { to: request.to },
-      );
-      setNewRequestCount();
-      refetchRequests(request.id, "removed");
-    },
-    [requests, requestCount],
-  );
-
   // RESPONSES (RECIPIENT'S SIDE ONLY)
   // if request was accepted, the recipient join the group and
   // removes request from both users' inboxes
   const respondToDirectRequest = useCallback(
     async (response: directConversationResponse) => {
-      // await directRequestsAPI.respondToDirectConversationRequest(
-      //   username!,
-      //   response,
-      // );
-      // setNewRequestCount();
+      await directRequestsAPI.respondToDirectConversationRequest(
+        username!,
+        response,
+      );
+      setNewRequestCount();
       refetchRequests(response.id, "received", response.accepted);
-
-      // dispatch(setUnansweredRequests(-1));
+      dispatch(setUnansweredRequests(-1));
     },
     [requests, dispatch],
   );
 
   return {
     respondToDirectRequest,
-    removeDirectRequest,
-    deleteDirectRequest,
   };
 };
 

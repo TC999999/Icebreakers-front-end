@@ -17,8 +17,6 @@ type input = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
-  removeDirectRequest: (request: sentRequestCard) => void;
-  deleteDirectRequest: (request: sentRequestCard) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   deleteGroupRequest: (request: SentGroupCard) => void;
@@ -32,8 +30,6 @@ const useRequestCard = ({
   requestType,
   request,
   respondToDirectRequest,
-  removeDirectRequest,
-  deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
   deleteGroupRequest,
@@ -85,12 +81,6 @@ const useRequestCard = ({
   const remove = useCallback(() => {
     if (
       "to" in request &&
-      !("groupID" in request) &&
-      requestType === "direct-requests-sent"
-    ) {
-      removeDirectRequest(request);
-    } else if (
-      "to" in request &&
       "groupID" in request &&
       requestType === "group-requests-sent"
     ) {
@@ -107,12 +97,6 @@ const useRequestCard = ({
   // callback function that allows user to remove the requests that they have sent to other users
   const deleteRequest = useCallback(() => {
     if (
-      "to" in request &&
-      !("groupID" in request) &&
-      requestType === "direct-requests-removed"
-    ) {
-      deleteDirectRequest(request);
-    } else if (
       "to" in request &&
       "groupID" in request &&
       requestType === "group-requests-removed"

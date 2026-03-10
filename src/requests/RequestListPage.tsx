@@ -20,8 +20,6 @@ const RequestListPage = () => {
     changeViewedRequests,
     toggleTabletTabs,
     respondToDirectRequest,
-    removeDirectRequest,
-    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     deleteGroupRequest,
@@ -29,7 +27,6 @@ const RequestListPage = () => {
     removeGroupInvitation,
     deleteGroupInvitation,
     fetchNextPage,
-    handleKeydown,
   } = useRequestListPage();
 
   return (
@@ -47,7 +44,6 @@ const RequestListPage = () => {
             requestCount={requestCount}
             changeViewedRequests={changeViewedRequests}
             toggleTabletTabs={toggleTabletTabs}
-            handleKeydown={handleKeydown}
           />
         </Suspense>
       )}
@@ -56,7 +52,6 @@ const RequestListPage = () => {
           viewedRequests={viewedRequests}
           requestCount={requestCount}
           changeViewedRequests={changeViewedRequests}
-          handleKeydown={handleKeydown}
         />
         <RequestList
           currentRequestType={viewedRequests}
@@ -66,8 +61,6 @@ const RequestListPage = () => {
           hasNextPage={hasNextPage}
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}
-          removeDirectRequest={removeDirectRequest}
-          deleteDirectRequest={deleteDirectRequest}
           respondToGroupRequest={respondToGroupRequest}
           removeGroupRequest={removeGroupRequest}
           deleteGroupRequest={deleteGroupRequest}

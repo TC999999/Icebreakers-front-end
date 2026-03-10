@@ -19,8 +19,7 @@ type Props = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
-  removeDirectRequest: (request: sentRequestCard) => void;
-  deleteDirectRequest: (request: sentRequestCard) => void;
+
   respondToGroupRequest: (response: groupConversationResponse) => void;
   removeGroupRequest: (request: SentGroupCard) => void;
   deleteGroupRequest: (request: SentGroupCard) => void;
@@ -36,8 +35,6 @@ const RequestCard: React.FC<Props> = ({
   requestType,
   request,
   respondToDirectRequest,
-  removeDirectRequest,
-  deleteDirectRequest,
   respondToGroupRequest,
   removeGroupRequest,
   deleteGroupRequest,
@@ -49,8 +46,6 @@ const RequestCard: React.FC<Props> = ({
     requestType,
     request,
     respondToDirectRequest,
-    removeDirectRequest,
-    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     deleteGroupRequest,

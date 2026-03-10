@@ -19,7 +19,6 @@ import { useSearchParams } from "react-router-dom";
 import { shallowEqual } from "react-redux";
 import useRequestListPageSockets from "./useRequestListPageSockets";
 import queryClient from "../../helpers/queryClient";
-import requestTabs from "../../helpers/maps/requestTabs";
 
 // custom hook for request inbox page
 const useRequestListPage = () => {
@@ -89,9 +88,8 @@ const useRequestListPage = () => {
       }),
     retry: 0,
     initialPageParam: { offset: 0 },
-    getNextPageParam: (lastPage, allPages, lastPageParams) => {
-      if (lastPage.length > 0 && lastPage[0].next)
-        return { offset: lastPageParams.offset + 1 };
+    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+      if (lastPage.next) return { offset: lastPageParam.offset + 2 };
       return undefined;
     },
   });
@@ -100,7 +98,7 @@ const useRequestListPage = () => {
   const requests = useMemo(() => {
     return (
       data?.pages.flatMap((r) => {
-        return r;
+        return r.requestList;
       }) || []
     );
   }, [data]);
@@ -130,8 +128,6 @@ const useRequestListPage = () => {
   // custom hook that listens for socket signals from server for when a new request is being added or removed
   const {
     respondToDirectRequest,
-    removeDirectRequest,
-    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     deleteGroupRequest,
@@ -180,41 +176,6 @@ const useRequestListPage = () => {
     [searchParams],
   );
 
-  // when user presses left or right arrow keys when focused on request tabs,
-  // changes viewed request type to the next or previous request type respectively,
-  // updates url search parameters, and clears previous request cache; if user is on
-  // the very top or very bottom tab and presses the right or left arrow key respectively,
-  // viewed request type changes to the very bottom or very top request type respectively
-  // (i.e. it loops around)
-  const handleKeydown = useCallback(
-    (e: React.KeyboardEvent, requestType: requestType) => {
-      let params: requestParams | null = null;
-      if (e.key === "ArrowRight") {
-        const next =
-          requestTabs.get(requestType)?.next || "direct-requests-sent";
-        const nextParams = requestTabs.get(next)?.params;
-        if (next && nextParams) {
-          params = nextParams;
-        }
-      } else if (e.key === "ArrowLeft") {
-        const prev =
-          requestTabs.get(requestType)?.prev || "group-invites-removed";
-        const prevParams = requestTabs.get(prev)?.params;
-        if (prev && prevParams) {
-          params = prevParams;
-        }
-      }
-
-      if (params) {
-        queryClient.removeQueries({
-          queryKey: ["requests", { directOrGroup, requestOrInvitation, type }],
-        });
-        setSearchParams(params);
-      }
-    },
-    [searchParams],
-  );
-
   return {
     viewedRequests,
     currentTitleAndDesc,
@@ -226,8 +187,6 @@ const useRequestListPage = () => {
     toggleTabletTabs,
     changeViewedRequests,
     respondToDirectRequest,
-    removeDirectRequest,
-    deleteDirectRequest,
     respondToGroupRequest,
     removeGroupRequest,
     deleteGroupRequest,
@@ -235,7 +194,6 @@ const useRequestListPage = () => {
     removeGroupInvitation,
     deleteGroupInvitation,
     fetchNextPage,
-    handleKeydown,
   };
 };
 

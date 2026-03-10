@@ -29,7 +29,6 @@ const RequestTab: React.FC<Props> = ({
       onClick={() => changeViewedRequests(params)}
       aria-selected={viewedRequests === requestType}
       role="tab"
-      tabIndex={viewedRequests === requestType ? 0 : -1}
     >
       <span>{title}</span>{" "}
       {requestAmount > 0 && (

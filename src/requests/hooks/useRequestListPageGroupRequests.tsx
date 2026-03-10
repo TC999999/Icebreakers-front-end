@@ -106,7 +106,7 @@ const useRequestListPageGroupRequests = ({
   // removes invitation from both users' inboxes
   const respondToGroupInvitation = useCallback(
     async (response: groupConversationResponse) => {
-      await groupRequestsAPI.respondToGroupInvitation(username!, response);
+      // await groupRequestsAPI.respondToGroupInvitation(username!, response);
       setNewRequestCount();
       refetchRequests(response.id, "invitations", "received");
       dispatch(setUnansweredRequests(-1));
@@ -118,7 +118,7 @@ const useRequestListPageGroupRequests = ({
   // request from both users' inboxes
   const respondToGroupRequest = useCallback(
     async (response: groupConversationResponse) => {
-      await groupRequestsAPI.respondToGroupRequest(username!, response);
+      // await groupRequestsAPI.respondToGroupRequest(username!, response);
       setNewRequestCount();
       refetchRequests(response.id, "requests", "received");
       dispatch(setUnansweredRequests(-1));

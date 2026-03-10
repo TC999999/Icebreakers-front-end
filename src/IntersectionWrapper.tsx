@@ -5,7 +5,7 @@ import type {
   InfiniteQueryObserverResult,
   InfiniteData,
 } from "@tanstack/react-query";
-import type { requestList } from "./types/requestTypes";
+import type { requestInfiniteQueryRes } from "./types/requestTypes";
 
 import "./styles/IntersectionWrapper.scss";
 
@@ -15,7 +15,10 @@ type Props = {
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined,
   ) => Promise<
-    InfiniteQueryObserverResult<InfiniteData<requestList, unknown>, Error>
+    InfiniteQueryObserverResult<
+      InfiniteData<requestInfiniteQueryRes, unknown>,
+      Error
+    >
   >;
 };
 
