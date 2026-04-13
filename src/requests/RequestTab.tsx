@@ -32,8 +32,8 @@ const RequestTab: React.FC<Props> = ({
     >
       <span>{title}</span>{" "}
       {requestAmount > 0 && (
-        <span>
-          <b>({requestAmount})</b>
+        <span className="unread-request-counter">
+          <b>{requestAmount}</b>
         </span>
       )}
     </div>

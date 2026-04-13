@@ -51,7 +51,9 @@ const RequestForm: React.FC<directConversationRequestPair> = ({
             onBottom={true}
           />
         </div>
-        <button className="submit-button">Make Request!</button>
+        <div id="button-row">
+          <button className="submit-button">Make Request!</button>
+        </div>
       </form>
     </div>
   );

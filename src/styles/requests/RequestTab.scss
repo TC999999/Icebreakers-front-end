@@ -3,10 +3,11 @@
 
 .request-tab {
   background-color: white;
-  padding: 20px;
+  padding: 20px 10px 20px 5px;
   border-bottom: solid c.$secondary;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   cursor: pointer;
+  position: relative;
 
   &:hover,
   &.focused {
@@ -14,10 +15,28 @@
     color: blue;
     text-decoration: underline;
   }
-}
 
-.selected-tab {
-  background-color: antiquewhite;
-  color: rgb(34, 0, 255);
-  text-decoration: underline;
+  .unread-request-counter {
+    text-decoration: none;
+    font-size: small;
+    background-color: c.$secondary;
+    padding: 5px;
+    color: rgb(249, 245, 245);
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    border-radius: 50%;
+    max-width: 100%;
+    height: 10px;
+    animation: notificationPopUp 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.selected-tab {
+    background-color: antiquewhite;
+    color: rgb(34, 0, 255);
+    text-decoration: underline;
+  }
 }
