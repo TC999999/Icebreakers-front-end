@@ -1,5 +1,5 @@
 import API from "./api";
-import type { requestInfiniteQueryRes } from "../types/requestTypes";
+import type { RequestInfiniteQueryRes } from "../types/requestTypes";
 
 // API for basic request actions
 // extends from the requests API class
@@ -14,7 +14,7 @@ class requestsAPI extends API {
   public static async getRequests(
     username: string,
     params: any,
-  ): Promise<requestInfiniteQueryRes> {
+  ): Promise<RequestInfiniteQueryRes> {
     const res = await this.getRequest(username, params);
     return res;
   }

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
-import type { groupRequestFormData } from "../../types/requestTypes";
+import type { GroupRequestFormData } from "../../types/requestTypes";
 import type { groupName } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import {
@@ -22,13 +22,13 @@ const useGroupRequest = () => {
   const notify = (message: string) => toast.error(message);
   const username = useAppSelector((store) => store.user.user?.username);
 
-  const originalData = useRef<groupRequestFormData>({
+  const originalData = useRef<GroupRequestFormData>({
     to: "",
     from: "",
     content: "",
   });
 
-  const [formData, setFormData] = useState<groupRequestFormData>(
+  const [formData, setFormData] = useState<GroupRequestFormData>(
     originalData.current,
   );
   const [groupData, setGroupData] = useState<groupName>({

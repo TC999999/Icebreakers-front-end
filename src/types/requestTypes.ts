@@ -1,4 +1,4 @@
-export type requestType =
+export type RequestType =
   | "direct-requests-received"
   | "direct-requests-sent"
   | "group-invites-received"
@@ -6,68 +6,66 @@ export type requestType =
   | "group-requests-received"
   | "group-requests-sent";
 
-export type directConversationRequest = {
+// DIRECT REQUEST FORM DATA
+export type DirectConversationRequest = {
   to: string;
   content: string;
 };
 
-export type directConversationRequestPair = {
+export type DirectConversationRequestPair = {
   to: string;
   from: string;
 };
 
-export type sentRequest = {
+// GROUP REQUEST FORM DATA
+export type GroupRequestFormData = {
   to: string;
+  from: string;
   content: string;
-  createdAt: string;
 };
 
-interface requestCard {
+// BASE/DIRECT REQUEST CARD
+interface RequestCard {
   id: string;
   content: string;
   createdAt: string;
-  hasResponded: boolean;
-  hasAccepted: boolean;
 }
 
-export interface sentRequestCard extends requestCard {
-  to: string;
-}
-
-export type receivedRequest = {
-  from: string;
-  content: string;
-  createdAt: string;
-};
-
-export interface receivedRequestCard extends requestCard {
+export interface ReceivedRequestCard extends RequestCard {
   from: string;
 }
 
-export type directRequestCard = {
-  id: string;
-  from: string;
+export interface SentRequestCard extends RequestCard {
   to: string;
-  content: string;
-  createdAt: string;
-};
+}
 
-export type directConversationDelete = {
-  to: string;
-};
-
-export type directConversationResponse = {
-  id: string;
-  from: string;
-  accepted: boolean;
-};
-
-export type groupConversationResponse = {
-  id: string;
-  from: string;
+// GROUP REQUEST CARDS
+interface BaseGroupRequestCard {
   groupID: string;
   groupTitle: string;
+}
+export interface ReceivedGroupRequestCard
+  extends BaseGroupRequestCard, ReceivedRequestCard {}
+
+export interface SentGroupRequestCard
+  extends BaseGroupRequestCard, SentRequestCard {}
+
+// REQUEST RESPONSES
+export interface DirectConversationResponse {
+  id: string;
+  from: string;
   accepted: boolean;
+}
+
+export interface GroupConversationResponse extends DirectConversationResponse {
+  groupID: string;
+  groupTitle: string;
+}
+
+// MAYBE DELETE
+
+export type DirectConversationDelete = {
+  to: string;
 };
 
 export type groupInvitationDelete = {
@@ -79,21 +77,15 @@ export type groupRequestDelete = {
   groupID: string;
 };
 
-export type groupRequestResponse = {
-  id: string;
-  from: string;
-  groupID: string;
-  groupTitle: string;
-  accepted: boolean;
-};
+// END MAYBE DELETE
 
-export type requestParams = {
+export type RequestParams = {
   directOrGroup: "direct" | "group";
   requestOrInvitation: "requests" | "invitations";
   type: "received" | "sent";
 };
 
-export type requestCountSTR =
+export type RequestCountSTR =
   | "receivedDirectRequestCount"
   | "sentDirectRequestCount"
   | "receivedGroupInvitationCount"
@@ -101,63 +93,34 @@ export type requestCountSTR =
   | "receivedGroupRequestCount"
   | "sentGroupRequestCount";
 
-export type requestCount = {
-  [T in requestCountSTR]: number;
+export type RequestCount = {
+  [T in RequestCountSTR]: number;
 };
 
-export type requestCountChange = {
-  addRequest?: requestCountSTR;
-  subtractRequest?: requestCountSTR;
-};
-
-// group cards
-interface GroupCardTemplate {
-  groupTitle: string;
-  groupID: string;
-  content: string;
-  createdAt: string;
-  id: string;
-  next: boolean;
-  hasResponded: boolean;
-  hasAccepted: boolean;
-}
-
-export interface ReceivedGroupCard extends GroupCardTemplate {
-  from: string;
-}
-
-export interface SentGroupCard extends GroupCardTemplate {
-  to: string;
-}
-
-export type socketRequest = {
-  requestType: requestType;
+export type SocketRequest = {
+  requestType: RequestType;
   to: string;
   request?: any;
   response?: any;
 };
 
-export type groupRequestFormData = {
-  to: string;
-  from: string;
-  content: string;
-};
+export type AnyRequest =
+  | SentRequestCard
+  | ReceivedRequestCard
+  | SentGroupRequestCard
+  | ReceivedGroupRequestCard;
 
-export type requestList = (
-  | sentRequestCard
-  | receivedRequestCard
-  | SentGroupCard
-  | ReceivedGroupCard
-)[];
-export type requestSocketHookProps = {
-  setNewRequestCount: () => void;
+export type RequestList = AnyRequest[];
+
+export type RequestSocketHookProps = {
+  setNewRequestCount: (requestType: RequestCountSTR) => void;
   refetchRequests: (id: string) => void;
-  requestParams: requestParams;
+  requestParams: RequestParams;
 };
 
-export type requestInfiniteQueryRes = {
-  requestList: requestList;
+export type RequestInfiniteQueryRes = {
+  requestList: RequestList;
   next: boolean;
 };
 
-export type requestInfiniteQueryParams = { offset: number };
+export type RequestInfiniteQueryParams = { offset: number };

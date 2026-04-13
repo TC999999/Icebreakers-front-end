@@ -1,16 +1,16 @@
 import RequestTab from "./RequestTab";
 import type {
-  requestCount,
-  requestType,
-  requestParams,
+  RequestCount,
+  RequestType,
+  RequestParams,
 } from "../types/requestTypes";
 import "../styles/requests/RequestTabList.scss";
 import useRequestTabList from "./hooks/useRequestTabList";
 
 type Props = {
-  viewedRequests: requestType;
-  requestCount: requestCount;
-  changeViewedRequests: (params: requestParams) => Promise<void>;
+  viewedRequests: RequestType;
+  requestCount: RequestCount;
+  changeViewedRequests: (params: RequestParams) => Promise<void>;
 };
 
 // Reusable React component for tab list in request list page that separates requests of

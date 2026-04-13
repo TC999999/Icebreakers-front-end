@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
-import type { directConversationRequest } from "../../types/requestTypes";
+import type { DirectConversationRequest } from "../../types/requestTypes";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/loading";
@@ -13,12 +13,12 @@ const useRequestForm = (to: string, from: string) => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
 
-  const originalData = useRef<directConversationRequest>({
+  const originalData = useRef<DirectConversationRequest>({
     to,
     content: "",
   });
 
-  const [requestData, setRequestData] = useState<directConversationRequest>(
+  const [requestData, setRequestData] = useState<DirectConversationRequest>(
     originalData.current,
   );
 

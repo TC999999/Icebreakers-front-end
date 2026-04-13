@@ -1,24 +1,17 @@
 import { useCallback } from "react";
 import type {
-  directConversationResponse,
-  groupConversationResponse,
-  receivedRequestCard,
-  sentRequestCard,
-  requestType,
-  SentGroupCard,
-  ReceivedGroupCard,
+  RequestType,
+  DirectConversationResponse,
+  GroupConversationResponse,
+  AnyRequest,
 } from "../../types/requestTypes";
 
 type input = {
-  requestType: requestType;
-  request:
-    | receivedRequestCard
-    | sentRequestCard
-    | SentGroupCard
-    | ReceivedGroupCard;
-  respondToDirectRequest: (response: directConversationResponse) => void;
-  respondToGroupRequest: (response: groupConversationResponse) => void;
-  respondToGroupInvitation: (response: groupConversationResponse) => void;
+  requestType: RequestType;
+  request: AnyRequest;
+  respondToDirectRequest: (response: DirectConversationResponse) => void;
+  respondToGroupRequest: (response: GroupConversationResponse) => void;
+  respondToGroupInvitation: (response: GroupConversationResponse) => void;
 };
 
 // custom hook for request card in list of requests in any tab in request inbox

@@ -3,9 +3,9 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useAppSelector } from "../../features/hooks";
 import requestsAPI from "../../apis/requestsAPI";
 import type {
-  requestType,
-  requestCount,
-  requestParams,
+  RequestType,
+  RequestCount,
+  RequestParams,
 } from "../../types/requestTypes";
 import requestDesc from "../../helpers/maps/requestList";
 import {
@@ -32,7 +32,7 @@ const useRequestListPage = () => {
   }, shallowEqual);
 
   const defaultTitleAndDesc: titleAndDesc = { title: "", description: "" };
-  const initialCount: requestCount = {
+  const initialCount: RequestCount = {
     receivedDirectRequestCount: 0,
     sentDirectRequestCount: 0,
     receivedGroupInvitationCount: 0,
@@ -44,7 +44,7 @@ const useRequestListPage = () => {
   // builds a reusable requestType type string for currently viewed requests by pulling the values from
   // the url search parameters and returning the correct value from the requestType map; used for getting
   // correct title and description shown in the component
-  const buildRequestType = (): requestType => {
+  const buildRequestType = (): RequestType => {
     return (
       requestTypeMap[`${directOrGroup}-${requestOrInvitation}-${type}`] ||
       "direct-requests-received"
@@ -54,7 +54,7 @@ const useRequestListPage = () => {
   // builds a reusable request parameters type object for the currently viewed requests by pulling the values
   // from the url search parameters and retrieving the correct value from their respective maps; used for
   // fetching data
-  const buildRequestParams = (): requestParams => {
+  const buildRequestParams = (): RequestParams => {
     return {
       directOrGroup: DoGMap[directOrGroup] || "direct",
       requestOrInvitation: RoIMap[requestOrInvitation] || "requests",
@@ -63,7 +63,7 @@ const useRequestListPage = () => {
   };
 
   const [viewedRequests, setViewedRequests] =
-    useState<requestType>(buildRequestType);
+    useState<RequestType>(buildRequestType);
   const [currentTitleAndDesc, setViewedTitleAndDesc] = useState<titleAndDesc>(
     requestDesc.get(buildRequestType()) || defaultTitleAndDesc,
   );
@@ -74,7 +74,7 @@ const useRequestListPage = () => {
   // use infinite query initially receives a single request, but continuously receives new requests as user
   // calls fetchNextPage function until hasNextPage boolean is false; also fetches new requests whenever query
   // key parameters are changed (which in this case is the url search parameters)
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
+  const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: ["requests", { directOrGroup, requestOrInvitation, type }],
     queryFn: async ({ pageParam }) =>
       await requestsAPI.getRequests(username!, {
@@ -112,15 +112,15 @@ const useRequestListPage = () => {
   // highlights the respective tab on the left and changes current description being shown;
   // if tablet request tabs being shown, they are hidden afterwards
   useEffect(() => {
-    if (isLoading) {
-      const requestType: requestType = buildRequestType();
+    if (isFetching) {
+      const requestType: RequestType = buildRequestType();
       setViewedRequests(requestType);
       setViewedTitleAndDesc(
         requestDesc.get(requestType) || defaultTitleAndDesc,
       );
       if (showTabletRequestTabs) setShowTabletRequestTabs(false);
     }
-  }, [isLoading, searchParams]);
+  }, [isFetching, searchParams]);
 
   // custom hook that listens for socket signals from server for when a new request is being added or removed
   const {
@@ -159,7 +159,7 @@ const useRequestListPage = () => {
   // when user clicks on respective request tab, clears previous request cache and updates url search
   // parameters
   const changeViewedRequests = useCallback(
-    async (params: requestParams) => {
+    async (params: RequestParams) => {
       queryClient.removeQueries({
         queryKey: ["requests", { directOrGroup, requestOrInvitation, type }],
       });
@@ -174,7 +174,7 @@ const useRequestListPage = () => {
     requests,
     requestCount,
     showTabletRequestTabs,
-    isLoading,
+    isFetching,
     hasNextPage,
     toggleTabletTabs,
     changeViewedRequests,

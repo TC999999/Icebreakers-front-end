@@ -1,14 +1,11 @@
 import { type JSX } from "react";
 import type { titleAndDesc } from "../types/miscTypes";
 import type {
-  sentRequestCard,
-  receivedRequestCard,
-  SentGroupCard,
-  ReceivedGroupCard,
-  directConversationResponse,
-  requestType,
-  groupConversationResponse,
-  requestInfiniteQueryRes,
+  RequestType,
+  RequestList,
+  DirectConversationResponse,
+  GroupConversationResponse,
+  RequestInfiniteQueryRes,
 } from "../types/requestTypes";
 import RequestCard from "./RequestCard";
 import "../styles/requests/RequestList.scss";
@@ -23,34 +20,29 @@ import type {
 } from "@tanstack/react-query";
 
 type Props = {
-  currentRequestType: requestType;
+  currentRequestType: RequestType;
   currentTitleAndDesc: titleAndDesc;
-  requestList: (
-    | receivedRequestCard
-    | sentRequestCard
-    | ReceivedGroupCard
-    | SentGroupCard
-  )[];
+  requestList: RequestList;
   isLoading: boolean;
   hasNextPage: boolean;
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
-  respondToDirectRequest: (response: directConversationResponse) => void;
-  respondToGroupRequest: (response: groupConversationResponse) => void;
-  respondToGroupInvitation: (response: groupConversationResponse) => void;
+  respondToDirectRequest: (response: DirectConversationResponse) => void;
+  respondToGroupRequest: (response: GroupConversationResponse) => void;
+  respondToGroupInvitation: (response: GroupConversationResponse) => void;
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined,
   ) => Promise<
     InfiniteQueryObserverResult<
-      InfiniteData<requestInfiniteQueryRes, unknown>,
+      InfiniteData<RequestInfiniteQueryRes, unknown>,
       Error
     >
   >;
 };
 
 // React Component with a list of Request Cards to be viewed in any of the the request inbox
-const RequestList: React.FC<Props> = ({
+const RequestListFC: React.FC<Props> = ({
   currentRequestType,
   currentTitleAndDesc,
   requestList,
@@ -108,4 +100,4 @@ const RequestList: React.FC<Props> = ({
   );
 };
 
-export default RequestList;
+export default RequestListFC;

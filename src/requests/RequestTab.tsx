@@ -1,13 +1,13 @@
 import React from "react";
-import type { requestType, requestParams } from "../types/requestTypes";
+import type { RequestType, RequestParams } from "../types/requestTypes";
 import "../styles/requests/RequestTab.scss";
 
 type Props = {
   title: string;
-  params: requestParams;
-  requestType: requestType;
-  viewedRequests: requestType;
-  changeViewedRequests: (requestParams: requestParams) => void;
+  params: RequestParams;
+  requestType: RequestType;
+  viewedRequests: RequestType;
+  changeViewedRequests: (requestParams: RequestParams) => void;
   requestAmount: number;
 };
 
