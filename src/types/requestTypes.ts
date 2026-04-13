@@ -1,13 +1,10 @@
 export type requestType =
   | "direct-requests-received"
   | "direct-requests-sent"
-  | "direct-requests-removed"
   | "group-invites-received"
   | "group-invites-sent"
-  | "group-invites-removed"
   | "group-requests-received"
-  | "group-requests-sent"
-  | "group-requests-removed";
+  | "group-requests-sent";
 
 export type directConversationRequest = {
   to: string;
@@ -90,28 +87,19 @@ export type groupRequestResponse = {
   accepted: boolean;
 };
 
-export type requestsList = {
-  sentRequestList: sentRequestCard[];
-  receivedRequestList: receivedRequestCard[];
-  removedRequestList: sentRequestCard[];
-};
-
 export type requestParams = {
   directOrGroup: "direct" | "group";
   requestOrInvitation: "requests" | "invitations";
-  type: "received" | "sent" | "removed";
+  type: "received" | "sent";
 };
 
 export type requestCountSTR =
   | "receivedDirectRequestCount"
   | "sentDirectRequestCount"
-  | "removedDirectRequestCount"
   | "receivedGroupInvitationCount"
   | "sentGroupInvitationCount"
-  | "removedGroupInvitationCount"
   | "receivedGroupRequestCount"
-  | "sentGroupRequestCount"
-  | "removedGroupRequestCount";
+  | "sentGroupRequestCount";
 
 export type requestCount = {
   [T in requestCountSTR]: number;
@@ -162,12 +150,14 @@ export type requestList = (
   | ReceivedGroupCard
 )[];
 export type requestSocketHookProps = {
-  requests: requestList;
   setNewRequestCount: () => void;
-  requestCount: requestCount;
+  refetchRequests: (id: string) => void;
+  requestParams: requestParams;
 };
 
 export type requestInfiniteQueryRes = {
   requestList: requestList;
   next: boolean;
 };
+
+export type requestInfiniteQueryParams = { offset: number };

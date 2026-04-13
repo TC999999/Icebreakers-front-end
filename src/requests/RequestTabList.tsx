@@ -5,7 +5,6 @@ import type {
   requestParams,
 } from "../types/requestTypes";
 import "../styles/requests/RequestTabList.scss";
-
 import useRequestTabList from "./hooks/useRequestTabList";
 
 type Props = {
@@ -35,7 +34,7 @@ const RequestTabList: React.FC<Props> = ({
       <RequestTab
         key="tab-1"
         requestType="direct-requests-received"
-        title="Received"
+        title="Direct Requests Received"
         params={{
           directOrGroup: "direct",
           requestOrInvitation: "requests",
@@ -48,7 +47,7 @@ const RequestTabList: React.FC<Props> = ({
       <RequestTab
         key="tab-2"
         requestType="direct-requests-sent"
-        title="Sent"
+        title="Direct Requests Sent"
         params={{
           directOrGroup: "direct",
           requestOrInvitation: "requests",
@@ -60,19 +59,6 @@ const RequestTabList: React.FC<Props> = ({
       />
       <RequestTab
         key="tab-3"
-        requestType="direct-requests-removed"
-        title="Removed"
-        viewedRequests={viewedRequests}
-        params={{
-          directOrGroup: "direct",
-          requestOrInvitation: "requests",
-          type: "removed",
-        }}
-        changeViewedRequests={changeViewedRequests}
-        requestAmount={requestCount.removedDirectRequestCount}
-      />
-      <RequestTab
-        key="tab-4"
         requestType="group-requests-received"
         title="Group Requests Received"
         params={{
@@ -85,7 +71,7 @@ const RequestTabList: React.FC<Props> = ({
         requestAmount={requestCount.receivedGroupRequestCount}
       />
       <RequestTab
-        key="tab-5"
+        key="tab-4"
         requestType="group-requests-sent"
         title="Group Requests Sent"
         params={{
@@ -98,20 +84,7 @@ const RequestTabList: React.FC<Props> = ({
         requestAmount={requestCount.sentGroupRequestCount}
       />
       <RequestTab
-        key="tab-6"
-        requestType="group-requests-removed"
-        title="Group Requests Removed"
-        params={{
-          directOrGroup: "group",
-          requestOrInvitation: "requests",
-          type: "removed",
-        }}
-        viewedRequests={viewedRequests}
-        changeViewedRequests={changeViewedRequests}
-        requestAmount={requestCount.removedGroupRequestCount}
-      />
-      <RequestTab
-        key="tab-7"
+        key="tab-5"
         requestType="group-invites-received"
         title="Group Invitations Received"
         params={{
@@ -124,7 +97,7 @@ const RequestTabList: React.FC<Props> = ({
         requestAmount={requestCount.receivedGroupInvitationCount}
       />
       <RequestTab
-        key="tab-8"
+        key="tab-6"
         requestType="group-invites-sent"
         title="Group Invitations Sent"
         params={{
@@ -135,19 +108,6 @@ const RequestTabList: React.FC<Props> = ({
         viewedRequests={viewedRequests}
         changeViewedRequests={changeViewedRequests}
         requestAmount={requestCount.sentGroupInvitationCount}
-      />
-      <RequestTab
-        key="tab-9"
-        requestType="group-invites-removed"
-        title="Group Invitations Removed"
-        params={{
-          directOrGroup: "group",
-          requestOrInvitation: "invitations",
-          type: "removed",
-        }}
-        viewedRequests={viewedRequests}
-        changeViewedRequests={changeViewedRequests}
-        requestAmount={requestCount.removedGroupInvitationCount}
       />
     </div>
   );

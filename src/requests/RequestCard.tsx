@@ -19,13 +19,8 @@ type Props = {
     | SentGroupCard
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
-
   respondToGroupRequest: (response: groupConversationResponse) => void;
-  removeGroupRequest: (request: SentGroupCard) => void;
-  deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
-  removeGroupInvitation: (request: SentGroupCard) => void;
-  deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
 // reusable React component for request cards that show up in the user's request inbox; can ue used
@@ -36,29 +31,20 @@ const RequestCard: React.FC<Props> = ({
   request,
   respondToDirectRequest,
   respondToGroupRequest,
-  removeGroupRequest,
-  deleteGroupRequest,
   respondToGroupInvitation,
-  removeGroupInvitation,
-  deleteGroupInvitation,
 }) => {
-  const { respond, remove, deleteRequest } = useRequestCard({
+  const { respond } = useRequestCard({
     requestType,
     request,
     respondToDirectRequest,
     respondToGroupRequest,
-    removeGroupRequest,
-    deleteGroupRequest,
     respondToGroupInvitation,
-    removeGroupInvitation,
-    deleteGroupInvitation,
   });
 
   return (
     <div className="request-card">
       {requestType === "group-invites-received" ||
-      requestType === "group-invites-sent" ||
-      requestType === "group-invites-removed" ? (
+      requestType === "group-invites-sent" ? (
         <h2>
           {"from" in request
             ? `Invitation From ${request.from}`
@@ -76,7 +62,6 @@ const RequestCard: React.FC<Props> = ({
       <div className="request-message">
         <p>{request.content}</p>
       </div>
-
       <div>
         <span>
           <small>Made At: {createDate(request.createdAt, "long")}</small>
@@ -98,7 +83,6 @@ const RequestCard: React.FC<Props> = ({
           </small>
         </span>
       </div>
-
       {!request.hasResponded && (
         <div id="response-list">
           {(requestType === "direct-requests-received" ||
@@ -113,25 +97,6 @@ const RequestCard: React.FC<Props> = ({
               </button>
             </div>
           )}
-          {/* {(requestType === "direct-requests-sent" ||
-            requestType === "group-invites-sent" ||
-            requestType === "group-requests-sent") && (
-            <div className="response-buttons" id="sent-response">
-              <button className="remove-button" onClick={() => remove()}>
-                Remove
-              </button>
-            </div>
-          )} */}
-
-          {/* {(requestType === "direct-requests-removed" ||
-            requestType === "group-invites-removed" ||
-            requestType === "group-requests-removed") && (
-            <div className="response-buttons" id="removed-response">
-              <button className="delete-button" onClick={() => deleteRequest()}>
-                Delete
-              </button>
-            </div>
-          )} */}
         </div>
       )}
     </div>

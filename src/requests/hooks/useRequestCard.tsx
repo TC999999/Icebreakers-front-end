@@ -18,11 +18,7 @@ type input = {
     | ReceivedGroupCard;
   respondToDirectRequest: (response: directConversationResponse) => void;
   respondToGroupRequest: (response: groupConversationResponse) => void;
-  removeGroupRequest: (request: SentGroupCard) => void;
-  deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
-  removeGroupInvitation: (request: SentGroupCard) => void;
-  deleteGroupInvitation: (request: SentGroupCard) => void;
 };
 
 // custom hook for request card in list of requests in any tab in request inbox
@@ -31,11 +27,7 @@ const useRequestCard = ({
   request,
   respondToDirectRequest,
   respondToGroupRequest,
-  removeGroupRequest,
-  deleteGroupRequest,
   respondToGroupInvitation,
-  removeGroupInvitation,
-  deleteGroupInvitation,
 }: input) => {
   // callback function that allows user to respond to the requests that they have received; works for
   // both acceptance and denial
@@ -77,41 +69,7 @@ const useRequestCard = ({
     }
   }, []);
 
-  // callback function that allows user to remove the requests that they have sent to other users
-  const remove = useCallback(() => {
-    if (
-      "to" in request &&
-      "groupID" in request &&
-      requestType === "group-requests-sent"
-    ) {
-      removeGroupRequest(request);
-    } else if (
-      "to" in request &&
-      "groupID" in request &&
-      requestType === "group-invites-sent"
-    ) {
-      removeGroupInvitation(request);
-    }
-  }, []);
-
-  // callback function that allows user to remove the requests that they have sent to other users
-  const deleteRequest = useCallback(() => {
-    if (
-      "to" in request &&
-      "groupID" in request &&
-      requestType === "group-requests-removed"
-    ) {
-      deleteGroupRequest(request);
-    } else if (
-      "to" in request &&
-      "groupID" in request &&
-      requestType === "group-invites-removed"
-    ) {
-      deleteGroupInvitation(request);
-    }
-  }, []);
-
-  return { respond, remove, deleteRequest };
+  return { respond };
 };
 
 export default useRequestCard;

@@ -17,22 +17,17 @@ type RoIMapType = {
 
 // initial dynamic object for setting up type map
 type tMapType = {
-  [key: string]: "received" | "sent" | "removed";
+  [key: string]: "received" | "sent";
 };
 
 // map of request types as strings as keys to the corresponding type as an explicit requestType type
 export const requestTypeMap: typeMap = {
   "direct-requests-received": "direct-requests-received",
   "direct-requests-sent": "direct-requests-sent",
-  "direct-requests-removed": "direct-requests-removed",
-
   "group-invitations-received": "group-invites-received",
   "group-invitations-sent": "group-invites-sent",
-  "group-invitations-removed": "group-invites-removed",
-
   "group-requests-received": "group-requests-received",
   "group-requests-sent": "group-requests-sent",
-  "group-requests-removed": "group-requests-removed",
 };
 
 // map for direct-or-group parameters: strings as keys to the corresponding type as an
@@ -53,5 +48,4 @@ export const RoIMap: RoIMapType = {
 export const tMap: tMapType = {
   received: "received",
   sent: "sent",
-  removed: "removed",
 };

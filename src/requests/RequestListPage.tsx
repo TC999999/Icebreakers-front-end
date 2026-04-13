@@ -21,11 +21,7 @@ const RequestListPage = () => {
     toggleTabletTabs,
     respondToDirectRequest,
     respondToGroupRequest,
-    removeGroupRequest,
-    deleteGroupRequest,
     respondToGroupInvitation,
-    removeGroupInvitation,
-    deleteGroupInvitation,
     fetchNextPage,
   } = useRequestListPage();
 
@@ -62,11 +58,7 @@ const RequestListPage = () => {
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}
           respondToGroupRequest={respondToGroupRequest}
-          removeGroupRequest={removeGroupRequest}
-          deleteGroupRequest={deleteGroupRequest}
           respondToGroupInvitation={respondToGroupInvitation}
-          removeGroupInvitation={removeGroupInvitation}
-          deleteGroupInvitation={deleteGroupInvitation}
           fetchNextPage={fetchNextPage}
         />
       </div>

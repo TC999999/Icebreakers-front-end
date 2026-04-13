@@ -37,13 +37,8 @@ type Props = {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => Promise<void>;
   respondToDirectRequest: (response: directConversationResponse) => void;
-
   respondToGroupRequest: (response: groupConversationResponse) => void;
-  removeGroupRequest: (request: SentGroupCard) => void;
-  deleteGroupRequest: (request: SentGroupCard) => void;
   respondToGroupInvitation: (response: groupConversationResponse) => void;
-  removeGroupInvitation: (request: SentGroupCard) => void;
-  deleteGroupInvitation: (request: SentGroupCard) => void;
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined,
   ) => Promise<
@@ -63,13 +58,8 @@ const RequestList: React.FC<Props> = ({
   hasNextPage,
   toggleTabletTabs,
   respondToDirectRequest,
-
   respondToGroupRequest,
-  removeGroupRequest,
-  deleteGroupRequest,
   respondToGroupInvitation,
-  removeGroupInvitation,
-  deleteGroupInvitation,
   fetchNextPage,
 }): JSX.Element => {
   return (
@@ -98,11 +88,7 @@ const RequestList: React.FC<Props> = ({
                 request={request}
                 respondToDirectRequest={respondToDirectRequest}
                 respondToGroupRequest={respondToGroupRequest}
-                removeGroupRequest={removeGroupRequest}
-                deleteGroupRequest={deleteGroupRequest}
                 respondToGroupInvitation={respondToGroupInvitation}
-                removeGroupInvitation={removeGroupInvitation}
-                deleteGroupInvitation={deleteGroupInvitation}
               />
             ))}
             <IntersectionWrapper
@@ -112,7 +98,6 @@ const RequestList: React.FC<Props> = ({
             />
           </div>
         )}
-
         {!isLoading && requestList && requestList.length === 0 && (
           <div>
             <h3 className="message">This list is currently empty!</h3>
