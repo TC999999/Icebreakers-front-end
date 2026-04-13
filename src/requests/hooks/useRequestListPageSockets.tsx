@@ -1,10 +1,14 @@
 import { useEffect, useCallback } from "react";
 import type {
-  requestType,
-  requestCount,
-  requestInfiniteQueryRes,
-  requestParams,
+  RequestType,
+  RequestCount,
+  RequestInfiniteQueryRes,
+  RequestParams,
+  RequestCountSTR,
+  // ReceivedRequestCard,
+  // ReceivedGroupRequestCard,
 } from "../../types/requestTypes";
+import { requestCountMap } from "../../helpers/maps/requestTypeMap";
 import socket from "../../helpers/socket";
 import useRequestListPageDirectRequests from "./useRequestListPageDirectRequest";
 import useRequestListPageGroupRequests from "./useRequestListPageGroupRequests";
@@ -12,9 +16,9 @@ import type { InfiniteData } from "@tanstack/react-query";
 import queryClient from "../../helpers/queryClient";
 
 type Props = {
-  requestCount: requestCount;
-  viewedRequests: requestType;
-  requestParams: requestParams;
+  requestCount: RequestCount;
+  viewedRequests: RequestType;
+  requestParams: RequestParams;
 };
 
 // custom hook for websocket logic in request inbox page
@@ -26,30 +30,20 @@ const useRequestListPageSockets = ({
   // sets up socket listeners on initial render
   useEffect(() => {
     socket.on("addRequest", async ({ request, requestType }) => {
+      await queryClient.cancelQueries({ queryKey: ["requestCount"] });
       if (requestType === viewedRequests) {
         await queryClient.cancelQueries({
           queryKey: ["requests", requestParams],
         });
 
-        const { content, createdAt, from, id } = request;
-
         queryClient.setQueryData(
           ["requests", requestParams],
-          (prevData: InfiniteData<requestInfiniteQueryRes, number>) => {
-            const newRequest = {
-              content,
-              createdAt,
-              from,
-              id,
-              hasAccepted: false,
-              hasResponded: false,
-            };
-
+          (prevData: InfiniteData<RequestInfiniteQueryRes, number>) => {
             return {
               ...prevData,
               pages: prevData.pages.map((page, i) => {
                 return i === 0
-                  ? { ...page, requestList: [newRequest, ...page.requestList] }
+                  ? { ...page, requestList: [request, ...page.requestList] }
                   : page;
               }),
             };
@@ -60,10 +54,18 @@ const useRequestListPageSockets = ({
           queryKey: ["requests", requestParams],
         });
       }
-      setNewRequestCount();
+      queryClient.setQueryData(["requestCount"], (prevData: RequestCount) => {
+        const requestCountStr = requestCountMap[requestType];
+        return {
+          ...prevData,
+          [requestCountStr]: prevData[requestCountStr] + 1,
+        };
+      });
+      queryClient.invalidateQueries({ queryKey: ["requestCount"] });
     });
 
     socket.on("removeRequest", async ({ response, requestType }) => {
+      await queryClient.cancelQueries({ queryKey: ["requestCount"] });
       if (viewedRequests === requestType) {
         await queryClient.cancelQueries({
           queryKey: ["requests", requestParams],
@@ -75,7 +77,16 @@ const useRequestListPageSockets = ({
           queryKey: ["requests", requestParams],
         });
       }
-      setNewRequestCount();
+
+      queryClient.setQueryData(["requestCount"], (prevData: RequestCount) => {
+        const requestCountStr = requestCountMap[requestType];
+        return {
+          ...prevData,
+          [requestCountStr]: prevData[requestCountStr] - 1,
+        };
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["requestCount"] });
     });
 
     return () => {
@@ -85,16 +96,25 @@ const useRequestListPageSockets = ({
   }, [viewedRequests, requestCount, requestParams, queryClient]);
 
   //callback function to set new request count: to only be used in other functions
-  const setNewRequestCount = () => {
-    queryClient.invalidateQueries({ queryKey: ["requestCount"] });
-  };
+  const setNewRequestCount = useCallback(
+    async (requestType: RequestCountSTR) => {
+      await queryClient.cancelQueries({ queryKey: ["requestCount"] });
+      queryClient.setQueryData(["requestCount"], (prevData: RequestCount) => {
+        return { ...prevData, [requestType]: prevData[requestType] - 1 };
+      });
+
+      console.log("resetCount");
+      queryClient.invalidateQueries({ queryKey: ["requestCount"] });
+    },
+    [queryClient],
+  );
 
   // updates current request list
   const refetchRequests = useCallback(
     (id: string) => {
       queryClient.setQueryData(
         ["requests", requestParams],
-        (prev: InfiniteData<requestInfiniteQueryRes, number>) => {
+        (prev: InfiniteData<RequestInfiniteQueryRes, number>) => {
           const newMap = prev.pages.map((r) => {
             const newRequests = r.requestList.filter((request) => {
               return request.id !== id;

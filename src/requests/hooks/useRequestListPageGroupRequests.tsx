@@ -2,9 +2,9 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { type AppDispatch } from "../../features/store";
 import { setUnansweredRequests } from "../../features/slices/auth";
 import type {
-  groupConversationResponse,
-  requestSocketHookProps,
-  requestInfiniteQueryRes,
+  GroupConversationResponse,
+  RequestSocketHookProps,
+  RequestInfiniteQueryRes,
 } from "../../types/requestTypes";
 import { shallowEqual } from "react-redux";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
@@ -16,7 +16,7 @@ const useRequestListPageGroupRequests = ({
   setNewRequestCount,
   refetchRequests,
   requestParams,
-}: requestSocketHookProps) => {
+}: RequestSocketHookProps) => {
   const dispatch: AppDispatch = useAppDispatch();
 
   const username = useAppSelector((store) => {
@@ -27,23 +27,23 @@ const useRequestListPageGroupRequests = ({
   // if invitation was accepted, the recipient join the group and
   // removes invitation from both users' inboxes
   const { mutate: respondToGroupInvitation } = useMutation({
-    mutationFn: (response: groupConversationResponse) =>
+    mutationFn: (response: GroupConversationResponse) =>
       groupRequestsAPI.respondToGroupInvitation(username!, response),
-    onMutate: async (response: groupConversationResponse) => {
+    onMutate: async (response: GroupConversationResponse) => {
       await queryClient.cancelQueries({
         queryKey: ["requests", requestParams],
       });
       const previousPages = queryClient.getQueryData<
-        InfiniteData<requestInfiniteQueryRes, number>
+        InfiniteData<RequestInfiniteQueryRes, number>
       >(["requests", requestParams]);
       refetchRequests(response.id);
       return { previousPages };
     },
     onSuccess: () => {
-      setNewRequestCount();
+      setNewRequestCount("receivedGroupInvitationCount");
       dispatch(setUnansweredRequests(-1));
     },
-    onError: (err: Error, response: groupConversationResponse, context) => {
+    onError: (err: Error, response: GroupConversationResponse, context) => {
       queryClient.setQueryData(
         ["requests", requestParams],
         context?.previousPages,
@@ -57,23 +57,28 @@ const useRequestListPageGroupRequests = ({
   // if request was accepted, the sender join the group and removes
   // request from both users' inboxes
   const { mutate: respondToGroupRequest } = useMutation({
-    mutationFn: (response: groupConversationResponse) =>
-      groupRequestsAPI.respondToGroupRequest(username!, response),
-    onMutate: async (response: groupConversationResponse) => {
+    mutationFn: async (response: GroupConversationResponse) => {
+      console.log(response);
+      groupRequestsAPI.respondToGroupRequest(username!, response);
+    },
+
+    onMutate: async (response: GroupConversationResponse) => {
       await queryClient.cancelQueries({
         queryKey: ["requests", requestParams],
       });
       const previousPages = queryClient.getQueryData<
-        InfiniteData<requestInfiniteQueryRes, number>
+        InfiniteData<RequestInfiniteQueryRes, number>
       >(["requests", requestParams]);
       refetchRequests(response.id);
       return { previousPages };
     },
+
     onSuccess: () => {
-      setNewRequestCount();
+      setNewRequestCount("receivedGroupRequestCount");
       dispatch(setUnansweredRequests(-1));
     },
-    onError: (err: Error, response: groupConversationResponse, context) => {
+
+    onError: (err: Error, response: GroupConversationResponse, context) => {
       queryClient.setQueryData(
         ["requests", requestParams],
         context?.previousPages,

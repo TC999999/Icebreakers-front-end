@@ -1,8 +1,12 @@
-import type { requestType } from "../../types/requestTypes";
+import type { RequestType, RequestCountSTR } from "../../types/requestTypes";
 
 // initial dynamic object for setting up request type map
 type typeMap = {
-  [key: string]: requestType;
+  [key: string]: RequestType;
+};
+
+type countMap = {
+  [key: string]: RequestCountSTR;
 };
 
 // initial dynamic object for setting up direct-or-group map
@@ -28,6 +32,16 @@ export const requestTypeMap: typeMap = {
   "group-invitations-sent": "group-invites-sent",
   "group-requests-received": "group-requests-received",
   "group-requests-sent": "group-requests-sent",
+};
+
+// map of request types as strings as keys to the corresponding type as an explicit RequestCountStr type
+export const requestCountMap: countMap = {
+  "direct-requests-received": "receivedDirectRequestCount",
+  "direct-requests-sent": "sentDirectRequestCount",
+  "group-invitations-received": "receivedGroupInvitationCount",
+  "group-invitations-sent": "sentGroupInvitationCount",
+  "group-requests-received": "receivedGroupRequestCount",
+  "group-requests-sent": "sentGroupRequestCount",
 };
 
 // map for direct-or-group parameters: strings as keys to the corresponding type as an

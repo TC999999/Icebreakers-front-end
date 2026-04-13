@@ -15,7 +15,7 @@ const RequestListPage = () => {
     requestCount,
     currentTitleAndDesc,
     showTabletRequestTabs,
-    isLoading,
+    isFetching,
     hasNextPage,
     changeViewedRequests,
     toggleTabletTabs,
@@ -53,7 +53,7 @@ const RequestListPage = () => {
           currentRequestType={viewedRequests}
           currentTitleAndDesc={currentTitleAndDesc}
           requestList={requests}
-          isLoading={isLoading}
+          isLoading={isFetching}
           hasNextPage={hasNextPage}
           toggleTabletTabs={toggleTabletTabs}
           respondToDirectRequest={respondToDirectRequest}

@@ -3,9 +3,9 @@ import { type AppDispatch } from "../../features/store";
 import { setUnansweredRequests } from "../../features/slices/auth";
 import directRequestsAPI from "../../apis/directRequestsAPI";
 import type {
-  directConversationResponse,
-  requestInfiniteQueryRes,
-  requestSocketHookProps,
+  DirectConversationResponse,
+  RequestInfiniteQueryRes,
+  RequestSocketHookProps,
 } from "../../types/requestTypes";
 import { shallowEqual } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
@@ -17,7 +17,7 @@ const useRequestListPageDirectRequests = ({
   setNewRequestCount,
   refetchRequests,
   requestParams,
-}: requestSocketHookProps) => {
+}: RequestSocketHookProps) => {
   const dispatch: AppDispatch = useAppDispatch();
 
   const username = useAppSelector((store) => {
@@ -28,29 +28,32 @@ const useRequestListPageDirectRequests = ({
   // if request was accepted, the recipient join the group and
   // removes request from both users' inboxes
   const { mutate: respondToDirectRequest } = useMutation({
-    mutationFn: (response: directConversationResponse) =>
+    mutationFn: (response: DirectConversationResponse) =>
       directRequestsAPI.respondToDirectConversationRequest(username!, response),
 
-    onMutate: async (response: directConversationResponse) => {
+    onMutate: async (response: DirectConversationResponse) => {
       await queryClient.cancelQueries({
         queryKey: ["requests", requestParams],
       });
       const previousPages = queryClient.getQueryData<
-        InfiniteData<requestInfiniteQueryRes, number>
+        InfiniteData<RequestInfiniteQueryRes, number>
       >(["requests", requestParams]);
       refetchRequests(response.id);
       return { previousPages };
     },
+
     onSuccess: () => {
-      setNewRequestCount();
+      setNewRequestCount("receivedDirectRequestCount");
       dispatch(setUnansweredRequests(-1));
     },
-    onError: (err: Error, response: directConversationResponse, context) => {
+
+    onError: (err: Error, response: DirectConversationResponse, context) => {
       queryClient.setQueryData(
         ["requests", requestParams],
         context?.previousPages,
       );
     },
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["requests", requestParams] });
     },
