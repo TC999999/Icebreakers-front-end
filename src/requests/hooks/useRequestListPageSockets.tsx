@@ -103,7 +103,6 @@ const useRequestListPageSockets = ({
         return { ...prevData, [requestType]: prevData[requestType] - 1 };
       });
 
-      console.log("resetCount");
       queryClient.invalidateQueries({ queryKey: ["requestCount"] });
     },
     [queryClient],

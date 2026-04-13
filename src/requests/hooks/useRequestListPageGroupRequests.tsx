@@ -58,7 +58,6 @@ const useRequestListPageGroupRequests = ({
   // request from both users' inboxes
   const { mutate: respondToGroupRequest } = useMutation({
     mutationFn: async (response: GroupConversationResponse) => {
-      console.log(response);
       groupRequestsAPI.respondToGroupRequest(username!, response);
     },
 
