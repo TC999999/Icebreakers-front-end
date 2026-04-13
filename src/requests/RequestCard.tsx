@@ -1,26 +1,19 @@
 import type {
-  directConversationResponse,
-  receivedRequestCard,
-  sentRequestCard,
-  requestType,
-  SentGroupCard,
-  ReceivedGroupCard,
-  groupConversationResponse,
+  AnyRequest,
+  DirectConversationResponse,
+  RequestType,
+  GroupConversationResponse,
 } from "../types/requestTypes";
 import "../styles/requests/RequestCard.scss";
 import createDate from "../helpers/createDate";
 import useRequestCard from "./hooks/useRequestCard";
 
 type Props = {
-  requestType: requestType;
-  request:
-    | receivedRequestCard
-    | sentRequestCard
-    | SentGroupCard
-    | ReceivedGroupCard;
-  respondToDirectRequest: (response: directConversationResponse) => void;
-  respondToGroupRequest: (response: groupConversationResponse) => void;
-  respondToGroupInvitation: (response: groupConversationResponse) => void;
+  requestType: RequestType;
+  request: AnyRequest;
+  respondToDirectRequest: (response: DirectConversationResponse) => void;
+  respondToGroupRequest: (response: GroupConversationResponse) => void;
+  respondToGroupInvitation: (response: GroupConversationResponse) => void;
 };
 
 // reusable React component for request cards that show up in the user's request inbox; can ue used
@@ -67,38 +60,20 @@ const RequestCard: React.FC<Props> = ({
           <small>Made At: {createDate(request.createdAt, "long")}</small>
         </span>
       </div>
-      <div>
-        <span>
-          <small>
-            Status:{" "}
-            {!request.hasResponded && !request.hasAccepted && (
-              <b>Not Yet Responded</b>
-            )}
-            {request.hasResponded && request.hasAccepted && (
-              <b>Request Accepted</b>
-            )}
-            {request.hasResponded && !request.hasAccepted && (
-              <b>Request Declined</b>
-            )}
-          </small>
-        </span>
+      <div id="response-list">
+        {(requestType === "direct-requests-received" ||
+          requestType === "group-invites-received" ||
+          requestType === "group-requests-received") && (
+          <div className="response-buttons" id="received-response">
+            <button className="accept-button" onClick={() => respond(true)}>
+              Accept
+            </button>
+            <button className="decline-button" onClick={() => respond(false)}>
+              Decline
+            </button>
+          </div>
+        )}
       </div>
-      {!request.hasResponded && (
-        <div id="response-list">
-          {(requestType === "direct-requests-received" ||
-            requestType === "group-invites-received" ||
-            requestType === "group-requests-received") && (
-            <div className="response-buttons" id="received-response">
-              <button className="accept-button" onClick={() => respond(true)}>
-                Accept
-              </button>
-              <button className="decline-button" onClick={() => respond(false)}>
-                Decline
-              </button>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

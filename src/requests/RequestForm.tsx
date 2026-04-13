@@ -1,11 +1,11 @@
 import type { JSX } from "react";
-import type { directConversationRequestPair } from "../types/requestTypes";
+import type { DirectConversationRequestPair } from "../types/requestTypes";
 import useRequestForm from "./hooks/useRequestForm";
 import "../styles/requests/RequestForm.scss";
 import InputDirections from "../InputDirections";
 
 // React Component for form to create a new direct conversation request with another user
-const RequestForm: React.FC<directConversationRequestPair> = ({
+const RequestForm: React.FC<DirectConversationRequestPair> = ({
   to,
   from,
 }): JSX.Element => {
