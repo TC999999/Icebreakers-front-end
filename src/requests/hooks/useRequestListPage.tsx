@@ -35,13 +35,10 @@ const useRequestListPage = () => {
   const initialCount: requestCount = {
     receivedDirectRequestCount: 0,
     sentDirectRequestCount: 0,
-    removedDirectRequestCount: 0,
     receivedGroupInvitationCount: 0,
     sentGroupInvitationCount: 0,
-    removedGroupInvitationCount: 0,
     receivedGroupRequestCount: 0,
     sentGroupRequestCount: 0,
-    removedGroupRequestCount: 0,
   };
 
   // builds a reusable requestType type string for currently viewed requests by pulling the values from
@@ -84,12 +81,12 @@ const useRequestListPage = () => {
         directOrGroup,
         requestOrInvitation,
         type,
-        ...pageParam,
+        pageParam,
       }),
     retry: 0,
-    initialPageParam: { offset: 0 },
+    initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      if (lastPage.next) return { offset: lastPageParam.offset + 2 };
+      if (lastPage.next) return lastPageParam + 3;
       return undefined;
     },
   });
@@ -123,19 +120,14 @@ const useRequestListPage = () => {
       );
       if (showTabletRequestTabs) setShowTabletRequestTabs(false);
     }
-  }, [isLoading]);
+  }, [isLoading, searchParams]);
 
   // custom hook that listens for socket signals from server for when a new request is being added or removed
   const {
     respondToDirectRequest,
     respondToGroupRequest,
-    removeGroupRequest,
-    deleteGroupRequest,
     respondToGroupInvitation,
-    removeGroupInvitation,
-    deleteGroupInvitation,
   } = useRequestListPageSockets({
-    requests,
     requestCount,
     viewedRequests,
     requestParams: buildRequestParams(),
@@ -188,11 +180,7 @@ const useRequestListPage = () => {
     changeViewedRequests,
     respondToDirectRequest,
     respondToGroupRequest,
-    removeGroupRequest,
-    deleteGroupRequest,
     respondToGroupInvitation,
-    removeGroupInvitation,
-    deleteGroupInvitation,
     fetchNextPage,
   };
 };
