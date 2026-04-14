@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import type { simpleGroup, GroupInvitation } from "../../types/groupTypes";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/loading";
+import { setFormLoading } from "../../features/slices/loading";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import {
@@ -10,9 +10,8 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import socket from "../../helpers/socket";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
-import { toast } from "react-toastify";
+import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 // hook for page with form to create a group invitation
 const useGroupInvite = () => {
@@ -21,7 +20,6 @@ const useGroupInvite = () => {
   });
   const navigate: NavigateFunction = useNavigate();
   const dispatch: AppDispatch = useAppDispatch();
-  const notify = (message: string) => toast.error(message);
 
   const { to } = useParams();
   const originalData = useRef<GroupInvitation>({
@@ -50,6 +48,9 @@ const useGroupInvite = () => {
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
+  const { handleMountRequestError, handleSubmitRequestError } =
+    useRequestErrorHandler();
+
   // on initial render, updates form data and original form data if both username in redux state
   // and url params exist, also sets the group list state with a list of groups that the current
   // user is in
@@ -67,9 +68,7 @@ const useGroupInvite = () => {
         getGroups();
       }
     } catch (err: any) {
-      const error = JSON.parse(err);
-      dispatch(setLoadError(error));
-      navigate("/error");
+      handleMountRequestError(err);
     }
   }, []);
 
@@ -92,23 +91,13 @@ const useGroupInvite = () => {
       try {
         if (handleSubmitValidity()) {
           dispatch(setFormLoading(true));
-
-          const invitation = await groupRequestsAPI.sendGroupInvitation(
-            username!,
-            formData,
-          );
-          socket.emit("addRequest", {
-            requestType: "group-invites-received",
-            countType: "receivedGroupInvitationCount",
-            to: formData.to,
-            request: invitation,
-          });
+          await groupRequestsAPI.sendGroupInvitation(username!, formData);
           navigate(`/user/${to}`);
         } else {
           handleClientFlashError();
         }
       } catch (err: any) {
-        notify(JSON.parse(err.message).message);
+        handleSubmitRequestError(err);
       } finally {
         dispatch(setFormLoading(false));
       }

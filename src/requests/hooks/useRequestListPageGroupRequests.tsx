@@ -29,6 +29,7 @@ const useRequestListPageGroupRequests = ({
   const { mutate: respondToGroupInvitation } = useMutation({
     mutationFn: (response: GroupConversationResponse) =>
       groupRequestsAPI.respondToGroupInvitation(username!, response),
+
     onMutate: async (response: GroupConversationResponse) => {
       await queryClient.cancelQueries({
         queryKey: ["requests", requestParams],
@@ -39,10 +40,12 @@ const useRequestListPageGroupRequests = ({
       refetchRequests(response.id);
       return { previousPages };
     },
+
     onSuccess: () => {
       setNewRequestCount("receivedGroupInvitationCount");
       dispatch(setUnansweredRequests(-1));
     },
+
     onError: (err: Error, response: GroupConversationResponse, context) => {
       queryClient.setQueryData(
         ["requests", requestParams],
@@ -83,6 +86,7 @@ const useRequestListPageGroupRequests = ({
         context?.previousPages,
       );
     },
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["requests", requestParams] });
     },
