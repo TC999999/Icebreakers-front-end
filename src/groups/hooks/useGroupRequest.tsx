@@ -9,7 +9,6 @@ import {
   type NavigateFunction,
 } from "react-router-dom";
 import { setFormLoading } from "../../features/slices/loading";
-import socket from "../../helpers/socket";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
 import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
