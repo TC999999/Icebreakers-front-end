@@ -8,18 +8,18 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import { setFormLoading, setLoadError } from "../../features/slices/loading";
+import { setFormLoading } from "../../features/slices/loading";
 import socket from "../../helpers/socket";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
-import { toast } from "react-toastify";
+import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 // custom hook for react component that contains form to join a group
 const useGroupRequest = () => {
   const { id } = useParams();
   const navigate: NavigateFunction = useNavigate();
   const dispatch = useAppDispatch();
-  const notify = (message: string) => toast.error(message);
+
   const username = useAppSelector((store) => store.user.user?.username);
 
   const originalData = useRef<GroupRequestFormData>({
@@ -48,6 +48,10 @@ const useGroupRequest = () => {
     handleClientFlashError,
   } = useValidInputHandler(originalData.current);
 
+  // hook for handling the initial mount error and error after submitting a new request
+  const { handleMountRequestError, handleSubmitRequestError } =
+    useRequestErrorHandler();
+
   // on initial render, retrieves group information needed for clear form instructions
   useEffect(() => {
     const getGroup = async () => {
@@ -67,9 +71,7 @@ const useGroupRequest = () => {
           }
         }
       } catch (err: any) {
-        const error = JSON.parse(err.message);
-        dispatch(setLoadError(error.mesage));
-        navigate("/error");
+        handleMountRequestError(err.message);
       } finally {
         dispatch(setFormLoading(false));
       }
@@ -94,23 +96,17 @@ const useGroupRequest = () => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       try {
-        if (handleSubmitValidity()) {
+        if (handleSubmitValidity() && id) {
           dispatch(setFormLoading(true));
-          if (id) {
-            const request = await groupRequestsAPI.sendRequest(id, formData);
-            socket.emit("addRequest", {
-              requestType: "group-requests-received",
-              countType: "receivedGroupRequestCount",
-              request,
-              to: request.to,
-            });
-            navigate(`/groups/${id}`);
-          }
+
+          await groupRequestsAPI.sendRequest(id, formData);
+
+          navigate(`/groups/${id}`);
         } else {
           handleClientFlashError();
         }
       } catch (err: any) {
-        notify(JSON.parse(err.message).message);
+        handleSubmitRequestError(err);
       } finally {
         dispatch(setFormLoading(false));
       }
