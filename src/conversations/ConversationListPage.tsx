@@ -15,10 +15,14 @@ import "../styles/conversations/ConversationListPage.scss";
 const ConversationListPage = () => {
   const {
     loadingMessages,
+    loadingConversations,
     messageInput,
-    currentConversation,
+    conversationID,
+    title,
+    recipient,
+    isOnline,
     conversations,
-    currentMessages,
+    messages: currentMessages,
     typingMessage,
     showEditForm,
     showTabletConversationTabs,
@@ -39,7 +43,12 @@ const ConversationListPage = () => {
       {showEditForm && (
         <Suspense fallback={<LoadingSmall lazy={true} />}>
           <EditConversation
-            currentConversation={currentConversation}
+            currentConversation={{
+              id: conversationID,
+              title,
+              recipient,
+              isOnline,
+            }}
             hideForm={toggleEditForm}
             updateConversations={updateConversations}
           />
@@ -55,7 +64,8 @@ const ConversationListPage = () => {
         <Suspense fallback={<LoadingSmall lazy={true} />}>
           <ConversationTabListTablet
             conversations={conversations}
-            currentConversation={currentConversation}
+            currentConversationID={conversationID}
+            loadingConversations={loadingConversations}
             handleCurrentConversation={handleCurrentConversation}
             toggleTabletConversationTabs={toggleTabletConversationTabs}
           />
@@ -66,7 +76,8 @@ const ConversationListPage = () => {
         <div id="conversation-list-window">
           <ConversationTabList
             conversations={conversations}
-            currentConversation={currentConversation}
+            currentConversationID={conversationID}
+            loadingConversations={loadingConversations}
             handleCurrentConversation={handleCurrentConversation}
           />
           <div id="conversation-messages-window">
@@ -79,7 +90,6 @@ const ConversationListPage = () => {
                     <button
                       type="button"
                       className="tab-button"
-                      // title="Show Conversations"
                       aria-label="Show Conversations"
                       onClick={(e) => toggleTabletConversationTabs(e)}
                     >
@@ -87,31 +97,23 @@ const ConversationListPage = () => {
                     </button>
                   </div>
 
-                  {currentConversation.id && (
-                    <h3>
-                      {currentConversation.title
-                        ? currentConversation.title
-                        : currentConversation.recipient}
-                    </h3>
-                  )}
-                  {currentConversation.recipient.length > 0 && (
+                  {conversationID && <h3>{title ? title : recipient}</h3>}
+                  {recipient.length > 0 && (
                     <div>
                       <span>
-                        <b>With:</b> {currentConversation.recipient}{" "}
+                        <b>With:</b> {recipient}{" "}
                         <div
                           id="online-status"
-                          title={`${currentConversation.recipient} is ${
-                            currentConversation.isOnline ? `online` : `offline`
+                          title={`${recipient} is ${
+                            isOnline ? `online` : `offline`
                           }`}
-                          className={
-                            currentConversation.isOnline ? "online" : "offline"
-                          }
+                          className={isOnline ? "online" : "offline"}
                         ></div>
                       </span>
                     </div>
                   )}
 
-                  {currentConversation.id.length > 0 && (
+                  {conversationID.length > 0 && (
                     <>
                       <div id="edit-conversation-button">
                         <button
@@ -126,7 +128,7 @@ const ConversationListPage = () => {
                   )}
                 </header>
 
-                {currentMessages.length === 0 && !loadingMessages && (
+                {conversationID.length === 0 && !loadingMessages && (
                   <div id="no-conversation-selected-message">
                     <h5>
                       Please select one of the conversations on the left. If
@@ -171,14 +173,14 @@ const ConversationListPage = () => {
                     id="content"
                     name="content"
                     className="form-input"
-                    value={messageInput.content}
+                    value={messageInput}
                     onChange={handleChangeInput}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     rows={5}
                     cols={40}
                     placeholder="Type a message here"
-                    disabled={currentConversation.id.length === 0}
+                    disabled={conversationID.length === 0}
                     autoComplete="off"
                   ></textarea>
                 </div>
@@ -187,7 +189,7 @@ const ConversationListPage = () => {
                     title="Send Message"
                     className="send-button"
                     aria-label="Send Message"
-                    disabled={currentConversation.id.length === 0}
+                    disabled={conversationID.length === 0}
                   >
                     <FaArrowUp />
                   </button>

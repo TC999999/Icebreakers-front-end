@@ -1,21 +1,12 @@
 import API from "./api";
 import type {
   conversation,
-  savedMessage,
-  conversationMessage,
-  currentConversation,
   updateConversation,
+  currentConversation,
+  newMessage,
+  conversationMessage,
+  currentConversationMessages,
 } from "../types/conversationTypes";
-
-type getMessagesReturn = {
-  messages: conversationMessage[];
-  conversationData: currentConversation;
-  unreadMessages: number;
-};
-
-type createMessagesReturn = {
-  message: conversationMessage;
-};
 
 // API class for direct conversations, including creating new messages, getting all
 // current conversations, and getting all messages for a single conversation,
@@ -26,18 +17,18 @@ class directConversationsAPI extends API {
 
   // retrieves a list of all of a single user's conversations, not including messages
   public static async getConversations(
-    username: string
+    username: string,
   ): Promise<conversation[]> {
-    let res = await this.getRequest(`${username}/conversation`);
+    const res = await this.getRequest(`${username}/conversation`);
     return res.conversations;
   }
 
   // retrieves the direct conversation id that two distinct users share
   public static async getConversationID(
     username: string,
-    otherUser: string
+    otherUser: string,
   ): Promise<any> {
-    let res = await this.getRequest(`${username}/conversation/${otherUser}`);
+    const res = await this.getRequest(`${username}/conversation/${otherUser}`);
     return res;
   }
 
@@ -45,36 +36,36 @@ class directConversationsAPI extends API {
   // belong to either user in the conversation
   public static async getMessages(
     username: string,
-    id: string
-  ): Promise<getMessagesReturn> {
+    id: string,
+  ): Promise<currentConversationMessages> {
     const res = await this.getRequest(`${username}/conversation/${id}/message`);
     return res;
   }
 
   // creates and returns a new message for a single conversation created by one of the users involved
   // in the conversation
-  public static async createMessage(
-    message: savedMessage,
-    username: string,
-    id: string,
-    otherUser: string
-  ): Promise<createMessagesReturn> {
+  public static async createMessage({
+    id,
+    username,
+    otherUser,
+    content,
+  }: newMessage): Promise<conversationMessage> {
     const res = await this.postRequest(
       `${username}/conversation/${id}/message`,
-      { ...message, otherUser }
+      { content, otherUser },
     );
-    return res;
+    return res.message;
   }
 
   // updates a single direct conversation's title and returns that new title
   public static async updateConversation(
     conversation: updateConversation,
     username: string,
-    id: string
+    id: string,
   ): Promise<any> {
     const res = await this.patchRequest(
       `${username}/conversation/${id}`,
-      conversation
+      conversation,
     );
     return res.updatedConversation;
   }

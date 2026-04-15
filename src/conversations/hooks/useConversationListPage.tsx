@@ -1,53 +1,41 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import {
-  useSearchParams,
-  useNavigate,
-  type NavigateFunction,
-} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { setUnreadDirectMessages } from "../../features/slices/auth";
-import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import type {
   conversation,
-  conversationMessage,
-  savedMessage,
-  currentConversation,
   returnUpdateConversation,
+  newMessage,
+  currentConversationMessages,
+  conversationMessage,
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import socket from "../../helpers/socket";
 import savedMessages from "../../helpers/maps/savedMessages";
 import messageTruncate from "../../helpers/messageTruncate";
 import { shallowEqual } from "react-redux";
-import { toast } from "react-toastify";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import queryClient from "../../helpers/queryClient";
 
 // hook for direct conversation page
 const useConversationListPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
-  const navigate: NavigateFunction = useNavigate();
-  const notify = (message: string) => toast.error(message);
   const username = useAppSelector((store) => {
     return store.user.user?.username;
   }, shallowEqual);
-
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const initialInput: savedMessage = { content: "" };
-  const initialConversationData: currentConversation = {
+  const id = searchParams.get("id") || "";
+  const initialConversationData: currentConversationMessages = {
     id: "",
     title: "",
     recipient: "",
     isOnline: false,
+    unreadMessages: 0,
+    messages: [],
   };
-  const [conversations, setConversations] = useState<conversation[]>([]);
-  const [currentConversation, setCurrentConversation] =
-    useState<currentConversation>(initialConversationData);
-  const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
-    [],
-  );
-  const [messageInput, setMessageInput] = useState<savedMessage>(initialInput);
-  const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
+
+  const [messageInput, setMessageInput] = useState<string>("");
   const [typingMessage, setTypingMessage] = useState<string>("");
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
   const [showTabletConversationTabs, setShowTabletConversationTabs] =
@@ -58,104 +46,120 @@ const useConversationListPage = () => {
 
   // reusable function used to update unread direct message notification indicator
   const updateDirectMessageCount = useCallback(
-    (unreadMessages: number, id: string) => {
-      if (unreadMessages > 0) {
-        setConversations((prev) =>
-          prev.map((convo) =>
-            convo.id === id ? { ...convo, unreadMessages: 0 } : convo,
-          ),
-        );
+    async (unreadMessages: number, id: string) => {
+      try {
+        if (unreadMessages > 0) {
+          queryClient.setQueryData(["conversations"], () => {
+            return conversations.map((conversation) => {
+              return conversation.id === id
+                ? { ...conversation, unreadMessages: 0 }
+                : conversation;
+            });
+          });
 
-        dispatch(setUnreadDirectMessages(unreadMessages * -1));
-        socket.emit("clearTotalUnreadDirectMessages", {
-          unreadMessages,
-        });
+          dispatch(setUnreadDirectMessages(unreadMessages * -1));
+          socket.emit("clearTotalUnreadDirectMessages", {
+            unreadMessages,
+          });
+        }
+      } catch (err) {
+        console.log(err);
       }
     },
     [],
   );
 
+  const { data: conversations, isLoading: loadingConversations } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: () => directConversationsAPI.getConversations(username!),
+    initialData: [],
+    retry: 0,
+  });
+
+  const {
+    data: {
+      id: conversationID,
+      title,
+      recipient,
+      isOnline,
+      messages,
+      unreadMessages,
+    },
+    isFetching: loadingMessages,
+  } = useQuery({
+    queryKey: ["currentConversation", { id }],
+    queryFn: () => directConversationsAPI.getMessages(username!, id),
+    initialData: initialConversationData,
+    enabled: id.length > 0,
+    retry: 0,
+  });
+
   // gets all of a user's direct conversations on initial render. If there's a conversation id in parameters,
   // retrieves messages from that conversation
   useEffect(() => {
-    let ignore = true;
-    const getConversations = async () => {
-      try {
-        dispatch(setFormLoading(true));
-        if (username) {
-          const conversations =
-            await directConversationsAPI.getConversations(username);
-          setConversations(conversations);
-          const id = searchParams.get("id");
-          if (id) {
-            setLoadingMessages(true);
+    const updateCurrentConversation = async () => {
+      if (id) {
+        socket.emit("isOnline", recipient, (response: boolean) => {
+          queryClient.setQueryData(
+            ["currentConversation", { id }],
+            (prevData: currentConversationMessages) => {
+              return {
+                ...prevData,
+                isOnline: response,
+              };
+            },
+          );
+        });
 
-            const { messages, conversationData, unreadMessages } =
-              await directConversationsAPI.getMessages(username, id);
-            setCurrentConversation(conversationData);
-            socket.emit(
-              "isOnline",
-              conversationData.recipient,
-              (response: boolean) => {
-                setCurrentConversation((prev) => ({
-                  ...prev,
-                  isOnline: response,
-                }));
-              },
-            );
-
-            setCurrentMessages(messages);
-            setLoadingMessages(false);
-
-            if (!ignore) updateDirectMessageCount(unreadMessages, id);
-          }
-        }
-      } catch (err: any) {
-        const error = JSON.parse(err.message);
-        dispatch(setLoadError(error));
-        navigate("/error");
-      } finally {
-        dispatch(setFormLoading(false));
+        updateDirectMessageCount(unreadMessages, id);
       }
     };
-    getConversations();
 
-    return () => {
-      ignore = false;
-    };
-  }, []);
+    updateCurrentConversation();
+  }, [conversationID]);
 
   // lets user know when other user in the conversation is online
   useEffect(() => {
     socket.on("isOnline", ({ user, isOnline }) => {
-      if (user === currentConversation.recipient) {
-        setCurrentConversation((prev) => ({ ...prev, isOnline: isOnline }));
+      if (user === recipient) {
+        queryClient.setQueryData(
+          ["currentConversation", { id }],
+          (prevData: currentConversationMessages) => {
+            return {
+              ...prevData,
+              isOnline: isOnline,
+            };
+          },
+        );
       }
     });
 
     return () => {
       socket.off("isOnline");
     };
-  }, [currentConversation]);
+  }, [id]);
 
   // auto scrolls to the bottom of the messages list div whenever a new message is added
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [currentMessages]);
+  }, [messages]);
 
   // updates list of current messages when a message from current conversation
   // is added from other user in conversation
   useEffect(() => {
     socket.on("directMessage", ({ message, id }) => {
-      if (id === currentConversation.id) {
-        setCurrentMessages((prev) => {
-          return [...prev, message];
-        });
+      if (conversationID === id) {
+        queryClient.setQueryData(
+          ["currentConversation", { id }],
+          (prevData: currentConversationMessages) => {
+            return { ...prevData, messages: [...prevData.messages, message] };
+          },
+        );
 
         let findConvo = conversations.find(
-          (conversation) => conversation.id === currentConversation.id,
+          (conversation) => conversation.id === conversationID,
         );
         if (findConvo) {
           findConvo = {
@@ -164,11 +168,14 @@ const useConversationListPage = () => {
             lastUpdatedAt: message.createdAt,
           };
 
+          // fix this so that the conversation bubbles to the top instead of filter then add back
           const filteredConversations = conversations.filter((convo) => {
-            return convo.id !== currentConversation.id;
+            return convo.id !== id;
           });
 
-          setConversations([findConvo, ...filteredConversations]);
+          queryClient.setQueryData(["conversations"], () => {
+            return [findConvo, ...filteredConversations];
+          });
         }
         dispatch(setUnreadDirectMessages(-1));
         socket.emit("decreaseUnreadDirectMessages", { id });
@@ -183,10 +190,16 @@ const useConversationListPage = () => {
             lastUpdatedAt: message.createdAt,
             unreadMessages: findConvo.unreadMessages + 1,
           };
+
+          // fix this so that the conversation bubbles to the top instead of filter then add back
           const filteredConversations = conversations.filter((convo) => {
             return convo.id !== id;
           });
-          setConversations([findConvo, ...filteredConversations]);
+
+          // fix this so that the conversation bubbles to the top instead of filter then add back
+          queryClient.setQueryData(["conversations"], () => {
+            return [findConvo, ...filteredConversations];
+          });
         }
       }
     });
@@ -194,37 +207,39 @@ const useConversationListPage = () => {
     return () => {
       socket.off("directMessage");
     };
-  }, [currentConversation, conversations]);
+  }, [conversationID, conversations]);
 
   // lets user know when other user in the conversation is typing
   useEffect(() => {
     socket.on("isTyping", ({ otherUser, id, isTyping }) => {
-      if (id === currentConversation.id) {
-        if (isTyping) {
-          setTypingMessage(`${otherUser} is typing`);
-        } else {
-          setTypingMessage("");
-        }
-      }
+      if (id === conversationID)
+        setTypingMessage(isTyping ? `${otherUser} is typing` : "");
 
-      setConversations(
-        conversations.map((c) => {
-          return c.id === id ? { ...c, isTyping } : c;
-        }),
+      queryClient.setQueryData(
+        ["conversations"],
+        (prevData: conversation[]) => {
+          return prevData.map((c) => {
+            return c.id === id ? { ...c, isTyping } : c;
+          });
+        },
       );
     });
 
     return () => {
       socket.off("isTyping");
     };
-  }, [currentConversation, conversations]);
+  }, [conversationID, conversations]);
 
   // adds conversation to list if requested user accepts conversation request
   useEffect(() => {
     socket.on("addConversation", ({ conversation }) => {
-      setConversations((prev) => [conversation, ...prev]);
+      queryClient.setQueryData(
+        ["conversations"],
+        (prevData: conversation[]) => {
+          return [conversation, ...prevData];
+        },
+      );
     });
-
     return () => {
       socket.off("addConversation");
     };
@@ -234,23 +249,33 @@ const useConversationListPage = () => {
   // sends socket signal to other user that also updates title
   useEffect(() => {
     socket.on("editConversation", ({ conversation }) => {
-      const newConversations = conversations.map((c) => {
-        return c.id === conversation.id ? { ...c, ...conversation } : c;
-      });
+      queryClient.setQueryData(
+        ["conversations"],
+        (prevData: conversation[]) => {
+          prevData.map((c) => {
+            return c.id === conversation.id ? { ...c, ...conversation } : c;
+          });
+        },
+      );
 
-      setConversations(newConversations);
-      if (currentConversation.id === conversation.id) {
-        setCurrentConversation((prev) => ({
-          ...prev,
-          title: conversation.title,
-        }));
+      if (conversationID === conversation.id) {
+        queryClient.setQueryData(
+          ["currentConversation", { id }],
+          (prevData: currentConversationMessages) => {
+            return {
+              ...prevData,
+
+              title: conversation.title,
+            };
+          },
+        );
       }
     });
 
     return () => {
       socket.off("editConversation");
     };
-  }, [conversations, currentConversation]);
+  }, [conversations, title]);
 
   // if hidden conversation tab list is shown on smaller screen, automatically hides tab list if
   // screen width is wider than 1173px
@@ -268,59 +293,26 @@ const useConversationListPage = () => {
   // that amount from total number of unread messages, also changes online status of other user
   const handleCurrentConversation = useCallback(
     async (conversation: conversation) => {
-      try {
-        if (conversation.id !== currentConversation.id) {
-          setLoadingMessages(true);
-          savedMessages.delete(currentConversation.id);
+      if (conversation.id !== conversationID) {
+        savedMessages.delete(conversationID);
 
-          if (currentConversation.id && messageInput.content.length > 0) {
-            savedMessages.set(currentConversation.id, messageInput.content);
-          }
-
-          updateDirectMessageCount(
-            conversation.unreadMessages,
-            conversation.id,
-          );
-
-          const { messages } = await directConversationsAPI.getMessages(
-            username!,
-            conversation.id,
-          );
-
-          const convoMessage = savedMessages.get(conversation.id);
-
-          setMessageInput((prev) => ({
-            ...prev,
-            content: convoMessage ? convoMessage : "",
-          }));
-
-          socket.emit(
-            "isOnline",
-            conversation.otherUser,
-            (response: boolean) => {
-              setCurrentConversation((prev) => ({
-                ...prev,
-                id: conversation.id,
-                title: conversation.title,
-                recipient: conversation.otherUser,
-                isOnline: response,
-              }));
-            },
-          );
-          setCurrentMessages(messages);
-          setTypingMessage("");
-          setLoadingMessages(false);
-          setSearchParams({ id: conversation.id.toString() });
-          if (showTabletConversationTabs) setShowTabletConversationTabs(false);
+        if (conversationID && messageInput.length > 0) {
+          savedMessages.set(conversationID, messageInput);
         }
-      } catch (err: any) {
-        const error = JSON.parse(err.message);
-        notify(error.message);
+
+        updateDirectMessageCount(conversation.unreadMessages, conversation.id);
+
+        const convoMessage = savedMessages.get(conversation.id);
+
+        setMessageInput(convoMessage ? convoMessage : "");
+
+        setTypingMessage("");
+        setSearchParams({ id: conversation.id.toString() });
+        if (showTabletConversationTabs) setShowTabletConversationTabs(false);
       }
     },
     [
       loadingMessages,
-      currentConversation,
       conversations,
       typingMessage,
       messageInput,
@@ -361,25 +353,25 @@ const useConversationListPage = () => {
   // if user is typing something
   const handleChangeInput = useCallback(
     (e: React.FocusEvent<HTMLTextAreaElement>): void => {
-      let { name, value } = e.target;
-      setMessageInput((prev) => ({ ...prev, [name]: value }));
-      if (currentConversation.id.length > 0 && value.length > 0) {
+      let { value } = e.target;
+      setMessageInput(value);
+      if (conversationID.length > 0 && value.length > 0) {
         socket.emit("isTyping", {
           otherUser: username,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
+          id: conversationID,
+          to: recipient,
           isTyping: true,
         });
-      } else if (currentConversation.id.length > 0 && value.length === 0) {
+      } else if (conversationID.length > 0 && value.length === 0) {
         socket.emit("isTyping", {
           otherUser: username,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
+          id: conversationID,
+          to: recipient,
           isTyping: false,
         });
       }
     },
-    [messageInput, currentConversation],
+    [messageInput, conversationID, recipient],
   );
 
   // when user types at least one character into message input, sends socket signal to other user
@@ -391,19 +383,16 @@ const useConversationListPage = () => {
         | React.FocusEvent<HTMLTextAreaElement>,
     ) => {
       e.preventDefault();
-      if (
-        currentConversation.id.length > 0 &&
-        messageInput.content.length > 0
-      ) {
+      if (conversationID.length > 0 && messageInput.length > 0) {
         socket.emit("isTyping", {
           otherUser: username,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
+          id: conversationID,
+          to: recipient,
           isTyping: true,
         });
       }
     },
-    [messageInput],
+    [messageInput, conversationID, recipient],
   );
 
   // when user clicks off of message input, sends socket signal to other user
@@ -415,101 +404,119 @@ const useConversationListPage = () => {
         | React.FocusEvent<HTMLTextAreaElement>,
     ) => {
       e.preventDefault();
-      if (currentConversation.id.length > 0) {
+      if (conversationID.length > 0) {
         socket.emit("isTyping", {
           otherUser: username,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
+          id: conversationID,
+          to: recipient,
           isTyping: false,
         });
       }
     },
-    [messageInput],
+    [messageInput, conversationID, recipient],
   );
 
   // when user updates conversation title, updates conversation tab list to show new title and
   // updates title in header as well
   const updateConversations = useCallback(
     (newConversation: returnUpdateConversation) => {
-      const newConversations = conversations.map((c) => {
-        return c.id === newConversation.id ? { ...c, ...newConversation } : c;
-      });
+      queryClient.setQueryData(
+        ["conversations"],
+        (prevData: conversation[]) => {
+          return prevData.map((c) => {
+            return c.id === newConversation.id
+              ? { ...c, ...newConversation }
+              : c;
+          });
+        },
+      );
 
-      setConversations(newConversations);
-      setCurrentConversation((prev) => ({
-        ...prev,
-        title: newConversation.title,
-      }));
+      queryClient.setQueryData(
+        ["currentConversation", { id }],
+        (prevData: currentConversationMessages) => {
+          return {
+            ...prevData,
+            title: newConversation.title,
+          };
+        },
+      );
     },
-    [currentConversation, conversations],
+    [title, conversations],
   );
 
   // handles sending message to other users, including updated db
   // and sending a socket signal to other user
-  const handleSend = useCallback(
-    async (e: React.FormEvent) => {
-      try {
-        e.preventDefault();
-        if (document.activeElement instanceof HTMLElement)
-          document.activeElement.blur();
+  const { mutate } = useMutation({
+    mutationFn: (newMessage: newMessage) =>
+      directConversationsAPI.createMessage(newMessage),
 
-        if (!messageInput.content) {
-          throw new Error("message cannot be empty");
-        }
-        const { message } = await directConversationsAPI.createMessage(
-          messageInput,
-          username!,
-          currentConversation.id,
-          currentConversation.recipient,
-        );
-        setCurrentMessages((prev) => {
-          return [...prev, message];
-        });
+    onMutate: async (newMessage: newMessage) => {
+      const { id: cID, username, content } = newMessage;
 
-        setMessageInput(initialInput);
+      const newDate = new Date().toISOString();
 
-        let findConvo = conversations.find(
-          (conversation) => conversation.id === currentConversation.id,
-        );
-        if (findConvo) {
-          findConvo = {
-            ...findConvo,
-            latestMessage: messageTruncate(message.content),
-            lastUpdatedAt: message.createdAt,
-          };
+      const addMessage: conversationMessage = {
+        id: cID,
+        username,
+        content,
+        createdAt: newDate,
+      };
 
-          const filteredConversations = conversations.filter((convo) => {
-            return convo.id !== currentConversation.id;
-          });
+      await queryClient.cancelQueries({
+        queryKey: ["currentConversation", { id }],
+      });
 
-          setConversations([findConvo, ...filteredConversations]);
-        }
+      const previousCurrentConversation =
+        queryClient.getQueryData<currentConversationMessages>([
+          "currentConversation",
+          { id },
+        ]);
 
-        socket.emit("isTyping", {
-          otherUser: username,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
-          isTyping: false,
-        });
+      queryClient.setQueryData(
+        ["currentConversation", { id }],
+        (prevData: currentConversationMessages) => {
+          return { ...prevData, messages: [...prevData.messages, addMessage] };
+        },
+      );
 
-        socket.emit("directMessage", {
-          message,
-          id: currentConversation.id,
-          to: currentConversation.recipient,
-        });
-      } catch (err: any) {
-        notify(JSON.parse(err.message).message);
-      }
+      return { previousCurrentConversation };
     },
-    [messageInput, conversations],
+
+    onSuccess: () => {
+      setMessageInput("");
+    },
+
+    onError: (err: Error, response: newMessage, context) => {
+      queryClient.setQueryData(
+        ["currentConversation", { id }],
+        context?.previousCurrentConversation,
+      );
+    },
+  });
+
+  const handleSend = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      mutate({
+        id: conversationID,
+        username: username!,
+        content: messageInput,
+        otherUser: recipient,
+      });
+    },
+    [conversationID, username, messageInput, recipient],
   );
 
   return {
     loadingMessages,
+    loadingConversations,
     conversations,
-    currentConversation,
+    conversationID,
+    title,
+    isOnline,
+    recipient,
     messageInput,
-    currentMessages,
+    messages,
     typingMessage,
     scrollRef,
     showEditForm,

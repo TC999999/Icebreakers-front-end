@@ -1,13 +1,11 @@
 import ConversationTabList from "./ConversationTabList";
-import type {
-  conversation,
-  currentConversation,
-} from "../types/conversationTypes";
+import type { conversation } from "../types/conversationTypes";
 import { FaArrowLeft } from "react-icons/fa";
 
 type Props = {
   conversations: conversation[];
-  currentConversation: currentConversation;
+  currentConversationID: string;
+  loadingConversations: boolean;
   handleCurrentConversation: (conversation: conversation) => Promise<void>;
   toggleTabletConversationTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -17,7 +15,8 @@ type Props = {
 // Reusable react component for list of left hand conversation tabs for changing viewed messages
 const ConversationTabListTablet: React.FC<Props> = ({
   conversations,
-  currentConversation,
+  currentConversationID,
+  loadingConversations,
   handleCurrentConversation,
   toggleTabletConversationTabs,
 }) => {
@@ -37,7 +36,8 @@ const ConversationTabListTablet: React.FC<Props> = ({
 
       <ConversationTabList
         conversations={conversations}
-        currentConversation={currentConversation}
+        currentConversationID={currentConversationID}
+        loadingConversations={loadingConversations}
         handleCurrentConversation={handleCurrentConversation}
       />
     </div>

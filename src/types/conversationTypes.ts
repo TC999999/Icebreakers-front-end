@@ -15,16 +15,17 @@ export type conversationMessage = {
   createdAt: string;
 };
 
-export type savedMessage = {
-  content: string;
-};
-
-export type currentConversation = {
+export interface currentConversation {
   id: string;
   title: string;
   recipient: string;
   isOnline: boolean;
-};
+}
+
+export interface currentConversationMessages extends currentConversation {
+  messages: conversationMessage[];
+  unreadMessages: number;
+}
 
 export type updateConversation = { title: string };
 
@@ -35,3 +36,14 @@ export type returnUpdateConversation = {
 };
 
 export type newConversationMessage = { content: string };
+
+export type newMessage = {
+  id: string;
+  username: string;
+  content: string;
+  otherUser: string;
+};
+
+export type createMessagesReturn = {
+  message: conversationMessage;
+};

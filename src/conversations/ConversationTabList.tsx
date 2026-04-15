@@ -1,16 +1,13 @@
 import React from "react";
-import type {
-  conversation,
-  currentConversation,
-} from "../types/conversationTypes";
+import type { conversation } from "../types/conversationTypes";
 import ConversationTab from "./ConversationTab";
 import "../styles/conversations/ConversationTabList.scss";
-
 import ConversationTabLIstSkeleton from "./skeletons/ConversationTabLIstSkeleton";
 
 type Props = {
   conversations: conversation[];
-  currentConversation: currentConversation;
+  currentConversationID: string;
+  loadingConversations: boolean;
   handleCurrentConversation: (conversation: conversation) => Promise<void>;
 };
 
@@ -18,25 +15,28 @@ type Props = {
 // tablet screen)
 const ConversationTabList: React.FC<Props> = ({
   conversations,
-  currentConversation,
+  currentConversationID,
+  loadingConversations,
   handleCurrentConversation,
 }) => {
   return (
     <div className="conversation-tabs">
-      {conversations.length ? (
+      {conversations.length > 0 && !loadingConversations && (
         <>
           {conversations.map((c) => {
             return (
               <ConversationTab
                 key={`conversation-${c.id}`}
                 conversation={c}
-                selected={currentConversation.id === c.id}
+                selected={currentConversationID === c.id}
                 handleCurrentConversation={handleCurrentConversation}
               />
             );
           })}
         </>
-      ) : (
+      )}
+
+      {conversations.length === 0 && loadingConversations && (
         <ConversationTabLIstSkeleton cards={8} />
       )}
     </div>
