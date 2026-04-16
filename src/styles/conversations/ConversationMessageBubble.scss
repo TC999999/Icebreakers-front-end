@@ -14,37 +14,37 @@
     border-radius: s.$borderRadius;
     align-self: flex-end;
     animation: slideFromRight 0.5s;
+
+    &::after {
+      content: " ";
+      width: 0;
+      height: 0;
+      position: absolute;
+      bottom: -30px;
+      right: 10%;
+      border-top: 20px solid blue;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid transparent;
+      border-right: 20px solid blue;
+    }
   }
 
   &.other-bubble {
     background-color: white;
     border-radius: s.$borderRadius;
     animation: slideFromLeft 0.5s;
+
+    &::before {
+      content: " ";
+      width: 0;
+      height: 0;
+      position: absolute;
+      bottom: -30px;
+      left: 10%;
+      border-top: 20px solid white;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid white;
+      border-right: 20px solid transparent;
+    }
   }
-}
-
-.self-bubble::after {
-  content: " ";
-  width: 0;
-  height: 0;
-  position: absolute;
-  bottom: -30px;
-  right: 10%;
-  border-top: 20px solid blue;
-  border-bottom: 20px solid transparent;
-  border-left: 20px solid transparent;
-  border-right: 20px solid blue;
-}
-
-.other-bubble::before {
-  content: " ";
-  width: 0;
-  height: 0;
-  position: absolute;
-  bottom: -30px;
-  left: 10%;
-  border-top: 20px solid white;
-  border-bottom: 20px solid transparent;
-  border-left: 20px solid white;
-  border-right: 20px solid transparent;
 }

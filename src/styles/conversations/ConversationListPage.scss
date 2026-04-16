@@ -5,8 +5,9 @@
   header {
     text-align: center;
     color: c.$secondary;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-      "Lucida Sans", Arial, sans-serif;
+    font-family:
+      "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+      Arial, sans-serif;
   }
 
   #conversation-list {
@@ -34,12 +35,14 @@
 
         #messages-header {
           background-color: c.$primary;
-          position: sticky;
-          top: 0;
+          position: relative;
           z-index: 2;
-          padding: 0;
           font-weight: bold;
-          height: 80px;
+          height: 10%;
+
+          h3 {
+            margin-top: 0;
+          }
 
           #online-status {
             display: inline-block;
@@ -79,12 +82,10 @@
           }
         }
 
-        #conversation-messages {
-          height: 90%;
-          overflow-y: scroll;
+        .center {
           display: flex;
-          flex-direction: column;
-
+          justify-content: center;
+          align-items: center;
           #no-conversation-selected-message {
             width: 50%;
             align-self: center;
@@ -98,10 +99,17 @@
 
             h5 {
               color: c.$secondary;
-              font-family: Impact, Haettenschweiler, "Arial Narrow Bold",
-                sans-serif;
+              font-family:
+                Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
             }
           }
+        }
+
+        #conversation-message-bubbles {
+          display: flex;
+          flex-direction: column;
+          overflow-y: scroll;
+          height: 80%;
         }
 
         #typing-message {
@@ -116,7 +124,8 @@
           bottom: 11%;
           z-index: 2;
           text-align: center;
-          font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+          font-family:
+            Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 
           .ellipsis {
             opacity: 0;
@@ -135,28 +144,33 @@
             animation-delay: 1s;
           }
         }
+      }
 
-        #conversation-message-input {
-          height: 10%;
-          background-color: c.$primary;
+      #conversation-message-input {
+        height: 10%;
+        background-color: c.$primary;
+        display: flex;
+        align-items: center;
+        z-index: 2;
+        position: absolute;
+        width: 100%;
+        height: 10%;
+        bottom: 0;
+
+        form#send-message-form {
+          width: 100%;
           display: flex;
           align-items: center;
+          justify-content: center;
 
-          form#send-message-form {
+          #message-div {
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
 
-            #message-div {
-              width: 100%;
-
-              input {
-                width: 80%;
-                padding: 5px;
-                border: s.$borderSettings c.$secondary;
-                border-radius: s.$borderRadius;
-              }
+            input {
+              width: 80%;
+              padding: 5px;
+              border: s.$borderSettings c.$secondary;
+              border-radius: s.$borderRadius;
             }
           }
         }
