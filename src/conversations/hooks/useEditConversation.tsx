@@ -9,8 +9,7 @@ import type {
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import { shallowEqual } from "react-redux";
-import socket from "../../helpers/socket";
-import { toast } from "react-toastify";
+import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 type input = {
   currentConversation: currentConversation;
@@ -28,11 +27,12 @@ const useEditConversation = ({
     return store.user.user?.username;
   }, shallowEqual);
   const dispatch: AppDispatch = useAppDispatch();
-  const notify = (message: string) => toast.error(message);
 
   const initialData: updateConversation = { title: "" };
 
   const [formData, setFormData] = useState<updateConversation>(initialData);
+
+  const { handleSubmitRequestError } = useRequestErrorHandler();
 
   // on initial render, updates form data to initially have the current conversation title in state
   useEffect(() => {
@@ -55,8 +55,8 @@ const useEditConversation = ({
   // conversation title in the header and tab list
   const handleSubmit = useCallback(
     async (e: React.FormEvent): Promise<void> => {
+      e.preventDefault();
       try {
-        e.preventDefault();
         dispatch(setFormLoading(true));
         hideForm(e);
         const conversation = await directConversationsAPI.updateConversation(
@@ -65,13 +65,8 @@ const useEditConversation = ({
           currentConversation.id,
         );
         updateConversations(conversation);
-        socket.emit("editConversation", {
-          conversation,
-          to: currentConversation.recipient,
-        });
       } catch (err: any) {
-        const error = JSON.parse(err.message);
-        notify(error.message);
+        handleSubmitRequestError(err);
       } finally {
         dispatch(setFormLoading(false));
       }

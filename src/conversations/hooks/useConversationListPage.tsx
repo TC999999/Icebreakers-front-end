@@ -248,24 +248,24 @@ const useConversationListPage = () => {
   // handles when a user edits the title of a conversation: when one user updates title,
   // sends socket signal to other user that also updates title
   useEffect(() => {
-    socket.on("editConversation", ({ conversation }) => {
+    socket.on("editConversation", ({ cID, title, lastUpdatedAt }) => {
+      console.log(cID, title, lastUpdatedAt);
       queryClient.setQueryData(
         ["conversations"],
         (prevData: conversation[]) => {
-          prevData.map((c) => {
-            return c.id === conversation.id ? { ...c, ...conversation } : c;
+          return prevData.map((c) => {
+            return c.id === cID ? { ...c, title, lastUpdatedAt } : c;
           });
         },
       );
 
-      if (conversationID === conversation.id) {
+      if (conversationID === cID) {
         queryClient.setQueryData(
           ["currentConversation", { id }],
           (prevData: currentConversationMessages) => {
             return {
               ...prevData,
-
-              title: conversation.title,
+              title,
             };
           },
         );
@@ -419,14 +419,12 @@ const useConversationListPage = () => {
   // when user updates conversation title, updates conversation tab list to show new title and
   // updates title in header as well
   const updateConversations = useCallback(
-    (newConversation: returnUpdateConversation) => {
+    ({ id, title, lastUpdatedAt }: returnUpdateConversation) => {
       queryClient.setQueryData(
         ["conversations"],
         (prevData: conversation[]) => {
           return prevData.map((c) => {
-            return c.id === newConversation.id
-              ? { ...c, ...newConversation }
-              : c;
+            return c.id === id ? { ...c, title, lastUpdatedAt } : c;
           });
         },
       );
@@ -436,7 +434,7 @@ const useConversationListPage = () => {
         (prevData: currentConversationMessages) => {
           return {
             ...prevData,
-            title: newConversation.title,
+            title,
           };
         },
       );

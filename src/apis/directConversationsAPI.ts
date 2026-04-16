@@ -2,10 +2,10 @@ import API from "./api";
 import type {
   conversation,
   updateConversation,
-  currentConversation,
   newMessage,
   conversationMessage,
   currentConversationMessages,
+  returnUpdateConversation,
 } from "../types/conversationTypes";
 
 // API class for direct conversations, including creating new messages, getting all
@@ -62,7 +62,7 @@ class directConversationsAPI extends API {
     conversation: updateConversation,
     username: string,
     id: string,
-  ): Promise<any> {
+  ): Promise<returnUpdateConversation> {
     const res = await this.patchRequest(
       `${username}/conversation/${id}`,
       conversation,
