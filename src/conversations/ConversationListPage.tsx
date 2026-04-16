@@ -84,7 +84,7 @@ const ConversationListPage = () => {
             {loadingMessages ? (
               <ConversationLoading />
             ) : (
-              <div ref={scrollRef} id="conversation-messages">
+              <>
                 <header id="messages-header">
                   <div id="conversation-tab-button">
                     <button
@@ -129,41 +129,49 @@ const ConversationListPage = () => {
                 </header>
 
                 {conversationID.length === 0 && !loadingMessages && (
-                  <div id="no-conversation-selected-message">
-                    <h5>
-                      Please select one of the conversations on the left. If
-                      viewing on a smaller screen, click the top left button and
-                      select a conversation.
-                    </h5>
+                  <div className="center">
+                    <div id="no-conversation-selected-message">
+                      <h5>
+                        If possible, please select one of the conversations on
+                        the left. If viewing on a smaller screen, click the top
+                        left button and select a conversation.
+                      </h5>
+                    </div>
                   </div>
                 )}
 
-                {currentMessages.map((m) => {
-                  return (
-                    <ConversationMessageBubble
-                      key={`conversation-${m.id}`}
-                      conversationMessage={m}
-                      isGroup={false}
-                    />
-                  );
-                })}
-                {typingMessage.length > 0 && (
-                  <div id="typing-message">
-                    {typingMessage}
-                    <span id="ellipses">
-                      <span className="ellipsis" id="ellipsis-1">
-                        .
-                      </span>
-                      <span className="ellipsis" id="ellipsis-2">
-                        .
-                      </span>
-                      <span className="ellipsis" id="ellipsis-3">
-                        .
-                      </span>
-                    </span>
-                  </div>
+                {conversationID.length > 0 && !loadingMessages && (
+                  <>
+                    <div id="conversation-message-bubbles" ref={scrollRef}>
+                      {currentMessages.map((m) => {
+                        return (
+                          <ConversationMessageBubble
+                            key={`conversation-${m.id}`}
+                            conversationMessage={m}
+                            isGroup={false}
+                          />
+                        );
+                      })}
+                    </div>
+                    {typingMessage.length > 0 && (
+                      <div id="typing-message">
+                        {typingMessage}
+                        <span id="ellipses">
+                          <span className="ellipsis" id="ellipsis-1">
+                            .
+                          </span>
+                          <span className="ellipsis" id="ellipsis-2">
+                            .
+                          </span>
+                          <span className="ellipsis" id="ellipsis-3">
+                            .
+                          </span>
+                        </span>
+                      </div>
+                    )}
+                  </>
                 )}
-              </div>
+              </>
             )}
 
             <div id="conversation-message-input">

@@ -144,7 +144,7 @@ const useConversationListPage = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, loadingMessages]);
 
   // updates list of current messages when a message from current conversation
   // is added from other user in conversation
@@ -482,8 +482,28 @@ const useConversationListPage = () => {
       return { previousCurrentConversation };
     },
 
-    onSuccess: () => {
+    onSuccess: (newMessage: conversationMessage) => {
       setMessageInput("");
+      let findConvo = conversations.find(
+        (conversation) => conversation.id === id,
+      );
+      if (findConvo) {
+        findConvo = {
+          ...findConvo,
+          latestMessage: messageTruncate(newMessage.content),
+          lastUpdatedAt: newMessage.createdAt,
+        };
+
+        // fix this so that the conversation bubbles to the top instead of filter then add back
+        const filteredConversations = conversations.filter((convo) => {
+          return convo.id !== id;
+        });
+
+        // fix this so that the conversation bubbles to the top instead of filter then add back
+        queryClient.setQueryData(["conversations"], () => {
+          return [findConvo, ...filteredConversations];
+        });
+      }
     },
 
     onError: (err: Error, response: newMessage, context) => {
