@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { type UserSearch } from "../../types/userTypes";
+import type { UserSearch } from "../../types/userTypes";
 import {
   useSearchParams,
   useNavigate,
@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import { setFormLoading } from "../../features/slices/loading";
-import { type AppDispatch } from "../../features/store";
+import type { AppDispatch } from "../../features/store";
 import userAPI from "../../apis/userAPI";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
