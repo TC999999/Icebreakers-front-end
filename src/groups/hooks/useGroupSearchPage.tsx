@@ -2,9 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import type { showResults, GroupSearch } from "../../types/groupTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import userAPI from "../../apis/userAPI";
-import { useAppDispatch } from "../../features/hooks";
-import type { AppDispatch } from "../../features/store";
-import { setFormLoading } from "../../features/slices/loading";
+
 import {
   useSearchParams,
   useNavigate,
@@ -12,13 +10,13 @@ import {
 } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useDebounce from "../../appHooks/useDebounce";
+import useLoading from "../../appHooks/useLoading";
 import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 type keyPress = { [key: string]: boolean };
 
 // custom hook for page for retrieving a list of groups filtered by inputted parameters
 const useGroupSearchPage = () => {
-  const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const title = searchParams.get("title") || "";
@@ -60,6 +58,9 @@ const useGroupSearchPage = () => {
     initialData: [],
     retry: 0,
   });
+
+  // reusable hooks for showing custom loading message for retrieving new groups
+  useLoading({ isFetching: loadingGroups });
 
   // debounced search input for group suggestion list to prevent unneeded refetches
   // from server side
@@ -243,7 +244,6 @@ const useGroupSearchPage = () => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       try {
-        dispatch(setFormLoading(true));
         let newParams = Object.fromEntries(
           Object.entries(groupSearchParams).filter((p) => {
             return p[1];
@@ -253,8 +253,6 @@ const useGroupSearchPage = () => {
         if (showGroupFilterTablet) setShowGroupFilterTablet(false);
       } catch (err) {
         handleSubmitRequestError(err);
-      } finally {
-        dispatch(setFormLoading(false));
       }
     },
     [groupSearchParams],

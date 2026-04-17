@@ -5,9 +5,6 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import { useAppDispatch } from "../../features/hooks";
-import { setFormLoading } from "../../features/slices/loading";
-import type { AppDispatch } from "../../features/store";
 import userAPI from "../../apis/userAPI";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -16,7 +13,6 @@ import useDebounce from "../../appHooks/useDebounce";
 
 // custom hook to handle user search page logic
 const useUserSearch = () => {
-  const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
   const notify = (message: string) => toast.error(message);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -115,7 +111,7 @@ const useUserSearch = () => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      dispatch(setFormLoading(true));
+
       try {
         let params = Object.fromEntries(
           Object.entries(searchQuery).filter((q) => {
@@ -126,8 +122,6 @@ const useUserSearch = () => {
       } catch (err: any) {
         const error = JSON.parse(err.message);
         notify(error.message);
-      } finally {
-        dispatch(setFormLoading(false));
       }
     },
     [searchQuery],
