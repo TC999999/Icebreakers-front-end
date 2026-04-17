@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import type { Register } from "../../types/authTypes";
-import type { interests } from "../../types/interestTypes";
+import type { Interests } from "../../types/interestTypes";
 import { RegisterUser } from "../../features/actions/auth";
 import type { AppDispatch } from "../../features/store";
 import { useAppDispatch } from "../../features/hooks";
@@ -43,7 +43,7 @@ const useSignUp = () => {
   } = useValidInputHandler(initialState.current);
 
   // initial state for list of all interests
-  const [initialInterests, setInitialInterests] = useState<interests>([]);
+  const [initialInterests, setInitialInterests] = useState<Interests>([]);
 
   // initial state for server side error message
   const [serverError, setServerError] = useState<string>("");
@@ -68,14 +68,14 @@ const useSignUp = () => {
     (
       e:
         | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>
+        | React.ChangeEvent<HTMLTextAreaElement>,
     ): void => {
       const { name, value } = e.target;
       handleInputValidity(name, value);
       setFormData((data) => ({ ...data, [name]: value }));
       if (serverError) setServerError("");
     },
-    [formData]
+    [formData],
   );
 
   // updates interests value in form data state when an interest checkbox is checked or unchecked,
@@ -96,7 +96,7 @@ const useSignUp = () => {
       handleInputValidity("interests", newInterests);
       setFormData((d) => ({ ...d, interests: newInterests }));
     },
-    [formData]
+    [formData],
   );
 
   // if all input values pass validity test, submits user data to create an account and sets it
@@ -125,7 +125,7 @@ const useSignUp = () => {
         }
       }
     },
-    [formData, validInputs]
+    [formData, validInputs],
   );
 
   return {

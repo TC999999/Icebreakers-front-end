@@ -1,22 +1,22 @@
 import "../styles/groupConversations/GroupConversationMessages.scss";
 import type {
-  newConversationMessage,
-  conversationMessage,
+  NewConversationMessage,
+  ConversationMessage,
 } from "../types/conversationTypes";
-import type { userTyping } from "../types/userTypes";
+import type { UserTyping } from "../types/userTypes";
 import ConversationMessageBubble from "../conversations/ConversationMessageBubble";
 import ConversationLoading from "../conversations/ConversationLoading";
 import GroupConversationUserTypingBlock from "./GroupConversationUserTypingBlock";
 import { FaArrowUp } from "react-icons/fa";
-import type { simpleGroup } from "../types/groupTypes";
+import type { SimpleGroup } from "../types/groupTypes";
 
 type Props = {
   scrollReference: React.RefObject<HTMLDivElement | null>;
-  selctedGroup: simpleGroup;
+  selctedGroup: SimpleGroup;
   loadingMessages: boolean;
-  messageInput: newConversationMessage;
-  messages: conversationMessage[];
-  usersTyping: userTyping;
+  messageInput: NewConversationMessage;
+  messages: ConversationMessage[];
+  usersTyping: UserTyping;
   handleMessage: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSend: (e: React.FormEvent) => void;
   handleFocus: (e: React.FocusEvent<HTMLTextAreaElement>) => void;

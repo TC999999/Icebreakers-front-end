@@ -1,7 +1,7 @@
-import type { groupUser, groupUserTab } from "./userTypes";
-import type { conversationMessage } from "./conversationTypes";
+import type { GroupUser, GroupUserTab } from "./userTypes";
+import type { ConversationMessage } from "./conversationTypes";
 
-export type newGroup = {
+export type NewGroup = {
   title: string;
   description: string;
   interests: number[];
@@ -9,12 +9,12 @@ export type newGroup = {
 
 export type showResults = "" | "title" | "host" | "user";
 
-export type groupSearchCard = {
+export type GroupSearchCard = {
   id: string;
   title: string;
   host: string;
   interests: string[];
-  users: groupUser[];
+  users: GroupUser[];
   handleGroupSearchCardKeyDown: (
     e: React.KeyboardEvent<HTMLDivElement>,
     id: string,
@@ -38,31 +38,31 @@ export type GroupSearchParams = {
   newGroups: boolean | null;
 };
 
-export type simpleGroup = {
+export type SimpleGroup = {
   id: string;
   title: string;
 };
 
 export type GroupName = { title: string; host: string };
 
-export type selectedGroup = { id: string; title: string; host: string };
+export type SelectedGroup = { id: string; title: string; host: string };
 
-export type hostedGroupCard = {
+export type HostedGroupCard = {
   id: string;
   title: string;
   createdAt: string;
 };
 
-export type nonHostedGroupCard = {
+export type NonHostedGroupCard = {
   id: string;
   title: string;
   host: string;
   createdAt: string;
 };
 
-export type allGroups = {
-  hostedGroups: hostedGroupCard[];
-  nonHostedGroups: nonHostedGroupCard[];
+export type AllGroups = {
+  hostedGroups: HostedGroupCard[];
+  nonHostedGroups: NonHostedGroupCard[];
 };
 
 export type GroupPage = {
@@ -71,7 +71,7 @@ export type GroupPage = {
   description: string;
   host: string;
   createdAt: string;
-  users: groupUser[];
+  users: GroupUser[];
   interests: string[];
 };
 
@@ -81,16 +81,16 @@ export type GroupInvitation = {
   content: string;
 };
 
-export type groupTab = {
+export type GroupTab = {
   id: string;
   title: string;
   host: string;
   unreadMessages: number;
 };
 
-export type groupMessageInfo = {
-  users: groupUserTab[];
-  messages: conversationMessage[];
+export type GroupMessageInfo = {
+  users: GroupUserTab[];
+  messages: ConversationMessage[];
   title: string;
   host: string;
   unreadMessages: number;

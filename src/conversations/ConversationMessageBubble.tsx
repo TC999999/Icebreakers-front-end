@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { useAppSelector } from "../features/hooks";
-import type { conversationMessage } from "../types/conversationTypes";
+import type { ConversationMessage } from "../types/conversationTypes";
 import "../styles/conversations/ConversationMessageBubble.scss";
 import createDate from "../helpers/createDate";
 import { shallowEqual } from "react-redux";
 
-type Props = { conversationMessage: conversationMessage; isGroup: boolean };
+type Props = { conversationMessage: ConversationMessage; isGroup: boolean };
 
 // component for conversation message bubbles, both for current and other user
 const ConversationMessageBubble: React.FC<Props> = ({

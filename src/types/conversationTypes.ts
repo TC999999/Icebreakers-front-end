@@ -1,4 +1,4 @@
-export type conversation = {
+export type Conversation = {
   id: string;
   title: string;
   otherUser: string;
@@ -8,7 +8,7 @@ export type conversation = {
   isTyping?: boolean;
 };
 
-export type conversationMessage = {
+export type ConversationMessage = {
   id: string;
   content: string;
   username: string;
@@ -16,35 +16,35 @@ export type conversationMessage = {
   new?: boolean;
 };
 
-export interface currentConversation {
+export interface CurrentConversation {
   id: string;
   title: string;
   recipient: string;
   isOnline: boolean;
 }
 
-export interface currentConversationMessages extends currentConversation {
-  messages: conversationMessage[];
+export interface CurrentConversationMessages extends CurrentConversation {
+  messages: ConversationMessage[];
   unreadMessages: number;
 }
 
-export type updateConversation = { title: string };
+export type UpdateConversation = { title: string };
 
-export type returnUpdateConversation = {
+export type ReturnUpdateConversation = {
   id: string;
   title: string;
   lastUpdatedAt: string;
 };
 
-export type newConversationMessage = { content: string };
+export type NewConversationMessage = { content: string };
 
-export type newMessage = {
+export type NewMessage = {
   id: string;
   username: string;
   content: string;
   otherUser: string;
 };
 
-export type createMessagesReturn = {
-  message: conversationMessage;
+export type CreateMessagesReturn = {
+  message: ConversationMessage;
 };

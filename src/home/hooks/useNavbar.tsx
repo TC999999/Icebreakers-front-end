@@ -5,7 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { type AppDispatch } from "../../features/store";
+import type { AppDispatch } from "../../features/store";
 import { LogOutUser } from "../../features/actions/auth";
 import selectNav from "../../helpers/selectNav";
 import { shallowEqual } from "react-redux";

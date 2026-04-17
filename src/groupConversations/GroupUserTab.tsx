@@ -1,9 +1,9 @@
 import { memo } from "react";
-import type { groupUserTab } from "../types/userTypes";
+import type { GroupUserTab as GT } from "../types/userTypes";
 import "../styles/groupConversations/GroupUserTab.scss";
 import { MdPerson } from "react-icons/md";
 
-type Props = { user: groupUserTab };
+type Props = { user: GT };
 
 const GroupUserTab: React.FC<Props> = memo(({ user }) => {
   return (

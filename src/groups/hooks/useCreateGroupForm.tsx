@@ -3,9 +3,9 @@ import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { shallowEqual } from "react-redux";
-import type { newGroup } from "../../types/groupTypes";
+import type { NewGroup } from "../../types/groupTypes";
 import interestsAPI from "../../apis/interestsAPI";
-import type { interestMap } from "../../types/interestTypes";
+import type { InterestMap } from "../../types/interestTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
@@ -20,14 +20,14 @@ const useCreateGroupForm = () => {
   const notify = (message: string) => toast.error(message);
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
-  const originalData = useRef<newGroup>({
+  const originalData = useRef<NewGroup>({
     title: "",
     description: "",
     interests: [],
   });
 
-  const [formData, setFormData] = useState<newGroup>(originalData.current);
-  const [interestList, setInterestList] = useState<interestMap>({});
+  const [formData, setFormData] = useState<NewGroup>(originalData.current);
+  const [interestList, setInterestList] = useState<InterestMap>({});
 
   // reusable hook for setting and checking input validity
   const {

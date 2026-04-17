@@ -1,31 +1,31 @@
 import API from "./api";
 import type {
-  newGroup,
-  allGroups,
+  NewGroup,
+  AllGroups,
   GroupPage,
-  simpleGroup,
-  groupSearchCard,
+  SimpleGroup,
+  GroupSearchCard,
   GroupName,
-  groupTab,
-  groupMessageInfo,
+  GroupTab,
+  GroupMessageInfo,
   GroupSearchParams,
 } from "../types/groupTypes";
 import type {
-  conversationMessage,
-  newConversationMessage,
+  ConversationMessage,
+  NewConversationMessage,
 } from "../types/conversationTypes";
-import type { groupMessageUserUpdate } from "../types/userTypes";
+import type { GroupMessageUserUpdate } from "../types/userTypes";
 
-type returnGroup = {
+type ReturnGroup = {
   group: GroupPage | GroupName;
   isInGroup?: boolean;
   requestPending?: boolean;
   invitationPending?: boolean;
 };
 
-type returnMessage = {
-  message: conversationMessage;
-  users: groupMessageUserUpdate[];
+type ReturnMessage = {
+  message: ConversationMessage;
+  users: GroupMessageUserUpdate[];
 };
 
 // API class for group conversations, including getting all current groups a user is a part of,
@@ -36,7 +36,7 @@ class groupConversationsAPI extends API {
   public static route = "groupMessage";
 
   // creates and returns a new group conversation where the inputted user is the host
-  public static async createConversation(username: string, group: newGroup) {
+  public static async createConversation(username: string, group: NewGroup) {
     const res = await this.postRequest(`new/${username}`, group);
     return res;
   }
@@ -46,7 +46,7 @@ class groupConversationsAPI extends API {
   public static async getAllGroups(
     username: string,
     params: any,
-  ): Promise<allGroups | simpleGroup[]> {
+  ): Promise<AllGroups | SimpleGroup[]> {
     const res = await this.getRequest(username, params);
     return res.groups;
   }
@@ -62,7 +62,7 @@ class groupConversationsAPI extends API {
   public static async getGroup(
     id: string,
     getSimple: boolean = false,
-  ): Promise<returnGroup> {
+  ): Promise<ReturnGroup> {
     const res = await this.getRequest(`id/${id}`, { getSimple });
     return res;
   }
@@ -70,13 +70,13 @@ class groupConversationsAPI extends API {
   // returns a list of groups based on inputted search params
   public static async searchGroups(
     params: GroupSearchParams,
-  ): Promise<groupSearchCard[]> {
+  ): Promise<GroupSearchCard[]> {
     const res = await this.getRequest("search", params);
     return res.groups;
   }
 
   // returns a list of group tabs for the group conversation page
-  public static async getGroupTabs(username: string): Promise<groupTab[]> {
+  public static async getGroupTabs(username: string): Promise<GroupTab[]> {
     const res = await this.getRequest(`${username}/tabs`);
     return res.groups;
   }
@@ -86,7 +86,7 @@ class groupConversationsAPI extends API {
   public static async getGroupMessages(
     username: string,
     id: string,
-  ): Promise<groupMessageInfo> {
+  ): Promise<GroupMessageInfo> {
     const res = await this.getRequest(`${username}/message/${id}`);
     return res;
   }
@@ -96,8 +96,8 @@ class groupConversationsAPI extends API {
   public static async createGroupMessage(
     username: string,
     id: string,
-    message: newConversationMessage,
-  ): Promise<returnMessage> {
+    message: NewConversationMessage,
+  ): Promise<ReturnMessage> {
     const res = await this.postRequest(`${username}/message/${id}`, message);
     return res;
   }

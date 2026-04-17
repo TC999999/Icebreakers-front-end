@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import useRequestPage from "./hooks/useRequestPage";
 import RequestForm from "./RequestForm";
 

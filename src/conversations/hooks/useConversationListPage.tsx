@@ -4,11 +4,11 @@ import type { AppDispatch } from "../../features/store";
 import { useSearchParams } from "react-router-dom";
 import { setUnreadDirectMessages } from "../../features/slices/auth";
 import type {
-  conversation,
-  returnUpdateConversation,
-  newMessage,
-  currentConversationMessages,
-  conversationMessage,
+  Conversation,
+  ReturnUpdateConversation,
+  NewMessage,
+  CurrentConversationMessages,
+  ConversationMessage,
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import socket from "../../helpers/socket";
@@ -26,7 +26,7 @@ const useConversationListPage = () => {
   }, shallowEqual);
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get("id") || "";
-  const initialConversationData: currentConversationMessages = {
+  const initialConversationData: CurrentConversationMessages = {
     id: "",
     title: "",
     recipient: "",
@@ -102,7 +102,7 @@ const useConversationListPage = () => {
         socket.emit("isOnline", recipient, (response: boolean) => {
           queryClient.setQueryData(
             ["currentConversation", { id }],
-            (prevData: currentConversationMessages) => {
+            (prevData: CurrentConversationMessages) => {
               return {
                 ...prevData,
                 isOnline: response,
@@ -124,7 +124,7 @@ const useConversationListPage = () => {
       if (user === recipient) {
         queryClient.setQueryData(
           ["currentConversation", { id }],
-          (prevData: currentConversationMessages) => {
+          (prevData: CurrentConversationMessages) => {
             return {
               ...prevData,
               isOnline: isOnline,
@@ -153,7 +153,7 @@ const useConversationListPage = () => {
       if (conversationID === id) {
         queryClient.setQueryData(
           ["currentConversation", { id }],
-          (prevData: currentConversationMessages) => {
+          (prevData: CurrentConversationMessages) => {
             return {
               ...prevData,
               messages: [...prevData.messages, { ...message, new: true }],
@@ -220,7 +220,7 @@ const useConversationListPage = () => {
 
       queryClient.setQueryData(
         ["conversations"],
-        (prevData: conversation[]) => {
+        (prevData: Conversation[]) => {
           return prevData.map((c) => {
             return c.id === id ? { ...c, isTyping } : c;
           });
@@ -238,7 +238,7 @@ const useConversationListPage = () => {
     socket.on("addConversation", ({ conversation }) => {
       queryClient.setQueryData(
         ["conversations"],
-        (prevData: conversation[]) => {
+        (prevData: Conversation[]) => {
           return [conversation, ...prevData];
         },
       );
@@ -255,7 +255,7 @@ const useConversationListPage = () => {
       console.log(cID, title, lastUpdatedAt);
       queryClient.setQueryData(
         ["conversations"],
-        (prevData: conversation[]) => {
+        (prevData: Conversation[]) => {
           return prevData.map((c) => {
             return c.id === cID ? { ...c, title, lastUpdatedAt } : c;
           });
@@ -265,7 +265,7 @@ const useConversationListPage = () => {
       if (conversationID === cID) {
         queryClient.setQueryData(
           ["currentConversation", { id }],
-          (prevData: currentConversationMessages) => {
+          (prevData: CurrentConversationMessages) => {
             return {
               ...prevData,
               title,
@@ -295,7 +295,7 @@ const useConversationListPage = () => {
   // clears unread message number and subtracts
   // that amount from total number of unread messages, also changes online status of other user
   const handleCurrentConversation = useCallback(
-    async (conversation: conversation) => {
+    async (conversation: Conversation) => {
       if (conversation.id !== conversationID) {
         savedMessages.delete(conversationID);
 
@@ -422,10 +422,10 @@ const useConversationListPage = () => {
   // when user updates conversation title, updates conversation tab list to show new title and
   // updates title in header as well
   const updateConversations = useCallback(
-    ({ id, title, lastUpdatedAt }: returnUpdateConversation) => {
+    ({ id, title, lastUpdatedAt }: ReturnUpdateConversation) => {
       queryClient.setQueryData(
         ["conversations"],
-        (prevData: conversation[]) => {
+        (prevData: Conversation[]) => {
           return prevData.map((c) => {
             return c.id === id ? { ...c, title, lastUpdatedAt } : c;
           });
@@ -434,7 +434,7 @@ const useConversationListPage = () => {
 
       queryClient.setQueryData(
         ["currentConversation", { id }],
-        (prevData: currentConversationMessages) => {
+        (prevData: CurrentConversationMessages) => {
           return {
             ...prevData,
             title,
@@ -448,15 +448,15 @@ const useConversationListPage = () => {
   // handles sending message to other users, including updated db
   // and sending a socket signal to other user
   const { mutate } = useMutation({
-    mutationFn: (newMessage: newMessage) =>
+    mutationFn: (newMessage: NewMessage) =>
       directConversationsAPI.createMessage(newMessage),
 
-    onMutate: async (newMessage: newMessage) => {
+    onMutate: async (newMessage: NewMessage) => {
       const { id: cID, username, content } = newMessage;
 
       const newDate = new Date().toISOString();
 
-      const addMessage: conversationMessage = {
+      const addMessage: ConversationMessage = {
         id: cID,
         username,
         content,
@@ -469,14 +469,14 @@ const useConversationListPage = () => {
       });
 
       const previousCurrentConversation =
-        queryClient.getQueryData<currentConversationMessages>([
+        queryClient.getQueryData<CurrentConversationMessages>([
           "currentConversation",
           { id },
         ]);
 
       queryClient.setQueryData(
         ["currentConversation", { id }],
-        (prevData: currentConversationMessages) => {
+        (prevData: CurrentConversationMessages) => {
           return { ...prevData, messages: [...prevData.messages, addMessage] };
         },
       );
@@ -484,7 +484,7 @@ const useConversationListPage = () => {
       return { previousCurrentConversation };
     },
 
-    onSuccess: (newMessage: conversationMessage) => {
+    onSuccess: (newMessage: ConversationMessage) => {
       setMessageInput("");
       let findConvo = conversations.find(
         (conversation) => conversation.id === id,
@@ -508,7 +508,7 @@ const useConversationListPage = () => {
       }
     },
 
-    onError: (err: Error, response: newMessage, context) => {
+    onError: (err: Error, response: NewMessage, context) => {
       queryClient.setQueryData(
         ["currentConversation", { id }],
         context?.previousCurrentConversation,

@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useAppSelector } from "../../features/hooks";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import type {
-  hostedGroupCard,
-  nonHostedGroupCard,
+  HostedGroupCard,
+  NonHostedGroupCard,
 } from "../../types/groupTypes";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
@@ -27,8 +27,8 @@ const useGroupList = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [hostedGroups, setHostedGroups] = useState<hostedGroupCard[]>([]);
-  const [nonHostedGroups, setNonHostedGroups] = useState<nonHostedGroupCard[]>(
+  const [hostedGroups, setHostedGroups] = useState<HostedGroupCard[]>([]);
+  const [nonHostedGroups, setNonHostedGroups] = useState<NonHostedGroupCard[]>(
     [],
   );
   const [currentGroupTab, setCurrentGroupTab] =

@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import Welcome from "./Welcome";
 
 // React component for initial home page the user sees after logging in

@@ -1,15 +1,15 @@
 import RequestTabList from "./RequestTabList";
 import type {
-  requestType,
-  requestCount,
-  requestParams,
+  RequestType,
+  RequestCount,
+  RequestParams,
 } from "../types/requestTypes";
 import { FaArrowLeft } from "react-icons/fa";
 
 type Props = {
-  viewedRequests: requestType;
-  requestCount: requestCount;
-  changeViewedRequests: (params: requestParams) => Promise<void>;
+  viewedRequests: RequestType;
+  requestCount: RequestCount;
+  changeViewedRequests: (params: RequestParams) => Promise<void>;
   toggleTabletTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;

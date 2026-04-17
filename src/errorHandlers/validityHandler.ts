@@ -1,4 +1,4 @@
-import type { validityTypes, errorFlash } from "../types/errorsTypes";
+import type { ValidityTypes, ErrorFlash } from "../types/errorsTypes";
 import {
   setUsernameValidity,
   setPasswordValidity,
@@ -14,7 +14,7 @@ import {
 type errorInput = {
   name: string;
   value: string | number[];
-  setter: React.Dispatch<React.SetStateAction<validityTypes>>;
+  setter: React.Dispatch<React.SetStateAction<ValidityTypes>>;
 };
 
 // when input field value changes, updates validity parameters based on the name and current value
@@ -60,17 +60,17 @@ export const inputValidityHandler = ({ name, value, setter }: errorInput) => {
 // when a form is submitted, this function checks if all validity parameters in the valid inputs
 // state are true, then returns that boolean; if not, changes boolean of flash error state to true
 export const submitErrorHandler = (
-  input: validityTypes,
-  setter: React.Dispatch<React.SetStateAction<errorFlash>>
+  input: ValidityTypes,
+  setter: React.Dispatch<React.SetStateAction<ErrorFlash>>,
 ) => {
   let allValid: boolean[] = [];
 
   for (let key in input) {
     if (Object.prototype.hasOwnProperty.call(input, key)) {
-      let valid = Object.values(input[key as keyof validityTypes]).every(
+      let valid = Object.values(input[key as keyof ValidityTypes]).every(
         (v) => {
           return v === true;
-        }
+        },
       );
       allValid.push(valid);
       setter((prev) => ({ ...prev, [key]: !valid }));

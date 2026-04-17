@@ -1,17 +1,17 @@
-export type validity = { [key: string]: boolean };
+export type Validity = { [key: string]: boolean };
 
-export type validityTypes = {
-  [key: string]: validity;
+export type ValidityTypes = {
+  [key: string]: Validity;
 };
 
-export type validityMessage = {
+export type ValidityMessage = {
   [key: string]: string;
 };
 
-export type errorFlash = {
+export type ErrorFlash = {
   [key: string]: boolean;
 };
 
-export type validMessageMap = {
-  [key: string]: validityMessage;
+export type ValidMessageMap = {
+  [key: string]: ValidityMessage;
 };

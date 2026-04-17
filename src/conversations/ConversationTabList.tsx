@@ -1,14 +1,14 @@
 import React from "react";
-import type { conversation } from "../types/conversationTypes";
+import type { Conversation } from "../types/conversationTypes";
 import ConversationTab from "./ConversationTab";
 import "../styles/conversations/ConversationTabList.scss";
 import ConversationTabLIstSkeleton from "./skeletons/ConversationTabLIstSkeleton";
 
 type Props = {
-  conversations: conversation[];
+  conversations: Conversation[];
   currentConversationID: string;
   loadingConversations: boolean;
-  handleCurrentConversation: (conversation: conversation) => Promise<void>;
+  handleCurrentConversation: (conversation: Conversation) => Promise<void>;
 };
 
 // reusable component for showing a list of conversation tabs (to show for both widescreen and

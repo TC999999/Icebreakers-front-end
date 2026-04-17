@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { useAppDispatch } from "../../features/hooks";
 import { setLoadError } from "../../features/slices/loading";
-import { type AppDispatch } from "../../features/store";
+import type { AppDispatch } from "../../features/store";
 import { shallowEqual } from "react-redux";
 
 const useRequestPage = () => {

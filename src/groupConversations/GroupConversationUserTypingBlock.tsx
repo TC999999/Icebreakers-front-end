@@ -1,9 +1,9 @@
 import React from "react";
-import type { userTyping } from "../types/userTypes";
+import type { UserTyping } from "../types/userTypes";
 import GroupConversationUserTypingMessage from "./GroupConversationUserTypingMessage";
 import "../styles/groupConversations/GroupConversationUserTypingBlock.scss";
 
-type Props = { usersTyping: userTyping };
+type Props = { usersTyping: UserTyping };
 
 const GroupConversationUserTypingBlock: React.FC<Props> = ({ usersTyping }) => {
   return (
@@ -15,7 +15,7 @@ const GroupConversationUserTypingBlock: React.FC<Props> = ({ usersTyping }) => {
               key={"user-" + u}
               username={u}
             />
-          )
+          ),
       )}
     </div>
   );

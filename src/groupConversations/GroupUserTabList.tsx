@@ -1,8 +1,8 @@
-import type { groupUserTab } from "../types/userTypes";
+import type { GroupUserTab as GT } from "../types/userTypes";
 import GroupUserTab from "./GroupUserTab";
 import "../styles/groupConversations/GroupUserTabList.scss";
 
-type Props = { currentUsers: groupUserTab[] };
+type Props = { currentUsers: GT[] };
 
 const GroupUserTabList: React.FC<Props> = ({ currentUsers }) => {
   return (

@@ -1,10 +1,10 @@
 import { memo } from "react";
-import type { groupUser } from "../types/userTypes";
+import type { GroupUser } from "../types/userTypes";
 import "../styles/groups/GroupUserCard.scss";
 import { MdPerson } from "react-icons/md";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 
-type Props = { user: groupUser };
+type Props = { user: GroupUser };
 
 // reusable react component for card in GroupPage.tsx that shows an individual user in the list
 // of users in the group

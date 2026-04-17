@@ -1,12 +1,12 @@
 import ConversationTabList from "./ConversationTabList";
-import type { conversation } from "../types/conversationTypes";
+import type { Conversation } from "../types/conversationTypes";
 import { FaArrowLeft } from "react-icons/fa";
 
 type Props = {
-  conversations: conversation[];
+  conversations: Conversation[];
   currentConversationID: string;
   loadingConversations: boolean;
-  handleCurrentConversation: (conversation: conversation) => Promise<void>;
+  handleCurrentConversation: (conversation: Conversation) => Promise<void>;
   toggleTabletConversationTabs: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;

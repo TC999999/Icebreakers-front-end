@@ -1,13 +1,13 @@
 import React from "react";
-import type { blockedUser } from "../types/userTypes";
+import type { BlockedUser } from "../types/userTypes";
 import BlockedUserCard from "./BlockedUserCard";
 import "../styles/blockUser/BlockedUserList.scss";
 
 type Props = {
-  blockedUsers: blockedUser[];
+  blockedUsers: BlockedUser[];
   unblockUser: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    blockedUser: string
+    blockedUser: string,
   ) => Promise<void>;
 };
 

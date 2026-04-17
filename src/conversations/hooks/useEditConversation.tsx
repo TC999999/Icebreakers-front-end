@@ -3,18 +3,18 @@ import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/loading";
 import type {
-  currentConversation,
-  updateConversation,
-  returnUpdateConversation,
+  CurrentConversation,
+  UpdateConversation,
+  ReturnUpdateConversation,
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
 import { shallowEqual } from "react-redux";
 import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 type input = {
-  currentConversation: currentConversation;
+  currentConversation: CurrentConversation;
   hideForm: (e: React.FormEvent) => void;
-  updateConversations: (newConversation: returnUpdateConversation) => void;
+  updateConversations: (newConversation: ReturnUpdateConversation) => void;
 };
 
 // hook for form page to edit conversation title
@@ -28,9 +28,9 @@ const useEditConversation = ({
   }, shallowEqual);
   const dispatch: AppDispatch = useAppDispatch();
 
-  const initialData: updateConversation = { title: "" };
+  const initialData: UpdateConversation = { title: "" };
 
-  const [formData, setFormData] = useState<updateConversation>(initialData);
+  const [formData, setFormData] = useState<UpdateConversation>(initialData);
 
   const { handleSubmitRequestError } = useRequestErrorHandler();
 

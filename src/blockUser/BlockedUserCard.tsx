@@ -1,11 +1,11 @@
 import React from "react";
-import type { blockedUser } from "../types/userTypes";
+import type { BlockedUser } from "../types/userTypes";
 import createDate from "../helpers/createDate";
 import { MdPerson } from "react-icons/md";
 import "../styles/blockUser/BlockedUsercard.scss";
 
 type Props = {
-  blockedUser: blockedUser;
+  blockedUser: BlockedUser;
   unblockUser: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     blockedUser: string,

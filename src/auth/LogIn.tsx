@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import useLogIn from "./hooks/useLogin";
 import "../styles/auth/LogIn.scss";
 

@@ -1,11 +1,11 @@
 import API from "./api";
 import type {
-  conversation,
-  updateConversation,
-  newMessage,
-  conversationMessage,
-  currentConversationMessages,
-  returnUpdateConversation,
+  Conversation,
+  UpdateConversation,
+  NewMessage,
+  ConversationMessage,
+  CurrentConversationMessages,
+  ReturnUpdateConversation,
 } from "../types/conversationTypes";
 
 // API class for direct conversations, including creating new messages, getting all
@@ -18,7 +18,7 @@ class directConversationsAPI extends API {
   // retrieves a list of all of a single user's conversations, not including messages
   public static async getConversations(
     username: string,
-  ): Promise<conversation[]> {
+  ): Promise<Conversation[]> {
     const res = await this.getRequest(`${username}/conversation`);
     return res.conversations;
   }
@@ -37,7 +37,7 @@ class directConversationsAPI extends API {
   public static async getMessages(
     username: string,
     id: string,
-  ): Promise<currentConversationMessages> {
+  ): Promise<CurrentConversationMessages> {
     const res = await this.getRequest(`${username}/conversation/${id}/message`);
     return res;
   }
@@ -49,7 +49,7 @@ class directConversationsAPI extends API {
     username,
     otherUser,
     content,
-  }: newMessage): Promise<conversationMessage> {
+  }: NewMessage): Promise<ConversationMessage> {
     const res = await this.postRequest(
       `${username}/conversation/${id}/message`,
       { content, otherUser },
@@ -59,10 +59,10 @@ class directConversationsAPI extends API {
 
   // updates a single direct conversation's title and returns that new title
   public static async updateConversation(
-    conversation: updateConversation,
+    conversation: UpdateConversation,
     username: string,
     id: string,
-  ): Promise<returnUpdateConversation> {
+  ): Promise<ReturnUpdateConversation> {
     const res = await this.patchRequest(
       `${username}/conversation/${id}`,
       conversation,

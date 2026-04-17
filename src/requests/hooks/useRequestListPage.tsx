@@ -14,7 +14,7 @@ import {
   RoIMap,
   tMap,
 } from "../../helpers/maps/requestTypeMap";
-import { type titleAndDesc } from "../../types/miscTypes";
+import type { TitleAndDesc } from "../../types/miscTypes";
 import { useSearchParams } from "react-router-dom";
 import { shallowEqual } from "react-redux";
 import useRequestListPageSockets from "./useRequestListPageSockets";
@@ -31,7 +31,7 @@ const useRequestListPage = () => {
     return store.user.user?.username;
   }, shallowEqual);
 
-  const defaultTitleAndDesc: titleAndDesc = { title: "", description: "" };
+  const defaultTitleAndDesc: TitleAndDesc = { title: "", description: "" };
   const initialCount: RequestCount = {
     receivedDirectRequestCount: 0,
     sentDirectRequestCount: 0,
@@ -64,7 +64,7 @@ const useRequestListPage = () => {
 
   const [viewedRequests, setViewedRequests] =
     useState<RequestType>(buildRequestType);
-  const [currentTitleAndDesc, setViewedTitleAndDesc] = useState<titleAndDesc>(
+  const [currentTitleAndDesc, setViewedTitleAndDesc] = useState<TitleAndDesc>(
     requestDesc.get(buildRequestType()) || defaultTitleAndDesc,
   );
 

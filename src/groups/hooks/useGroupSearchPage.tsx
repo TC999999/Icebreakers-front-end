@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 import type { showResults, GroupSearch } from "../../types/groupTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import userAPI from "../../apis/userAPI";
-
 import {
   useSearchParams,
   useNavigate,

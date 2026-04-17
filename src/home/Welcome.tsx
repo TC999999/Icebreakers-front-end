@@ -1,6 +1,6 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import { useAppSelector } from "../features/hooks";
-import { type ReduxAuthState } from "../types/authTypes";
+import type { ReduxAuthState } from "../types/authTypes";
 import { shallowEqual } from "react-redux";
 import "../styles/Welcome.scss";
 
@@ -8,7 +8,7 @@ import "../styles/Welcome.scss";
 const Welcome = (): JSX.Element => {
   const { user }: ReduxAuthState = useAppSelector(
     (store) => store.user,
-    shallowEqual
+    shallowEqual,
   );
   return (
     <main id="welcome-page">

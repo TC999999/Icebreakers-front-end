@@ -1,4 +1,4 @@
-import type { validity, validityTypes } from "../types/errorsTypes";
+import type { Validity, ValidityTypes } from "../types/errorsTypes";
 import {
   validityCheckersTrue,
   validityCheckersFalse,
@@ -45,8 +45,8 @@ import type { FormData } from "../types/miscTypes";
 //   favoriteColor: false,
 //   interests: false }
 export const constructErrorMap = (formData: FormData) => {
-  let ErrorMap: validityTypes = {};
-  let ErrorFlash: validity = {};
+  let ErrorMap: ValidityTypes = {};
+  let ErrorFlash: Validity = {};
 
   for (let d in formData) {
     if (!formData[d].length) {

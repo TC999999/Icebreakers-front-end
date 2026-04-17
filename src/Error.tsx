@@ -1,10 +1,10 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import { useAppSelector } from "./features/hooks";
 import { shallowEqual } from "react-redux";
-import type { loadingError } from "./types/authTypes";
+import type { LoadingError } from "./types/authTypes";
 
 type Props = {
-  error?: loadingError;
+  error?: LoadingError;
 };
 
 // error page for server side errors

@@ -5,11 +5,11 @@ import type {
   UserEdit,
   UserSearchParams,
 } from "../types/userTypes";
-import type { interestMap } from "../types/interestTypes";
+import type { InterestMap } from "../types/interestTypes";
 
 type EditReturn = {
   user: UserEdit;
-  interests: interestMap;
+  interests: InterestMap;
 };
 
 // API for user information; extends basic

@@ -1,12 +1,12 @@
 import type {
-  validity,
-  validityTypes,
-  validMessageMap,
+  Validity,
+  ValidityTypes,
+  ValidMessageMap,
 } from "../../types/errorsTypes";
 
 // Map of instructions for all form input types on what parameter values their respective value needs
 // to be considered valid
-export const validMessages: validMessageMap = {
+export const validMessages: ValidMessageMap = {
   username: {
     lengthValid: "Username must be between 5-30 characters.",
     characterValid: "Username may only contain letters or numbers.",
@@ -49,14 +49,14 @@ export const validMessages: validMessageMap = {
 
 // general validity parameter value for a form field input type (username, password, description,
 // etc) if all initial form input values are false
-let generalValidityFalse: validity = {
+let generalValidityFalse: Validity = {
   lengthValid: false,
   characterValid: false,
 };
 
 // map of which validity parameter values are required for each form field input type if initial form
 // input values are false
-export const validityCheckersFalse: validityTypes = {
+export const validityCheckersFalse: ValidityTypes = {
   username: generalValidityFalse,
   password: generalValidityFalse,
   emailAddress: { addressValid: false },
@@ -73,11 +73,11 @@ export const validityCheckersFalse: validityTypes = {
 
 // general validity parameter value for a form field input type (username, password, description,
 // etc) if all initial form input values are true
-let generalValidityTrue: validity = { lengthValid: true, characterValid: true };
+let generalValidityTrue: Validity = { lengthValid: true, characterValid: true };
 
 // map of which validity parameter values are required for each form field input type if initial form
 // input values are true
-export const validityCheckersTrue: validityTypes = {
+export const validityCheckersTrue: ValidityTypes = {
   username: generalValidityTrue,
   password: generalValidityTrue,
   emailAddress: { addressValid: true },

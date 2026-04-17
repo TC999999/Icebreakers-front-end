@@ -1,13 +1,13 @@
 import { memo } from "react";
-import type { conversation } from "../types/conversationTypes";
+import type { Conversation } from "../types/conversationTypes";
 import ConversationTypingBubble from "./ConversationTypingBubble";
 import "../styles/conversations/ConversationTab.scss";
 import createDate from "../helpers/createDate";
 
 type Props = {
-  conversation: conversation;
+  conversation: Conversation;
   selected: boolean;
-  handleCurrentConversation: (conversation: conversation) => void;
+  handleCurrentConversation: (conversation: Conversation) => void;
 };
 
 // component for conversation tab seen of the left side on conversation list page
@@ -48,7 +48,7 @@ const ConversationTab: React.FC<Props> = memo(
         </small>
       </div>
     );
-  }
+  },
 );
 
 export default ConversationTab;

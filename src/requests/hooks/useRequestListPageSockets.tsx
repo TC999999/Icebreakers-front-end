@@ -5,8 +5,6 @@ import type {
   RequestInfiniteQueryRes,
   RequestParams,
   RequestCountSTR,
-  // ReceivedRequestCard,
-  // ReceivedGroupRequestCard,
 } from "../../types/requestTypes";
 import { requestCountMap } from "../../helpers/maps/requestTypeMap";
 import socket from "../../helpers/socket";

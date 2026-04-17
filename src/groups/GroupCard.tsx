@@ -1,10 +1,10 @@
 import { memo } from "react";
-import type { hostedGroupCard, nonHostedGroupCard } from "../types/groupTypes";
+import type { HostedGroupCard, NonHostedGroupCard } from "../types/groupTypes";
 import createDate from "../helpers/createDate";
 import "../styles/groups/GroupCard.scss";
 
 type Props = {
-  group: hostedGroupCard | nonHostedGroupCard;
+  group: HostedGroupCard | NonHostedGroupCard;
   navigateGroup: (id: string) => void;
   handleKeyDownGroupCard: (
     e: React.KeyboardEvent<HTMLDivElement>,

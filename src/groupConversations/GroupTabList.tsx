@@ -1,11 +1,11 @@
 import React from "react";
-import type { groupTab, simpleGroup } from "../types/groupTypes";
+import type { GroupTab as GT, SimpleGroup } from "../types/groupTypes";
 import GroupTab from "./GroupTab";
 import "../styles/groupConversations/GroupTabList.scss";
 
 type Props = {
-  selectedGroup: simpleGroup;
-  groupTabList: groupTab[];
+  selectedGroup: SimpleGroup;
+  groupTabList: GT[];
   changeSelectedTab: (id: string, unreadMessages: number) => Promise<void>;
 };
 

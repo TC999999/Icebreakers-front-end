@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useAppDispatch } from "../features/hooks";
-import { type AppDispatch } from "../features/store";
+import type { AppDispatch } from "../features/store";
 import { setLoadError } from "../features/slices/loading";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { toast } from "react-toastify";

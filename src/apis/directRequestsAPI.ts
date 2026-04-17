@@ -1,8 +1,8 @@
 import requestsAPI from "./requestsAPI";
 import type {
-  directConversationRequest,
-  directConversationResponse,
-  directConversationDelete,
+  DirectConversationRequest,
+  DirectConversationResponse,
+  DirectConversationDelete,
 } from "../types/requestTypes";
 
 // API for direct conversation requests, including creating requests for other users, removing
@@ -15,7 +15,7 @@ class directRequestsAPI extends requestsAPI {
   // creates and returns a new direct conversation request
   public static async makeDirectConversationRequest(
     username: string,
-    request: directConversationRequest,
+    request: DirectConversationRequest,
   ): Promise<any> {
     let res = await this.postRequest(`new/${username}`, request);
     return res;
@@ -34,7 +34,7 @@ class directRequestsAPI extends requestsAPI {
   public static async deleteDirectConversationRequest(
     id: string,
     username: string,
-    request: directConversationDelete,
+    request: DirectConversationDelete,
   ): Promise<any> {
     let res = await this.deleteRequest(`delete/${id}/${username}`, request);
     return res;
@@ -44,7 +44,7 @@ class directRequestsAPI extends requestsAPI {
   // if receiving user accepts request
   public static async respondToDirectConversationRequest(
     username: string,
-    response: directConversationResponse,
+    response: DirectConversationResponse,
   ): Promise<any> {
     let res = await this.postRequest(
       `response/${response.id}/${username}`,

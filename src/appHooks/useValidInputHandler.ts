@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import type { validityTypes, validity } from "../types/errorsTypes";
+import type { ValidityTypes, Validity } from "../types/errorsTypes";
 import {
   inputValidityHandler,
   submitErrorHandler,
@@ -11,12 +11,12 @@ import type { FormData } from "../types/miscTypes";
 // submitting them to the backend server
 const useValidInputHandler = (inputs: FormData = {}) => {
   // sets initial state as empty map for form input keys and validation requirement values
-  const [validInputs, setValidInputs] = useState<validityTypes>({});
+  const [validInputs, setValidInputs] = useState<ValidityTypes>({});
   // sets initial state as empty map for form input keys and boolean values: if any boolean is true,
   // flashes invalid fields
-  const [currentErrorFlash, setCurrentErrorFlash] = useState<validity>({});
+  const [currentErrorFlash, setCurrentErrorFlash] = useState<Validity>({});
   // sets initial state as empty map for form input keys and boolean values
-  const [initialErrorFlash, setInitialErrorFlash] = useState<validity>({});
+  const [initialErrorFlash, setInitialErrorFlash] = useState<Validity>({});
 
   // state for which input field directions should be shown to user
   const [showDirections, setShowDirections] = useState<string>("");
@@ -40,7 +40,7 @@ const useValidInputHandler = (inputs: FormData = {}) => {
     (name: string, value: string | number[]) => {
       inputValidityHandler({ name, value, setter: setValidInputs });
     },
-    [validInputs]
+    [validInputs],
   );
 
   // sets which input directions should be shown when user focuses their cursor on field input
@@ -49,11 +49,11 @@ const useValidInputHandler = (inputs: FormData = {}) => {
       e:
         | React.FocusEvent<HTMLInputElement>
         | React.FocusEvent<HTMLTextAreaElement>
-        | React.FocusEvent<HTMLDivElement>
+        | React.FocusEvent<HTMLDivElement>,
     ) => {
       setShowDirections(e.currentTarget.id);
     },
-    [showDirections]
+    [showDirections],
   );
 
   // sets which input directions should be shown when user hovers their cursor on field input
@@ -62,7 +62,7 @@ const useValidInputHandler = (inputs: FormData = {}) => {
       e:
         | React.MouseEvent<HTMLInputElement>
         | React.MouseEvent<HTMLTextAreaElement>
-        | React.MouseEvent<HTMLDivElement>
+        | React.MouseEvent<HTMLDivElement>,
     ) => {
       e.preventDefault();
       if (
@@ -72,7 +72,7 @@ const useValidInputHandler = (inputs: FormData = {}) => {
         document.activeElement.blur();
       setShowDirections(e.currentTarget.id);
     },
-    [showDirections]
+    [showDirections],
   );
 
   // resets input directions to blank when user blurs their cursor out of field input
@@ -81,12 +81,12 @@ const useValidInputHandler = (inputs: FormData = {}) => {
       e:
         | React.FocusEvent<HTMLInputElement>
         | React.FocusEvent<HTMLTextAreaElement>
-        | React.FocusEvent<HTMLDivElement>
+        | React.FocusEvent<HTMLDivElement>,
     ) => {
       e.preventDefault();
       setShowDirections("");
     },
-    [showDirections]
+    [showDirections],
   );
 
   // sets which input directions should be shown when user hovers their cursor on field input
@@ -95,12 +95,12 @@ const useValidInputHandler = (inputs: FormData = {}) => {
       e:
         | React.MouseEvent<HTMLInputElement>
         | React.MouseEvent<HTMLTextAreaElement>
-        | React.MouseEvent<HTMLDivElement>
+        | React.MouseEvent<HTMLDivElement>,
     ) => {
       e.preventDefault();
       setShowDirections("");
     },
-    [showDirections]
+    [showDirections],
   );
 
   // returns boolean that tells if all inputs are valid (true if they are, false if they don't),

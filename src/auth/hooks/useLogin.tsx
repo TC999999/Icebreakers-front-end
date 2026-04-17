@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
-import { type LogIn } from "../../types/authTypes";
+import type { LogIn } from "../../types/authTypes";
 import { LogInUser } from "../../features/actions/auth";
-import { type AppDispatch } from "../../features/store";
+import type { AppDispatch } from "../../features/store";
 import { useAppDispatch } from "../../features/hooks";
 
 // hook for login page
@@ -21,7 +21,7 @@ const useLogIn = () => {
       const { name, value } = e.target;
       setFormData((data) => ({ ...data, [name]: value }));
     },
-    [formData]
+    [formData],
   );
 
   // handles submission for form data to backend; retrieves user data and sets redux user state
@@ -35,7 +35,7 @@ const useLogIn = () => {
         if (typeof err === "string") setError(err);
       }
     },
-    [formData]
+    [formData],
   );
 
   return { formData, error, handleChange, handleSubmit };

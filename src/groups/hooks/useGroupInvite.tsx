@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import type { simpleGroup, GroupInvitation } from "../../types/groupTypes";
+import type { SimpleGroup, GroupInvitation } from "../../types/groupTypes";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/loading";
@@ -32,7 +32,7 @@ const useGroupInvite = () => {
     originalData.current,
   );
 
-  const [groupList, setGroupList] = useState<simpleGroup[]>([]);
+  const [groupList, setGroupList] = useState<SimpleGroup[]>([]);
 
   // reusable hook for setting and checking input validity
   const {

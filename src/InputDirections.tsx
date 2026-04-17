@@ -1,7 +1,7 @@
 import React from "react";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { FaCircleXmark } from "react-icons/fa6";
-import type { validity } from "./types/errorsTypes";
+import type { Validity } from "./types/errorsTypes";
 import { validMessages } from "./helpers/maps/validMessage";
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
     | "description"
     | "group";
   showDirections: string;
-  validInputs: validity;
+  validInputs: Validity;
   onBottom: boolean;
 };
 

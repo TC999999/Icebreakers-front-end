@@ -1,10 +1,10 @@
 import React, { memo } from "react";
-import type { groupSearchCard } from "../types/groupTypes";
+import type { GroupSearchCard } from "../types/groupTypes";
 import "../styles/groups/GroupSearchCard.scss";
 import { MdPerson } from "react-icons/md";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 
-type Props = groupSearchCard;
+type Props = GroupSearchCard;
 
 // reusable React component for card of group data that appears when a user searches for groups:
 // contains group title, host, list of interests, and list of users in group

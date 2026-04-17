@@ -4,7 +4,7 @@ export type FormData = {
   [key: string]: string | number[];
 };
 
-export type titleAndDesc = {
+export type TitleAndDesc = {
   title: string;
   description: string;
 };

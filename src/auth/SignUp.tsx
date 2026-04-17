@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import useSignUp from "./hooks/useSignUp";
 import "../styles/auth/SignUp.scss";
 import InputDirections from "../InputDirections";

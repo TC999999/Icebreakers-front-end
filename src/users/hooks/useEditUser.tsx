@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { UserEdit } from "../../types/userTypes";
-import type { interestMap } from "../../types/interestTypes";
+import type { InterestMap } from "../../types/interestTypes";
 import { useAppDispatch } from "../../features/hooks";
 import { setFavoriteColor } from "../../features/slices/auth";
 import { setFormLoading, setLoadError } from "../../features/slices/loading";
@@ -25,7 +25,7 @@ const useEditUser = () => {
   });
 
   const [userData, setUserData] = useState<UserEdit>(originalData.current);
-  const interestsList = useRef<interestMap>({});
+  const interestsList = useRef<InterestMap>({});
 
   // reusable custom validator hook for setting and checking input value validity
   const {

@@ -1,8 +1,8 @@
-export type interest = {
+export type Interest = {
   id: number;
   topic: string;
 };
 
-export type interests = interest[];
+export type Interests = Interest[];
 
-export type interestMap = { [key: string]: interest };
+export type InterestMap = { [key: string]: Interest };

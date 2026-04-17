@@ -1,5 +1,4 @@
 import { lazy, Suspense } from "react";
-
 import useDeleteGroupMembers from "./hooks/useDeleteGroupMembers";
 import DeleteGroupMembersList from "./DeleteGroupMembersList";
 import LoadingSmall from "../LoadingSmall";

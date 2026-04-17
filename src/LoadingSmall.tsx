@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import { useAppSelector } from "./features/hooks";
 import { shallowEqual } from "react-redux";
 import "./styles/LoadingSmall.scss";

@@ -26,7 +26,7 @@ export type UserSearchParams = {
   findSimilarInterests: boolean | null;
 };
 
-export type groupUser = { favoriteColor: string; username: string };
+export type GroupUser = { favoriteColor: string; username: string };
 
 export type UserEdit = {
   emailAddress: string;
@@ -35,23 +35,23 @@ export type UserEdit = {
   interests: number[];
 };
 
-export type groupUserTab = {
+export type GroupUserTab = {
   username: string;
   favoriteColor: string;
   isOnline: boolean;
 };
 
-export type groupMessageUserUpdate = {
+export type GroupMessageUserUpdate = {
   id: string;
   username: string;
   unreadGroupMessages: number;
 };
 
-export type userTyping = {
+export type UserTyping = {
   [key: string]: number;
 };
 
-export type blockedUser = {
+export type BlockedUser = {
   username: string;
   favoriteColor: string;
   blockedAt: string;

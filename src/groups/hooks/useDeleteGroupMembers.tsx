@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { shallowEqual } from "react-redux";
-import type { groupUser } from "../../types/userTypes";
+import type { GroupUser } from "../../types/userTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { useParams, useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const useDeleteGroupMembers = () => {
   const navigate = useNavigate();
   const notify = (message: string) => toast.error(message);
 
-  const [users, setUsers] = useState<groupUser[]>([]);
+  const [users, setUsers] = useState<GroupUser[]>([]);
   const [groupTitle, setGroupTitle] = useState<string>("");
   const [showRemoveWindow, setShowRemoveWindow] = useState<boolean>(false);
   const [currentRemovedUser, setCurrentRemovedUser] = useState<string>("");

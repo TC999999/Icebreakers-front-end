@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "../features/hooks";
-import { type AppDispatch } from "../features/store";
+import type { AppDispatch } from "../features/store";
 import { getCurrentUser } from "../features/actions/auth";
 import { useAppSelector } from "../features/hooks";
 import type { UserState } from "../types/authTypes";

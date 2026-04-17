@@ -1,9 +1,9 @@
 import { memo } from "react";
-import type { groupTab } from "../types/groupTypes";
+import type { GroupTab as GT } from "../types/groupTypes";
 import "../styles/groupConversations/GroupTab.scss";
 
 type Props = {
-  group: groupTab;
+  group: GT;
   selected: boolean;
   changeSelectedTab: (id: string, unreadMessages: number) => Promise<void>;
 };
@@ -21,7 +21,7 @@ const GroupTab: React.FC<Props> = memo(
         {group.title}
       </div>
     );
-  }
+  },
 );
 
 export default GroupTab;

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { GroupRequestFormData } from "../../types/requestTypes";
-import type { groupName } from "../../types/groupTypes";
+import type { GroupName } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import {
   useParams,
@@ -30,7 +30,7 @@ const useGroupRequest = () => {
   const [formData, setFormData] = useState<GroupRequestFormData>(
     originalData.current,
   );
-  const [groupData, setGroupData] = useState<groupName>({
+  const [groupData, setGroupData] = useState<GroupName>({
     title: "",
     host: "",
   });

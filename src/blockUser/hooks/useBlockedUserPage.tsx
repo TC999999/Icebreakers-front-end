@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import blockAPI from "../../apis/blockAPI";
 import { useParams } from "react-router-dom";
-import type { blockedUser } from "../../types/userTypes";
+import type { BlockedUser } from "../../types/userTypes";
 import { useAppDispatch } from "../../features/hooks";
 import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ const useBlockedUserPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const notify = (message: string) => toast.error(message);
-  const [blockedUsers, setBlockedUsers] = useState<blockedUser[]>([]);
+  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
 
   // on initial render, retrieves list of all users that have been blocked by a single user;
   // throws an error if username in params does not match username saved on the server side

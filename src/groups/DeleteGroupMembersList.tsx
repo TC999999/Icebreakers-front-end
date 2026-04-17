@@ -1,13 +1,13 @@
 import React from "react";
-import type { groupUser } from "../types/userTypes";
+import type { GroupUser } from "../types/userTypes";
 import DeleteGroupMemberCard from "./DeleteGroupMemberCard";
 import "../styles/groups/DeleteGroupMembersList.scss";
 
 type Props = {
-  groupUsers: groupUser[];
+  groupUsers: GroupUser[];
   handleRemoveButton: (
     e: React.MouseEvent<HTMLButtonElement>,
-    username: string
+    username: string,
   ) => void;
 };
 

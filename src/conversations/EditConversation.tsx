@@ -1,17 +1,17 @@
 import type { JSX } from "react";
 import "../styles/conversations/EditConversation.scss";
 import type {
-  currentConversation,
-  returnUpdateConversation,
+  CurrentConversation,
+  ReturnUpdateConversation,
 } from "../types/conversationTypes";
 import useEditConversation from "./hooks/useEditConversation";
 
 type Props = {
-  currentConversation: currentConversation;
+  currentConversation: CurrentConversation;
   hideForm: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.FormEvent,
   ) => void;
-  updateConversations: (newConversation: returnUpdateConversation) => void;
+  updateConversations: (newConversation: ReturnUpdateConversation) => void;
 };
 
 // form component for editing a single conversation's title

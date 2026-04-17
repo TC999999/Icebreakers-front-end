@@ -8,11 +8,11 @@ import {
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-import type { groupTab, selectedGroup } from "../../types/groupTypes";
-import type { groupUserTab, userTyping } from "../../types/userTypes";
+import type { GroupTab, SelectedGroup } from "../../types/groupTypes";
+import type { GroupUserTab, UserTyping } from "../../types/userTypes";
 import type {
-  conversationMessage,
-  newConversationMessage,
+  ConversationMessage,
+  NewConversationMessage,
 } from "../../types/conversationTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import socket from "../../helpers/socket";
@@ -32,24 +32,24 @@ const useGroupConversationPage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialMessageInput = useRef<newConversationMessage>({ content: "" });
+  const initialMessageInput = useRef<NewConversationMessage>({ content: "" });
 
   const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
-  const [groupTabs, setGroupTabs] = useState<groupTab[]>([]);
-  const [selectedGroup, setSelectedGroup] = useState<selectedGroup>({
+  const [groupTabs, setGroupTabs] = useState<GroupTab[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<SelectedGroup>({
     id: "",
     title: "",
     host: "",
   });
-  const [currentUsers, setCurrentUsers] = useState<groupUserTab[]>([]);
-  const [currentMessages, setCurrentMessages] = useState<conversationMessage[]>(
+  const [currentUsers, setCurrentUsers] = useState<GroupUserTab[]>([]);
+  const [currentMessages, setCurrentMessages] = useState<ConversationMessage[]>(
     [],
   );
-  const [messageInput, setMessageInput] = useState<newConversationMessage>(
+  const [messageInput, setMessageInput] = useState<NewConversationMessage>(
     initialMessageInput.current,
   );
 
-  const [usersTyping, setUsersTyping] = useState<userTyping>({});
+  const [usersTyping, setUsersTyping] = useState<UserTyping>({});
 
   //for auto scrolling to the bottom of the messages list
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -89,7 +89,7 @@ const useGroupConversationPage = () => {
             const { users, messages, title, host, unreadMessages } =
               await groupConversationsAPI.getGroupMessages(username, id);
             setSelectedGroup({ id, title, host });
-            socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
+            socket.emit("isOnlineGroup", users, (newUsers: GroupUserTab[]) => {
               setCurrentUsers(newUsers);
             });
 
@@ -208,7 +208,7 @@ const useGroupConversationPage = () => {
             const { users, messages, title, host } =
               await groupConversationsAPI.getGroupMessages(username, id);
             setSelectedGroup({ id, title, host });
-            socket.emit("isOnlineGroup", users, (newUsers: groupUserTab[]) => {
+            socket.emit("isOnlineGroup", users, (newUsers: GroupUserTab[]) => {
               setCurrentUsers(newUsers);
             });
             setCurrentMessages(messages);

@@ -1,5 +1,5 @@
-import { type JSX } from "react";
-import type { titleAndDesc } from "../types/miscTypes";
+import type { JSX } from "react";
+import type { TitleAndDesc } from "../types/miscTypes";
 import type {
   RequestType,
   RequestList,
@@ -21,7 +21,7 @@ import type {
 
 type Props = {
   currentRequestType: RequestType;
-  currentTitleAndDesc: titleAndDesc;
+  currentTitleAndDesc: TitleAndDesc;
   requestList: RequestList;
   isLoading: boolean;
   hasNextPage: boolean;

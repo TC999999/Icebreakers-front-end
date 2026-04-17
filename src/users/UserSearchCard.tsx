@@ -1,5 +1,5 @@
 import { type JSX, memo } from "react";
-import { type UserCard } from "../types/userTypes";
+import type { UserCard } from "../types/userTypes";
 import { MdPerson } from "react-icons/md";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import "../styles/users/UserSearchCard.scss";

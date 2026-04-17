@@ -22,19 +22,19 @@ export type UserState = {
   unreadGroupMessages: number;
 };
 
-type loadingInfo = {
+type LoadingInfo = {
   pageLoading: boolean;
   formLoading: boolean;
 };
 
-export type loadingError = {
+export type LoadingError = {
   message: string;
   status: number | null;
 };
 
 export type LoadingContext = {
-  loadingInfo: loadingInfo;
-  loadingError: loadingError;
+  loadingInfo: LoadingInfo;
+  loadingError: LoadingError;
 };
 
 export type ReduxAuthState = {

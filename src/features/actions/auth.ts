@@ -1,9 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  type Register,
-  type LogIn,
-  type UserState,
-} from "../../types/authTypes";
+import type { Register, LogIn, UserState } from "../../types/authTypes";
 import axiosInstance from "../../apis/axiosInstance";
 import socket from "../../helpers/socket";
 

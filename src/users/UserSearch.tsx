@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import type { JSX } from "react";
 import useUserSearch from "./hooks/useUserSearch";
 import UserSearchSkeleton from "./skeletons/UserSearchSkeleton";
 import UserSearchCard from "./UserSearchCard";
