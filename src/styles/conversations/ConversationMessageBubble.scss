@@ -13,7 +13,10 @@
     color: white;
     border-radius: s.$borderRadius;
     align-self: flex-end;
-    animation: slideFromRight 0.5s;
+
+    &.new {
+      animation: slideFromRight 0.5s;
+    }
 
     &::after {
       content: " ";
@@ -32,7 +35,10 @@
   &.other-bubble {
     background-color: white;
     border-radius: s.$borderRadius;
-    animation: slideFromLeft 0.5s;
+
+    &.new {
+      animation: slideFromLeft 0.5s;
+    }
 
     &::before {
       content: " ";

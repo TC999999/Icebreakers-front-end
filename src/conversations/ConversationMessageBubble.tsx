@@ -18,11 +18,13 @@ const ConversationMessageBubble: React.FC<Props> = ({
 
   return (
     <div
-      className={`direct-message-bubble ${
-        conversationMessage.username === username
-          ? "self-bubble"
-          : "other-bubble"
-      }`}
+      className={`direct-message-bubble 
+        ${
+          conversationMessage.username === username
+            ? "self-bubble"
+            : "other-bubble"
+        }
+        ${conversationMessage.new ? "new" : ""}`}
     >
       <div>
         <p>{conversationMessage.content}</p>

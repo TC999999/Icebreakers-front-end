@@ -13,6 +13,7 @@ export type conversationMessage = {
   content: string;
   username: string;
   createdAt: string;
+  new?: boolean;
 };
 
 export interface currentConversation {

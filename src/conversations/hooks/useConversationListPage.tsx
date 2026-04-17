@@ -154,7 +154,10 @@ const useConversationListPage = () => {
         queryClient.setQueryData(
           ["currentConversation", { id }],
           (prevData: currentConversationMessages) => {
-            return { ...prevData, messages: [...prevData.messages, message] };
+            return {
+              ...prevData,
+              messages: [...prevData.messages, { ...message, new: true }],
+            };
           },
         );
 
@@ -458,6 +461,7 @@ const useConversationListPage = () => {
         username,
         content,
         createdAt: newDate,
+        new: true,
       };
 
       await queryClient.cancelQueries({
