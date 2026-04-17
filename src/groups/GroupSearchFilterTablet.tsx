@@ -1,8 +1,4 @@
-import type {
-  showResults,
-  groupName,
-  groupSearchParams,
-} from "../types/groupTypes";
+import type { showResults, GroupName, GroupSearch } from "../types/groupTypes";
 import GroupSearchFilter from "./GroupSearchFilter";
 import "../styles/groups/GroupSearchFilter.scss";
 import "../styles/groups/GroupSearchFilterTablet.scss";
@@ -31,11 +27,15 @@ type Props = {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => void;
   handleCheckBoxClick: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  groupSearchParams: GroupSearch;
   showResults: showResults;
-  groupSearchResults: groupName[];
-  groupSearchParams: groupSearchParams;
+  groupSearchResults: GroupName[];
+  loadingGroupSuggestions: boolean;
+
   hostSearchResults: string[];
+  loadingHostSuggestions: boolean;
   userSearchResults: string[];
+  loadingUserSuggestions: boolean;
 };
 
 const GroupSearchFilterTablet: React.FC<Props> = ({
@@ -51,10 +51,13 @@ const GroupSearchFilterTablet: React.FC<Props> = ({
   handleGroupSearchResultsMouseOver,
   handleCheckBoxClick,
   showResults,
-  groupSearchResults,
   groupSearchParams,
+  groupSearchResults,
+  loadingGroupSuggestions,
   hostSearchResults,
+  loadingHostSuggestions,
   userSearchResults,
+  loadingUserSuggestions,
 }) => {
   return (
     <div className="modal-transparent" id="group-search-filter-tablet">
@@ -82,10 +85,13 @@ const GroupSearchFilterTablet: React.FC<Props> = ({
           handleGroupSearchResultsMouseOver={handleGroupSearchResultsMouseOver}
           handleCheckBoxClick={handleCheckBoxClick}
           showResults={showResults}
-          groupSearchResults={groupSearchResults}
           groupSearchParams={groupSearchParams}
+          groupSearchResults={groupSearchResults}
+          loadingGroupSuggestions={loadingGroupSuggestions}
           hostSearchResults={hostSearchResults}
+          loadingHostSuggestions={loadingHostSuggestions}
           userSearchResults={userSearchResults}
+          loadingUserSuggestions={loadingUserSuggestions}
         />
       </div>
     </div>

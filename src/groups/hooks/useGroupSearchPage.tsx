@@ -1,78 +1,117 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import type {
-  groupSearchCard,
-  groupSearchParams,
-  groupName,
-  showResults,
-} from "../../types/groupTypes";
+import { useEffect, useState, useCallback } from "react";
+import type { showResults, GroupSearch } from "../../types/groupTypes";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import userAPI from "../../apis/userAPI";
 import { useAppDispatch } from "../../features/hooks";
 import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/loading";
+import { setFormLoading } from "../../features/slices/loading";
 import {
   useSearchParams,
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import useDebounce from "../../appHooks/useDebounce";
+import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 type keyPress = { [key: string]: boolean };
 
+// custom hook for page for retrieving a list of groups filtered by inputted parameters
 const useGroupSearchPage = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate: NavigateFunction = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const title = searchParams.get("title") || "";
+  const host = searchParams.get("host") || "";
+  const user = searchParams.get("user") || "";
+  const similarInterests = searchParams.has("similarInterests");
+  const newGroups = searchParams.has("newGroups");
 
-  const [groupSearchParams, setGroupSearchParams] = useState<groupSearchParams>(
-    {
-      title: "",
-      host: "",
-      user: "",
-      similarInterests: false,
-      newGroups: false,
-    },
-  );
-  const originalGroups = useRef<groupName[]>([]);
-  const initialUsers = useRef<string[]>([]);
+  // initial url search parameter values are also initial group search params. Ensures that
+  // the search query boxes/checkboxes are filled on initial render
+  const [groupSearchParams, setGroupSearchParams] = useState<GroupSearch>({
+    title,
+    host,
+    user,
+    similarInterests,
+    newGroups,
+  });
+
   const [showResults, setShowResults] = useState<showResults>("");
-
-  const [currentGroups, setCurrentGroups] = useState<groupSearchCard[]>([]);
   const [showGroupFilterTablet, setShowGroupFilterTablet] =
     useState<boolean>(false);
-  const initialMountComplete = useRef<boolean>(false);
+
   const keyDown: keyPress = {};
 
-  // on initial render, grabs search params values from url, sets those parameter values into
-  // the search query boxes, and retrieves filtered list of all groups based on those parameters;
-  // furthermore, retrieves a list of all group names and usernames for search query purposes
-  useEffect(() => {
-    const getAllGroups = async () => {
-      try {
-        dispatch(setFormLoading(true));
-        let params = Object.fromEntries(searchParams.entries());
-        setGroupSearchParams((prev) => ({
-          ...prev,
-          ...params,
-          similarInterests: params.similarInterests === "true",
-          newGroups: params.newGroups === "true",
-        }));
-        const groups = await groupConversationsAPI.searchGroups(params);
-        const groupNames = await groupConversationsAPI.getAllGroupNames();
-        originalGroups.current = groupNames;
-        const allUsernames = await userAPI.getUserNames();
-        initialUsers.current = allUsernames;
-        setCurrentGroups(groups);
-      } catch (err: any) {
-        const error = JSON.parse(err.message);
-        dispatch(setLoadError(error));
-        navigate("/error");
-      } finally {
-        dispatch(setFormLoading(false));
-        initialMountComplete.current = true;
-      }
-    };
-    getAllGroups();
-  }, []);
+  const { handleSubmitRequestError } = useRequestErrorHandler();
+
+  // on initial render, grabs search params values from url and retrieves filtered list
+  // of all groups based on those parameters;
+  const { data: groups, isFetching: loadingGroups } = useQuery({
+    queryFn: () =>
+      groupConversationsAPI.searchGroups({
+        title: title.length > 0 ? title : null,
+        host: host.length > 0 ? host : null,
+        user: user.length > 0 ? user : null,
+        similarInterests: similarInterests || null,
+        newGroups: newGroups || null,
+      }),
+    queryKey: ["groups", { title, host, user, similarInterests, newGroups }],
+    initialData: [],
+    retry: 0,
+  });
+
+  // debounced search input for group suggestion list to prevent unneeded refetches
+  // from server side
+  const { newSearchInput: groupSuggestionInput } = useDebounce(
+    groupSearchParams.title,
+  );
+
+  // debounced search input for host user suggestion list to prevent unneeded refetches
+  // from server side
+  const { newSearchInput: hostSuggestionInput } = useDebounce(
+    groupSearchParams.host,
+  );
+
+  // debounced search input for user suggestion list to prevent unneeded refetches
+  // from server side
+  const { newSearchInput: userSuggestionInput } = useDebounce(
+    groupSearchParams.user,
+  );
+
+  // query for list of group name suggestions; updates automatically when debounced group
+  // suggestion input value updates
+  const { data: groupSearchSuggestions, isFetching: loadingGroupSuggestions } =
+    useQuery({
+      queryFn: () =>
+        groupConversationsAPI.getAllGroupNames(groupSuggestionInput),
+      queryKey: ["groupSuggestions", { name: groupSuggestionInput }],
+      initialData: [],
+      retry: 0,
+      enabled: groupSuggestionInput.length > 0,
+    });
+
+  // query for list of host name suggestions; updates automatically when debounced host
+  // suggestion input value updates
+  const { data: hostSearchSuggestions, isFetching: loadingHostSuggestions } =
+    useQuery({
+      queryFn: () => userAPI.getUserSuggestions(hostSuggestionInput),
+      queryKey: ["hostSuggestions", { name: hostSuggestionInput }],
+      initialData: [],
+      retry: 0,
+      enabled: hostSuggestionInput.length > 0,
+    });
+
+  // query for list of user name suggestions; updates automatically when debounced user
+  // suggestion input value updates
+  const { data: userSearchSuggestions, isFetching: loadingUserSuggestions } =
+    useQuery({
+      queryFn: () => userAPI.getUserSuggestions(userSuggestionInput),
+      queryKey: ["userSuggestions", { name: userSuggestionInput }],
+      initialData: [],
+      retry: 0,
+      enabled: userSuggestionInput.length > 0,
+    });
 
   // if hidden conversation tab list is shown on smaller screen, automatically hides tab list if
   // screen width is wider than 1173px
@@ -84,36 +123,6 @@ const useGroupSearchPage = () => {
     };
     window.addEventListener("resize", handleResize);
   }, [showGroupFilterTablet]);
-
-  // memo for when when the group name search query value changes, creates a new list of groups
-  // with names that begin with the query value
-  const groupSearchResults: groupName[] = useMemo(() => {
-    return groupSearchParams.title && showResults === "title"
-      ? originalGroups.current.filter((g) => {
-          return g.title.startsWith(groupSearchParams.title);
-        })
-      : [];
-  }, [groupSearchParams.title, showResults]);
-
-  // memo for when when the group host name search query value changes, creates a new list of
-  // group hosts with usernames that begin with the query value
-  const hostSearchResults: string[] = useMemo(() => {
-    return groupSearchParams.host && showResults === "host"
-      ? initialUsers.current.filter((u) => {
-          return u.startsWith(groupSearchParams.host);
-        })
-      : [];
-  }, [groupSearchParams.host, showResults]);
-
-  // memo for when when the group member name search query value changes, creates a new list of
-  // group members with usernames that begin with the query value
-  const userSearchResults: string[] = useMemo(() => {
-    return groupSearchParams.user && showResults === "user"
-      ? initialUsers.current.filter((u) => {
-          return u.startsWith(groupSearchParams.user);
-        })
-      : [];
-  }, [groupSearchParams.user, showResults]);
 
   // when user unfocuses their cursor on a search query input div, hides dropdown search
   // query options for that respective input
@@ -229,8 +238,7 @@ const useGroupSearchPage = () => {
     [groupSearchParams, showResults],
   );
 
-  // sends params to backend to retrieve filtered group list from database, which is then set in
-  // state; additionally, sets search params in the url search query
+  // updates params in url which causes refetch of group cards
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -241,12 +249,10 @@ const useGroupSearchPage = () => {
             return p[1];
           }),
         );
-        const groups = await groupConversationsAPI.searchGroups(newParams);
-        setCurrentGroups(groups);
         setSearchParams((prev) => ({ ...prev, ...newParams }));
         if (showGroupFilterTablet) setShowGroupFilterTablet(false);
       } catch (err) {
-        console.log(err);
+        handleSubmitRequestError(err);
       } finally {
         dispatch(setFormLoading(false));
       }
@@ -254,6 +260,7 @@ const useGroupSearchPage = () => {
     [groupSearchParams],
   );
 
+  // A11Y Friendly Functions
   // keyboard friendly function: when a group search card is focused on using
   // the tab key, if the user presses the enter key when also focused a card;
   // the browser redirects them to the correct group page based on the id;
@@ -321,7 +328,7 @@ const useGroupSearchPage = () => {
         }
       }
     },
-    [hostSearchResults, userSearchResults, groupSearchResults],
+    [hostSearchSuggestions, userSearchSuggestions, groupSearchSuggestions],
   );
 
   // keyboard friendly search result suggestion handler: when either up or down arrow keys are pressed
@@ -402,14 +409,17 @@ const useGroupSearchPage = () => {
   );
 
   return {
-    currentGroups,
+    groups,
     groupSearchParams,
-    groupSearchResults,
-    hostSearchResults,
-    userSearchResults,
+    groupSearchSuggestions,
+    hostSearchSuggestions,
+    userSearchSuggestions,
     showResults,
     showGroupFilterTablet,
-    initialMountComplete,
+    loadingGroups,
+    loadingGroupSuggestions,
+    loadingHostSuggestions,
+    loadingUserSuggestions,
     handleChange,
     handleInputBlur,
     handleResults,

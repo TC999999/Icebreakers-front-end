@@ -14,14 +14,17 @@ import { CiFilter } from "react-icons/ci";
 // member of
 const GroupSearchPage = () => {
   const {
-    currentGroups,
+    groups,
     groupSearchParams,
-    groupSearchResults,
-    hostSearchResults,
-    userSearchResults,
+    groupSearchSuggestions,
+    hostSearchSuggestions,
+    userSearchSuggestions,
     showResults,
     showGroupFilterTablet,
-    initialMountComplete,
+    loadingGroups,
+    loadingGroupSuggestions,
+    loadingHostSuggestions,
+    loadingUserSuggestions,
     handleChange,
     handleResults,
     handleInputBlur,
@@ -56,10 +59,13 @@ const GroupSearchPage = () => {
             }
             handleCheckBoxClick={handleCheckBoxClick}
             showResults={showResults}
-            groupSearchResults={groupSearchResults}
             groupSearchParams={groupSearchParams}
-            hostSearchResults={hostSearchResults}
-            userSearchResults={userSearchResults}
+            groupSearchResults={groupSearchSuggestions}
+            loadingGroupSuggestions={loadingGroupSuggestions}
+            hostSearchResults={hostSearchSuggestions}
+            loadingHostSuggestions={loadingHostSuggestions}
+            userSearchResults={userSearchSuggestions}
+            loadingUserSuggestions={loadingUserSuggestions}
           />
         </Suspense>
       )}
@@ -86,21 +92,24 @@ const GroupSearchPage = () => {
           handleGroupSearchResultsBlur={handleGroupSearchResultsBlur}
           handleGroupSearchResultsMouseOver={handleGroupSearchResultsMouseOver}
           handleCheckBoxClick={handleCheckBoxClick}
-          showResults={showResults}
-          groupSearchResults={groupSearchResults}
           groupSearchParams={groupSearchParams}
-          hostSearchResults={hostSearchResults}
-          userSearchResults={userSearchResults}
+          showResults={showResults}
+          groupSearchResults={groupSearchSuggestions}
+          loadingGroupSuggestions={loadingGroupSuggestions}
+          hostSearchResults={hostSearchSuggestions}
+          loadingHostSuggestions={loadingHostSuggestions}
+          userSearchResults={userSearchSuggestions}
+          loadingUserSuggestions={loadingUserSuggestions}
         />
       </header>
       <div id="group-search-list" role="Group Search List">
         <div id="search-results" role="Group Search Results">
-          {!initialMountComplete.current && currentGroups.length === 0 && (
+          {loadingGroups && groups.length === 0 && (
             <GroupSearchSkeleton cards={10} />
           )}
-          {initialMountComplete.current && currentGroups.length > 0 && (
+          {!loadingGroups && groups.length > 0 && (
             <>
-              {currentGroups.map((group) => (
+              {groups.map((group) => (
                 <GroupSearchCard
                   key={`group-${group.id}`}
                   id={group.id}
@@ -114,7 +123,7 @@ const GroupSearchPage = () => {
               ))}
             </>
           )}
-          {initialMountComplete.current && currentGroups.length === 0 && (
+          {!loadingGroups && groups.length === 0 && (
             <h2 id="empty-list">There Are No Groups That Match Your Query</h2>
           )}
         </div>

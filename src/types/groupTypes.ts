@@ -22,12 +22,20 @@ export type groupSearchCard = {
   handleGroupSearchCardKeyUp: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 };
 
-export type groupSearchParams = {
-  title: showResults extends "title" ? string : "";
-  host: showResults extends "host" ? string : "";
-  user: showResults extends "user" ? string : "";
+export type GroupSearch = {
+  title: string;
+  host: string;
+  user: string;
   similarInterests: boolean;
   newGroups: boolean;
+};
+
+export type GroupSearchParams = {
+  title: string | null;
+  host: string | null;
+  user: string | null;
+  similarInterests: boolean | null;
+  newGroups: boolean | null;
 };
 
 export type simpleGroup = {
@@ -35,7 +43,7 @@ export type simpleGroup = {
   title: string;
 };
 
-export type groupName = { title: string; host: string };
+export type GroupName = { title: string; host: string };
 
 export type selectedGroup = { id: string; title: string; host: string };
 

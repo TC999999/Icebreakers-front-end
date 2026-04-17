@@ -1,8 +1,4 @@
-import type {
-  showResults,
-  groupName,
-  groupSearchParams,
-} from "../types/groupTypes";
+import type { showResults, GroupName, GroupSearch } from "../types/groupTypes";
 import "../styles/groups/GroupSearchFilter.scss";
 
 type Props = {
@@ -27,10 +23,13 @@ type Props = {
   ) => void;
   handleCheckBoxClick: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   showResults: showResults;
-  groupSearchResults: groupName[];
-  groupSearchParams: groupSearchParams;
+  groupSearchParams: GroupSearch;
+  groupSearchResults: GroupName[];
+  loadingGroupSuggestions: boolean;
   hostSearchResults: string[];
+  loadingHostSuggestions: boolean;
   userSearchResults: string[];
+  loadingUserSuggestions: boolean;
 };
 
 const GroupSearchFilter: React.FC<Props> = ({
