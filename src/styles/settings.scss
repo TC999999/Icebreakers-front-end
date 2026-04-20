@@ -93,6 +93,22 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
   }
 }
 
+// pulse effect: continuously changing size and opaciity
+@keyframes pulse {
+  0% {
+    scale: 0.99;
+    opacity: 0.5;
+  }
+  50% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 0.99;
+    opacity: 0.5;
+  }
+}
+
 // side from right
 @keyframes slideFromRight {
   0% {
@@ -126,5 +142,84 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
   100% {
     opacity: 1;
     transform: translateY(0%);
+  }
+}
+
+// bouncy message bubble slide in animation
+// slide in bounce from the right
+@keyframes newMessagePopUpRight {
+  0% {
+    transform: translateX(100%);
+  }
+
+  20% {
+    transform: translateX(-10%);
+  }
+  30% {
+    transform: translateX(10%);
+  }
+
+  40% {
+    transform: translateX(-8%);
+  }
+  50% {
+    transform: translateX(8%);
+  }
+
+  60% {
+    transform: translateX(-5%);
+  }
+  70% {
+    transform: translateX(5%);
+  }
+
+  80% {
+    transform: translateX(-2%);
+  }
+  90% {
+    transform: translateX(2%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+// slide in bounce from the left
+@keyframes newMessagePopUpLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  20% {
+    transform: translateX(10%);
+  }
+  30% {
+    transform: translateX(-10%);
+  }
+
+  40% {
+    transform: translateX(8%);
+  }
+  50% {
+    transform: translateX(-8%);
+  }
+
+  60% {
+    transform: translateX(5%);
+  }
+  70% {
+    transform: translateX(-5%);
+  }
+
+  80% {
+    transform: translateX(2%);
+  }
+  90% {
+    transform: translateX(-2%);
+  }
+
+  100% {
+    transform: translateX(0%);
   }
 }

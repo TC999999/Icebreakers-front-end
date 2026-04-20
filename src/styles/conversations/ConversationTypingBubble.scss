@@ -9,22 +9,46 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   border-radius: s.$borderRadius;
   text-decoration: none;
   font-size: large;
   position: absolute;
   top: 35px;
   left: 40px;
+  animation: pulse 2s infinite;
+
+  .ellipsis {
+    font-weight: bold;
+    margin: 5px;
+  }
+
+  &::before {
+    content: " ";
+    position: absolute;
+    bottom: -10px;
+    left: 10px;
+    border: 5px solid c.$thirdly;
+    border-bottom-right-radius: 100px;
+  }
 
   &::after {
     content: " ";
     position: absolute;
-    top: 30px;
-    right: 10px;
-    border-top: 5px solid c.$thirdly;
-    border-bottom: 5px solid transparent;
-    border-left: 5px solid transparent;
-    border-right: 5px solid c.$thirdly;
+    bottom: -8px;
+    left: 5px;
+    border: 5px solid white;
+    border-bottom-right-radius: 100px;
+  }
+
+  &.selected {
+    &::after {
+      content: " ";
+      position: absolute;
+      bottom: -10px;
+      left: 10px;
+      border: solid beige;
+      border-width: 5px 0.5px 5px 5px;
+      border-bottom-right-radius: 100px;
+    }
   }
 }

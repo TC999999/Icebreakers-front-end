@@ -30,7 +30,9 @@ const ConversationTab: React.FC<Props> = memo(
           )}
         </p>
         <div className="latest-message">
-          {conversation.isTyping && <ConversationTypingBubble />}
+          {conversation.isTyping && (
+            <ConversationTypingBubble selected={selected} />
+          )}
 
           {conversation.latestMessage && !conversation.isTyping && (
             <p>{conversation.latestMessage}</p>

@@ -4,7 +4,7 @@
 .direct-message-bubble {
   width: 30%;
   padding: 10px;
-  margin: 15px;
+  margin: 20px 15px 20px;
   position: relative;
   word-wrap: break-word;
 
@@ -15,29 +15,7 @@
     align-self: flex-end;
 
     &.new {
-      animation: slideFromRight 0.5s;
-    }
-
-    &::after {
-      content: " ";
-      width: 0;
-      height: 0;
-      position: absolute;
-      bottom: -30px;
-      right: 10%;
-      border-top: 20px solid blue;
-      border-bottom: 20px solid transparent;
-      border-left: 20px solid transparent;
-      border-right: 20px solid blue;
-    }
-  }
-
-  &.other-bubble {
-    background-color: white;
-    border-radius: s.$borderRadius;
-
-    &.new {
-      animation: slideFromLeft 0.5s;
+      animation: newMessagePopUpRight ease-in-out 1.2s;
     }
 
     &::before {
@@ -46,11 +24,52 @@
       height: 0;
       position: absolute;
       bottom: -30px;
-      left: 10%;
-      border-top: 20px solid white;
-      border-bottom: 20px solid transparent;
-      border-left: 20px solid white;
-      border-right: 20px solid transparent;
+      right: 17px;
+      border: 20px solid blue;
+      border-bottom-left-radius: 100px;
+    }
+    &::after {
+      content: " ";
+      width: 0;
+      height: 0;
+      position: absolute;
+      bottom: -30px;
+      right: 17px;
+      border: solid c.$thirdly;
+      border-width: 10px 1px 20px 20px;
+      border-bottom-left-radius: 100px;
+    }
+  }
+
+  &.other-bubble {
+    background-color: white;
+    border-radius: s.$borderRadius;
+
+    &.new {
+      animation: newMessagePopUpLeft ease-out 1.2s;
+    }
+
+    &::before {
+      content: " ";
+      width: 0;
+      height: 0;
+      position: absolute;
+      bottom: -30px;
+      left: 17px;
+      border: 20px solid white;
+      border-bottom-right-radius: 100px;
+    }
+
+    &::after {
+      content: " ";
+      width: 0;
+      height: 0;
+      position: absolute;
+      bottom: -30px;
+      left: 17px;
+      border: solid c.$thirdly;
+      border-width: 10px 1px 20px 20px;
+      border-bottom-right-radius: 100px;
     }
   }
 }
