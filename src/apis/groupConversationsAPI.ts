@@ -5,10 +5,10 @@ import type {
   GroupPage,
   SimpleGroup,
   GroupSearchCard,
-  GroupName,
   GroupTab,
   GroupMessageInfo,
   GroupSearchParams,
+  BaseGroupSearch,
 } from "../types/groupTypes";
 import type {
   ConversationMessage,
@@ -17,7 +17,7 @@ import type {
 import type { GroupMessageUserUpdate } from "../types/userTypes";
 
 type ReturnGroup = {
-  group: GroupPage | GroupName;
+  group: GroupPage | BaseGroupSearch;
   isInGroup?: boolean;
   requestPending?: boolean;
   invitationPending?: boolean;
@@ -43,16 +43,22 @@ class groupConversationsAPI extends API {
 
   // gets all groups that the user is a part of, returns either a simpler or more complex version of
   // the list based on inputted params
-  public static async getAllGroups(
+  public static async getAllGroups(username: string): Promise<AllGroups> {
+    const res = await this.getRequest(username, {});
+    return res.groups;
+  }
+
+  public static async getAllGroupsSimple(
     username: string,
-    params: any,
-  ): Promise<AllGroups | SimpleGroup[]> {
-    const res = await this.getRequest(username, params);
+  ): Promise<SimpleGroup[]> {
+    const res = await this.getRequest(username, { getSingle: true });
     return res.groups;
   }
 
   // gets an initial list of group names and their hosts
-  public static async getAllGroupNames(name: string): Promise<GroupName[]> {
+  public static async getAllGroupNames(
+    name: string,
+  ): Promise<BaseGroupSearch[]> {
     const res = await this.getRequest("getNames", { name });
     return res.groups;
   }

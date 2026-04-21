@@ -32,33 +32,31 @@ const GroupList = () => {
         >
           <div
             className={`group-tab ${
-              currentGroupTab === "hostedGroups" ? "selected-group" : ""
+              currentGroupTab === "hosted" ? "selected-group" : ""
             }`}
-            title="hostedGroups"
+            title="hosted"
             role="tab"
-            aria-selected={currentGroupTab === "hostedGroups"}
-            tabIndex={currentGroupTab === "hostedGroups" ? 0 : -1}
+            aria-selected={currentGroupTab === "hosted"}
+            tabIndex={currentGroupTab === "hosted" ? 0 : -1}
             onClick={handleGroupTab}
           >
             Groups You Host
           </div>
           <div
             className={`group-tab ${
-              currentGroupTab === "nonHostedGroups" ? "selected-group" : ""
+              currentGroupTab === "nonHosted" ? "selected-group" : ""
             }`}
-            title="nonHostedGroups"
+            title="nonHosted"
             role="tab"
-            aria-selected={currentGroupTab === "nonHostedGroups"}
-            tabIndex={currentGroupTab === "nonHostedGroups" ? 0 : -1}
+            aria-selected={currentGroupTab === "nonHosted"}
+            tabIndex={currentGroupTab === "nonHosted" ? 0 : -1}
             onClick={handleGroupTab}
           >
             Groups You Do Not Host
           </div>
         </header>
 
-        <Activity
-          mode={currentGroupTab === "hostedGroups" ? "visible" : "hidden"}
-        >
+        <Activity mode={currentGroupTab === "hosted" ? "visible" : "hidden"}>
           <div
             className="groups-list-div"
             id="hosted-groups-list-div"
@@ -94,9 +92,7 @@ const GroupList = () => {
             )}
           </div>
         </Activity>
-        <Activity
-          mode={currentGroupTab === "nonHostedGroups" ? "visible" : "hidden"}
-        >
+        <Activity mode={currentGroupTab === "nonHosted" ? "visible" : "hidden"}>
           <div
             className="groups-list-div"
             id="non-hosted-groups-list-div"

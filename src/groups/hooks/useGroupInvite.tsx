@@ -60,9 +60,8 @@ const useGroupInvite = () => {
         setFormData((prev) => ({ ...prev, to }));
         originalData.current = { ...originalData.current, to };
         const getGroups = async () => {
-          const groups = await groupConversationsAPI.getAllGroups(username, {
-            getSingle: true,
-          });
+          const groups =
+            await groupConversationsAPI.getAllGroupsSimple(username);
           if (Array.isArray(groups)) setGroupList(groups);
         };
         getGroups();

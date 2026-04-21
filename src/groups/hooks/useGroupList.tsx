@@ -1,73 +1,52 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useAppSelector } from "../../features/hooks";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
-import type {
-  HostedGroupCard,
-  NonHostedGroupCard,
-} from "../../types/groupTypes";
-import { useAppDispatch } from "../../features/hooks";
-import type { AppDispatch } from "../../features/store";
-import { setFormLoading, setLoadError } from "../../features/slices/loading";
 import { shallowEqual } from "react-redux";
 import {
   useSearchParams,
   useNavigate,
   type NavigateFunction,
 } from "react-router-dom";
-
-type groupTabs = "hostedGroups" | "nonHostedGroups";
+import { useQuery } from "@tanstack/react-query";
+import useLoading from "../../appHooks/useLoading";
+import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
 const useGroupList = () => {
   const username = useAppSelector(
     (store) => store.user.user?.username,
     shallowEqual,
   );
-  const dispatch: AppDispatch = useAppDispatch();
+
   const navigate: NavigateFunction = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const [hostedGroups, setHostedGroups] = useState<HostedGroupCard[]>([]);
-  const [nonHostedGroups, setNonHostedGroups] = useState<NonHostedGroupCard[]>(
-    [],
-  );
-  const [currentGroupTab, setCurrentGroupTab] =
-    useState<groupTabs>("hostedGroups");
+  const currentGroupTab: string = searchParams.get("type") || "hosted";
 
   // on initial render, checks url params for type and sets the current group tab to be that type;
   // futhermore, also gets a list of all groups the user is a part of and sets them in state
-  useEffect(() => {
-    const getAllGroups = async () => {
-      try {
-        if (username) {
-          dispatch(setFormLoading(true));
-          const currentType = searchParams.get("type");
-          if (
-            currentType &&
-            (currentType === "hostedGroups" ||
-              currentType === "nonHostedGroups")
-          ) {
-            setCurrentGroupTab(currentType);
-          } else {
-            setSearchParams({ type: currentGroupTab });
-          }
-          const groups = await groupConversationsAPI.getAllGroups(username, {});
-          if (!Array.isArray(groups)) {
-            setHostedGroups(groups.hostedGroups);
-            setNonHostedGroups(groups.nonHostedGroups);
-          }
-        }
-      } catch (err: any) {
-        const error = JSON.parse(err.message);
-        dispatch(setLoadError(error));
-        navigate("/error");
-      } finally {
-        dispatch(setFormLoading(false));
-      }
-    };
 
-    getAllGroups();
-  }, []);
+  const {
+    data: { hostedGroups, nonHostedGroups },
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["groups"],
+    queryFn: () => groupConversationsAPI.getAllGroups(username!),
+    retry: 0,
+    initialData: { hostedGroups: [], nonHostedGroups: [] },
+  });
+
+  useLoading({ isFetching: isLoading });
+  const { handleMountRequestError } = useRequestErrorHandler();
+
+  useEffect(() => {
+    if (!currentGroupTab) setSearchParams({ type: "hosted" });
+  }, [currentGroupTab]);
+
+  useEffect(() => {
+    if (isError) handleMountRequestError(error);
+  }, [isError, error]);
 
   // navigates to group page with the corresponding id when a card is clicked
   const navigateGroup = useCallback((id: string): void => {
@@ -78,10 +57,8 @@ const useGroupList = () => {
   const handleGroupTab = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const { title } = e.currentTarget;
-      if (title === "hostedGroups" || title === "nonHostedGroups") {
-        setCurrentGroupTab(title);
+      if (title === "hosted" || title === "nonHosted")
         setSearchParams({ type: title });
-      }
     },
     [currentGroupTab],
   );
@@ -91,9 +68,7 @@ const useGroupList = () => {
   const handleKeyDownGroupTab = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        const nextTab =
-          e.key === "ArrowLeft" ? "hostedGroups" : "nonHostedGroups";
-        setCurrentGroupTab(nextTab);
+        const nextTab = e.key === "ArrowLeft" ? "hosted" : "nonHosted";
         setSearchParams({ type: nextTab });
       }
     },
@@ -102,9 +77,7 @@ const useGroupList = () => {
 
   const handleKeyDownGroupCard = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>, id: string) => {
-      if (e.key === "Enter") {
-        navigate(`/groups/${id}`);
-      }
+      if (e.key === "Enter") navigate(`/groups/${id}`);
     },
     [],
   );

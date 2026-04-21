@@ -1,18 +1,29 @@
 import type { GroupUser, GroupUserTab } from "./userTypes";
 import type { ConversationMessage } from "./conversationTypes";
 
+// NEW GROUP FORM DATA
 export type NewGroup = {
   title: string;
   description: string;
   interests: number[];
 };
 
+// GROUP SEARCH TYPES
 export type showResults = "" | "title" | "host" | "user";
 
-export type GroupSearchCard = {
-  id: string;
+export interface BaseGroupSearch {
   title: string;
   host: string;
+}
+
+export interface GroupSearch extends BaseGroupSearch {
+  user: string;
+  similarInterests: boolean;
+  newGroups: boolean;
+}
+
+export interface GroupSearchCard extends BaseGroupSearch {
+  id: string;
   interests: string[];
   users: GroupUser[];
   handleGroupSearchCardKeyDown: (
@@ -20,15 +31,7 @@ export type GroupSearchCard = {
     id: string,
   ) => void;
   handleGroupSearchCardKeyUp: (e: React.KeyboardEvent<HTMLDivElement>) => void;
-};
-
-export type GroupSearch = {
-  title: string;
-  host: string;
-  user: string;
-  similarInterests: boolean;
-  newGroups: boolean;
-};
+}
 
 export type GroupSearchParams = {
   title: string | null;
@@ -38,42 +41,34 @@ export type GroupSearchParams = {
   newGroups: boolean | null;
 };
 
-export type SimpleGroup = {
+// USED FOR CHECKLISTS
+export interface SimpleGroup {
   id: string;
   title: string;
-};
+}
 
-export type GroupName = { title: string; host: string };
-
-export type SelectedGroup = { id: string; title: string; host: string };
-
-export type HostedGroupCard = {
-  id: string;
-  title: string;
-  createdAt: string;
-};
-
-export type NonHostedGroupCard = {
-  id: string;
-  title: string;
+export interface SelectedGroup extends SimpleGroup {
   host: string;
+}
+
+// USER GROUP CARDS
+export interface HostedGroupCard extends SimpleGroup {
   createdAt: string;
-};
+}
+
+export interface NonHostedGroupCard extends HostedGroupCard, SelectedGroup {}
 
 export type AllGroups = {
   hostedGroups: HostedGroupCard[];
   nonHostedGroups: NonHostedGroupCard[];
 };
 
-export type GroupPage = {
-  id: string;
-  title: string;
+// GROUP PAGE TYPES
+export interface GroupPage extends NonHostedGroupCard {
   description: string;
-  host: string;
-  createdAt: string;
   users: GroupUser[];
   interests: string[];
-};
+}
 
 export type GroupInvitation = {
   to: string;
@@ -81,17 +76,12 @@ export type GroupInvitation = {
   content: string;
 };
 
-export type GroupTab = {
-  id: string;
-  title: string;
-  host: string;
+export interface GroupTab extends SelectedGroup {
   unreadMessages: number;
-};
+}
 
-export type GroupMessageInfo = {
+export interface GroupMessageInfo extends BaseGroupSearch {
   users: GroupUserTab[];
   messages: ConversationMessage[];
-  title: string;
-  host: string;
   unreadMessages: number;
-};
+}
