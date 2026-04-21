@@ -11,6 +11,9 @@ const useRequestTabList = () => {
     if (currSelected) currSelected.classList.remove("focused");
   }, []);
 
+  // when the user moves their cursor over the request tab list, if a request type tab
+  // was focused on due to above a11y functions, the focused class is removed from the tab
+  // that currently has it
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const currFocused = e.currentTarget.querySelector(

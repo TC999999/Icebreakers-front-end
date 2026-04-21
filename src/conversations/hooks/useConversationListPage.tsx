@@ -445,8 +445,8 @@ const useConversationListPage = () => {
     [title, conversations],
   );
 
-  // handles sending message to other users, including updated db
-  // and sending a socket signal to other user
+  // handles adding new messages to db as well as updating current message list to add
+  // new message
   const { mutate } = useMutation({
     mutationFn: (newMessage: NewMessage) =>
       directConversationsAPI.createMessage(newMessage),
@@ -516,6 +516,7 @@ const useConversationListPage = () => {
     },
   });
 
+  // runs mutate function when form is submitted
   const handleSend = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
@@ -530,6 +531,8 @@ const useConversationListPage = () => {
   );
 
   // A11y friendly functions
+  // when enter key is clicked when message input is focused on, acts as if send button was
+  // clicked
   const handleEnterSubmit = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter") {
@@ -537,13 +540,14 @@ const useConversationListPage = () => {
         const submitButton = document.querySelector(
           "button.send-button",
         ) as HTMLButtonElement;
-        console.log(submitButton);
         submitButton.click();
       }
     },
     [],
   );
 
+  // when direct conversation tab list is focused on, handles keyboard friendly
+  // navigation of tabs when up or down arrow keys are pressed
   const handleNavigateTabs = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key !== "Tab") e.preventDefault();
@@ -579,13 +583,16 @@ const useConversationListPage = () => {
     [],
   );
 
+  // when the user moves their cursor over the conversation tab list, if a conversation
+  // was focused on due to above a11y functions, the focused class is removed from the tab
+  // that currently has it
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const selectedTab = e.currentTarget.querySelector(
         'div.focused[role="tab"]',
       ) as HTMLDivElement;
 
-      selectedTab.classList.remove("focused");
+      if (selectedTab) selectedTab.classList.remove("focused");
     },
     [],
   );
