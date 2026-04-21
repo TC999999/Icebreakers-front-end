@@ -27,41 +27,44 @@ const useRequestTabList = () => {
   // the very top or very bottom tab and presses the right or left arrow key respectively,
   // viewed request type changes to the very bottom or very top request type respectively
   // (i.e. it loops around)
-  const handleKeydown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key !== "Tab") e.preventDefault();
+  const handleKeydown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== "Tab") e.preventDefault();
 
-    const currSelected = (e.currentTarget.querySelector(
-      'div.focused[role="tab"]',
-    ) ||
-      e.currentTarget.querySelector(
-        'div.selected-tab[role="tab"]',
-      )) as HTMLDivElement;
+      const currSelected = (e.currentTarget.querySelector(
+        'div.focused[role="tab"]',
+      ) ||
+        e.currentTarget.querySelector(
+          'div.selected-tab[role="tab"]',
+        )) as HTMLDivElement;
 
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      const next =
-        e.key === "ArrowDown"
-          ? currSelected.nextElementSibling
-          : currSelected.previousElementSibling;
-
-      currSelected.classList.remove("focused");
-      if (next) {
-        next.classList.add("focused");
-      } else {
-        const topOrBottom = (
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        const next =
           e.key === "ArrowDown"
-            ? e.currentTarget.firstElementChild
-            : e.currentTarget.lastElementChild
-        ) as HTMLDivElement;
+            ? currSelected.nextElementSibling
+            : currSelected.previousElementSibling;
 
-        topOrBottom.classList.add("focused");
+        currSelected.classList.remove("focused");
+        if (next) {
+          next.classList.add("focused");
+        } else {
+          const topOrBottom = (
+            e.key === "ArrowDown"
+              ? e.currentTarget.firstElementChild
+              : e.currentTarget.lastElementChild
+          ) as HTMLDivElement;
+
+          topOrBottom.classList.add("focused");
+        }
+      } else if (
+        e.key === "Enter" &&
+        !currSelected.classList.contains("selected-tab")
+      ) {
+        currSelected.click();
       }
-    } else if (
-      e.key === "Enter" &&
-      !currSelected.classList.contains("selected-tab")
-    ) {
-      currSelected.click();
-    }
-  }, []);
+    },
+    [],
+  );
 
   return { handleBlur, handleKeydown, handleMouseEnter };
 };

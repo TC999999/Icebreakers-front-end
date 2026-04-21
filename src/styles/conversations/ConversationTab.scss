@@ -10,7 +10,8 @@
   width: 200px;
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &.focused {
     background-color: aliceblue;
     color: blue;
   }

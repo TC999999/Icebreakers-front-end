@@ -35,6 +35,9 @@ const ConversationListPage = () => {
     handleBlur,
     handleFocus,
     updateConversations,
+    handleNavigateTabs,
+    handleEnterSubmit,
+    handleMouseEnter,
   } = useConversationListPage();
 
   // component for conversation page: including tab list, message window, and message input
@@ -68,6 +71,9 @@ const ConversationListPage = () => {
             loadingConversations={loadingConversations}
             handleCurrentConversation={handleCurrentConversation}
             toggleTabletConversationTabs={toggleTabletConversationTabs}
+            handleNavigateTabs={handleNavigateTabs}
+            handleMouseEnter={handleMouseEnter}
+            focusable={!showEditForm}
           />
         </Suspense>
       )}
@@ -79,6 +85,9 @@ const ConversationListPage = () => {
             currentConversationID={conversationID}
             loadingConversations={loadingConversations}
             handleCurrentConversation={handleCurrentConversation}
+            handleNavigateTabs={handleNavigateTabs}
+            handleMouseEnter={handleMouseEnter}
+            focusable={!showEditForm}
           />
           <div id="conversation-messages-window">
             {loadingMessages ? (
@@ -92,6 +101,7 @@ const ConversationListPage = () => {
                       className="tab-button"
                       aria-label="Show Conversations"
                       onClick={(e) => toggleTabletConversationTabs(e)}
+                      tabIndex={showEditForm ? -1 : 0}
                     >
                       <IoReorderThree />
                     </button>
@@ -120,6 +130,7 @@ const ConversationListPage = () => {
                           className="edit-button"
                           type="button"
                           onClick={(e) => toggleEditForm(e)}
+                          tabIndex={showEditForm ? -1 : 0}
                         >
                           Change Title
                         </button>
@@ -142,7 +153,11 @@ const ConversationListPage = () => {
 
                 {conversationID.length > 0 && !loadingMessages && (
                   <>
-                    <div id="conversation-message-bubbles" ref={scrollRef}>
+                    <div
+                      id="conversation-message-bubbles"
+                      ref={scrollRef}
+                      tabIndex={showEditForm ? -1 : 0}
+                    >
                       {currentMessages.map((m) => {
                         return (
                           <ConversationMessageBubble
@@ -185,11 +200,13 @@ const ConversationListPage = () => {
                     onChange={handleChangeInput}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
+                    onKeyDown={handleEnterSubmit}
                     rows={5}
                     cols={40}
                     placeholder="Type a message here"
                     disabled={conversationID.length === 0}
                     autoComplete="off"
+                    tabIndex={showEditForm ? -1 : 0}
                   ></textarea>
                 </div>
                 <div>
@@ -198,6 +215,7 @@ const ConversationListPage = () => {
                     className="send-button"
                     aria-label="Send Message"
                     disabled={conversationID.length === 0}
+                    tabIndex={showEditForm ? -1 : 0}
                   >
                     <FaArrowUp />
                   </button>

@@ -18,6 +18,8 @@ const ConversationTab: React.FC<Props> = memo(
         onClick={() => handleCurrentConversation(conversation)}
         className={`conversation-tab ${selected ? "selected" : ""}`}
         title={`Chat with ${conversation.otherUser}`}
+        aria-selected={selected}
+        role="tab"
       >
         <p className="conversation-header">
           {conversation.title.length > 0

@@ -529,6 +529,67 @@ const useConversationListPage = () => {
     [conversationID, username, messageInput, recipient],
   );
 
+  // A11y friendly functions
+  const handleEnterSubmit = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const submitButton = document.querySelector(
+          "button.send-button",
+        ) as HTMLButtonElement;
+        console.log(submitButton);
+        submitButton.click();
+      }
+    },
+    [],
+  );
+
+  const handleNavigateTabs = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== "Tab") e.preventDefault();
+      const selectedTab = (e.currentTarget.querySelector(
+        'div.focused[role="tab"]',
+      ) ||
+        e.currentTarget.querySelector(
+          'div.selected[role="tab"]',
+        )) as HTMLDivElement;
+
+      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && selectedTab) {
+        const nextTab =
+          e.key === "ArrowDown"
+            ? selectedTab.nextElementSibling ||
+              e.currentTarget.querySelector(':first-child[role="tab"]')
+            : selectedTab.previousElementSibling ||
+              e.currentTarget.querySelector(':last-child[role="tab"]');
+
+        nextTab?.classList.add("focused");
+        selectedTab.classList.remove("focused");
+      } else if (
+        (e.key === "ArrowDown" || e.key === "ArrowUp") &&
+        !selectedTab
+      ) {
+        const topTab = e.currentTarget.querySelector(
+          ':first-child[role="tab"]',
+        );
+        topTab?.classList.add("focused");
+      } else if (e.key === "Enter" && selectedTab) {
+        selectedTab.click();
+      }
+    },
+    [],
+  );
+
+  const handleMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const selectedTab = e.currentTarget.querySelector(
+        'div.focused[role="tab"]',
+      ) as HTMLDivElement;
+
+      selectedTab.classList.remove("focused");
+    },
+    [],
+  );
+
   return {
     loadingMessages,
     loadingConversations,
@@ -551,6 +612,9 @@ const useConversationListPage = () => {
     handleBlur,
     handleSend,
     updateConversations,
+    handleEnterSubmit,
+    handleNavigateTabs,
+    handleMouseEnter,
   };
 };
 

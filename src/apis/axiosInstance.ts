@@ -29,6 +29,8 @@ export const setUpInterceptors = (
         dispatch(clearUser());
         notify(error.response.data.error.message);
         navigate("/login");
+      } else if (error.response && error.response.status === 400) {
+        notify(error.response.data.error.message);
       } else if (error.response && error.response.status === 403) {
         dispatch(setLoadError(error.response.data.error));
         navigate("/error");

@@ -8,7 +8,10 @@ type Props = {
   conversations: Conversation[];
   currentConversationID: string;
   loadingConversations: boolean;
+  focusable: boolean;
   handleCurrentConversation: (conversation: Conversation) => Promise<void>;
+  handleNavigateTabs: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  handleMouseEnter: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
 
 // reusable component for showing a list of conversation tabs (to show for both widescreen and
@@ -17,10 +20,18 @@ const ConversationTabList: React.FC<Props> = ({
   conversations,
   currentConversationID,
   loadingConversations,
+  focusable,
   handleCurrentConversation,
+  handleNavigateTabs,
+  handleMouseEnter,
 }) => {
   return (
-    <div className="conversation-tabs">
+    <div
+      className="conversation-tabs"
+      onKeyDown={handleNavigateTabs}
+      onMouseEnter={handleMouseEnter}
+      tabIndex={focusable ? 0 : -1}
+    >
       {conversations.length > 0 && !loadingConversations && (
         <>
           {conversations.map((c) => {
