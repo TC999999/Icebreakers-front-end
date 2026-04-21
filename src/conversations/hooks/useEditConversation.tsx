@@ -4,7 +4,6 @@ import type { AppDispatch } from "../../features/store";
 import { setFormLoading } from "../../features/slices/loading";
 import type {
   CurrentConversation,
-  UpdateConversation,
   ReturnUpdateConversation,
 } from "../../types/conversationTypes";
 import directConversationsAPI from "../../apis/directConversationsAPI";
@@ -28,16 +27,14 @@ const useEditConversation = ({
   }, shallowEqual);
   const dispatch: AppDispatch = useAppDispatch();
 
-  const initialData: UpdateConversation = { title: "" };
-
-  const [formData, setFormData] = useState<UpdateConversation>(initialData);
+  const [title, setTitle] = useState<string>("");
 
   const { handleSubmitRequestError } = useRequestErrorHandler();
 
   // on initial render, updates form data to initially have the current conversation title in state
   useEffect(() => {
     const initialSet = () => {
-      setFormData((prev) => ({ ...prev, title: currentConversation.title }));
+      setTitle(currentConversation.title);
     };
     initialSet();
   }, [currentConversation]);
@@ -45,10 +42,10 @@ const useEditConversation = ({
   // updates form data state on input value change
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      const { value } = e.target;
+      setTitle(value);
     },
-    [formData],
+    [title],
   );
 
   // updates current conversation data in the database and returns data to update current
@@ -60,7 +57,7 @@ const useEditConversation = ({
         dispatch(setFormLoading(true));
         hideForm(e);
         const conversation = await directConversationsAPI.updateConversation(
-          formData,
+          title,
           username!,
           currentConversation.id,
         );
@@ -71,10 +68,10 @@ const useEditConversation = ({
         dispatch(setFormLoading(false));
       }
     },
-    [formData],
+    [title],
   );
 
-  return { formData, handleChange, handleSubmit };
+  return { title, handleChange, handleSubmit };
 };
 
 export default useEditConversation;

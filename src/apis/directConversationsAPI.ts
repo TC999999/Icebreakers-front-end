@@ -1,7 +1,6 @@
 import API from "./api";
 import type {
   Conversation,
-  UpdateConversation,
   NewMessage,
   ConversationMessage,
   CurrentConversationMessages,
@@ -59,14 +58,13 @@ class directConversationsAPI extends API {
 
   // updates a single direct conversation's title and returns that new title
   public static async updateConversation(
-    conversation: UpdateConversation,
+    title: string,
     username: string,
     id: string,
   ): Promise<ReturnUpdateConversation> {
-    const res = await this.patchRequest(
-      `${username}/conversation/${id}`,
-      conversation,
-    );
+    const res = await this.patchRequest(`${username}/conversation/${id}`, {
+      title,
+    });
     return res.updatedConversation;
   }
 }

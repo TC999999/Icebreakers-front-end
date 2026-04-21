@@ -28,8 +28,6 @@ export interface CurrentConversationMessages extends CurrentConversation {
   unreadMessages: number;
 }
 
-export type UpdateConversation = { title: string };
-
 export type ReturnUpdateConversation = {
   id: string;
   title: string;

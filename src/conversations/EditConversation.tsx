@@ -20,7 +20,7 @@ const EditConversation: React.FC<Props> = ({
   hideForm,
   updateConversations,
 }): JSX.Element | null => {
-  const { formData, handleChange, handleSubmit } = useEditConversation({
+  const { title, handleChange, handleSubmit } = useEditConversation({
     currentConversation,
     hideForm,
     updateConversations,
@@ -41,7 +41,7 @@ const EditConversation: React.FC<Props> = ({
                   name="title"
                   id="title"
                   placeholder="Enter New Title Here"
-                  value={formData.title}
+                  value={title}
                   onChange={handleChange}
                 />
               </label>
