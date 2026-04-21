@@ -5,6 +5,7 @@ import { shallowEqual } from "react-redux";
 import useNavbar from "./hooks/useNavbar";
 import "../styles/Navbar.scss";
 import { MdPerson } from "react-icons/md";
+import NavButton from "./NavButton";
 
 // React component for navbar component; includes navigation buttons for when the user is logged out
 // (Log In and Sign Up), and when the user is logged in (conversations, groups, search users, search
@@ -28,90 +29,51 @@ const NavBar = (): JSX.Element => {
         {user ? (
           <div className="tabs">
             <div id="scrollable-tabs">
-              <div className="navlink">
-                {user.unreadDirectMessages > 0 && (
-                  <div className="notification-label">
-                    {user.unreadDirectMessages}
-                  </div>
-                )}
-                <button
-                  name="conversations"
-                  value={"/conversations"}
-                  onClick={move}
-                  className={
-                    selectedNav === "conversations" ? "selectedNav" : ""
-                  }
-                >
-                  Conversations
-                </button>
-              </div>
-
-              <div className="navlink">
-                {user.unreadGroupMessages > 0 && (
-                  <div className="notification-label">
-                    {user.unreadGroupMessages}
-                  </div>
-                )}
-                <button
-                  name="groupConversations"
-                  value={"/conversations/groups"}
-                  onClick={move}
-                  className={
-                    selectedNav === "groupConversations" ? "selectedNav" : ""
-                  }
-                >
-                  Group Conversations
-                </button>
-              </div>
-              <div className="navlink">
-                <button
-                  name="groups"
-                  value={"/groups"}
-                  onClick={move}
-                  className={selectedNav === "groups" ? "selectedNav" : ""}
-                >
-                  Groups
-                </button>
-              </div>
-              <div className="navlink">
-                <button
-                  name="searchUsers"
-                  value={"/user/search"}
-                  onClick={move}
-                  className={selectedNav === "searchUsers" ? "selectedNav" : ""}
-                >
-                  Search For Friends
-                </button>
-              </div>
-              <div className="navlink">
-                <button
-                  name="searchGroups"
-                  value={"/groups/search"}
-                  onClick={move}
-                  className={
-                    selectedNav === "searchGroups" ? "selectedNav" : ""
-                  }
-                >
-                  Search For Groups
-                </button>
-              </div>
-              <div className="navlink">
-                {user.unansweredRequests > 0 && (
-                  <div className="notification-label">
-                    {user.unansweredRequests}
-                  </div>
-                )}
-                <button
-                  name="requests"
-                  value={
-                    "/request?directOrGroup=direct&requestOrInvitation=requests&type=received"
-                  }
-                  onClick={move}
-                  className={selectedNav === "requests" ? "selectedNav" : ""}
-                >
-                  Requests
-                </button>
-              </div>
+              <NavButton
+                selectedNav={selectedNav}
+                name="conversations"
+                value="/conversations"
+                title="Conversations"
+                onClick={move}
+                unreadNotifications={user.unreadDirectMessages}
+              />
+              <NavButton
+                selectedNav={selectedNav}
+                name="groupConversations"
+                value="/conversations/groups"
+                title="Group Conversations"
+                onClick={move}
+                unreadNotifications={user.unreadGroupMessages}
+              />
+              <NavButton
+                selectedNav={selectedNav}
+                name="groups"
+                value="/groups?type=hosted"
+                title="Groups"
+                onClick={move}
+              />
+              <NavButton
+                selectedNav={selectedNav}
+                name="searchUsers"
+                value="/user/search"
+                title="Search For Friends"
+                onClick={move}
+              />
+              <NavButton
+                selectedNav={selectedNav}
+                name="searchGroups"
+                value="/groups/search"
+                title="Search For Groups"
+                onClick={move}
+              />
+              <NavButton
+                selectedNav={selectedNav}
+                name="requests"
+                value="/request?directOrGroup=direct&requestOrInvitation=requests&type=received"
+                title="Requests"
+                onClick={move}
+                unreadNotifications={user.unansweredRequests}
+              />
             </div>
             <div id="user-tabs">
               <button
@@ -137,28 +99,20 @@ const NavBar = (): JSX.Element => {
           </div>
         ) : (
           <div className="tabs" id="logged-out-tabs">
-            <button
-              className={`auth-button ${
-                selectedNav === "login" ? "selectedNav" : ""
-              }`}
-              id="login-button"
+            <NavButton
+              selectedNav={selectedNav}
               name="login"
-              value={"/login"}
+              value="/login"
+              title="Log In"
               onClick={move}
-            >
-              Log In
-            </button>
-            <button
-              className={`auth-button ${
-                selectedNav === "register" ? "selectedNav" : ""
-              }`}
-              id="register-button"
+            />
+            <NavButton
+              selectedNav={selectedNav}
               name="register"
-              value={"/register"}
+              value="/register"
+              title="Register"
               onClick={move}
-            >
-              Register
-            </button>
+            />
           </div>
         )}
       </div>
