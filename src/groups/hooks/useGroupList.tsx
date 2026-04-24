@@ -11,6 +11,8 @@ import { useQuery } from "@tanstack/react-query";
 import useLoading from "../../appHooks/useLoading";
 import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
 
+// custom hook for group list component that handles redirecting the user to a specific
+// group page and the tabs at the top of the page
 const useGroupList = () => {
   const username = useAppSelector(
     (store) => store.user.user?.username,
@@ -28,7 +30,7 @@ const useGroupList = () => {
   const {
     data: { hostedGroups, nonHostedGroups },
     isLoading,
-    isError,
+    isLoadingError,
     error,
   } = useQuery({
     queryKey: ["groups"],
@@ -37,16 +39,22 @@ const useGroupList = () => {
     initialData: { hostedGroups: [], nonHostedGroups: [] },
   });
 
+  // reusable hook that displays loading message when fetching group data
   useLoading({ isFetching: isLoading });
+
+  // reusable hook for handling errors that may occur during initial mount
   const { handleMountRequestError } = useRequestErrorHandler();
 
+  // sets default search params to hosted groups (if users copy and paste the url)
   useEffect(() => {
     if (!currentGroupTab) setSearchParams({ type: "hosted" });
   }, [currentGroupTab]);
 
+  // on initial mount, if an error occurs while collecting data, the user will be
+  // redirected to the error page
   useEffect(() => {
-    if (isError) handleMountRequestError(error);
-  }, [isError, error]);
+    if (isLoadingError && error) handleMountRequestError(error);
+  }, [isLoadingError, error]);
 
   // navigates to group page with the corresponding id when a card is clicked
   const navigateGroup = useCallback((id: string): void => {
@@ -75,6 +83,8 @@ const useGroupList = () => {
     [currentGroupTab],
   );
 
+  // a11y friendly function that when the user clicks the enter key while focused
+  // on a group card, they will be redirected to that particular group page
   const handleKeyDownGroupCard = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>, id: string) => {
       if (e.key === "Enter") navigate(`/groups/${id}`);
