@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useAppSelector, useAppDispatch } from "../../features/hooks";
 import type { GroupRequestFormData } from "../../types/requestTypes";
-import type { BaseGroupSearch } from "../../types/groupTypes";
 import groupRequestsAPI from "../../apis/groupRequestsAPI";
 import {
   useParams,
@@ -12,6 +11,8 @@ import { setFormLoading } from "../../features/slices/loading";
 import groupConversationsAPI from "../../apis/groupConversationsAPI";
 import useValidInputHandler from "../../appHooks/useValidInputHandler";
 import useRequestErrorHandler from "../../appHooks/useRequestErrorHandler";
+import { useQuery } from "@tanstack/react-query";
+import useLoading from "../../appHooks/useLoading";
 
 // custom hook for react component that contains form to join a group
 const useGroupRequest = () => {
@@ -21,19 +22,29 @@ const useGroupRequest = () => {
 
   const username = useAppSelector((store) => store.user.user?.username);
 
+  // on initial render, retrieves group information needed for clear form instructions
+  const {
+    data: { title, host },
+    isLoading,
+    isLoadingError,
+    error,
+  } = useQuery({
+    queryKey: ["currentGroup", { id }],
+    queryFn: () => groupConversationsAPI.getGroupSimple(id!),
+    initialData: { title: "", host: "" },
+    retry: 0,
+  });
+
+  // sets a reference
   const originalData = useRef<GroupRequestFormData>({
-    to: "",
-    from: "",
+    to: host,
+    from: username!,
     content: "",
   });
 
   const [formData, setFormData] = useState<GroupRequestFormData>(
     originalData.current,
   );
-  const [groupData, setGroupData] = useState<BaseGroupSearch>({
-    title: "",
-    host: "",
-  });
 
   // reusable custom validator hook for setting and checking input value validity
   const {
@@ -51,33 +62,14 @@ const useGroupRequest = () => {
   const { handleMountRequestError, handleSubmitRequestError } =
     useRequestErrorHandler();
 
-  // on initial render, retrieves group information needed for clear form instructions
-  useEffect(() => {
-    const getGroup = async () => {
-      try {
-        dispatch(setFormLoading(true));
-        if (id) {
-          const { group } = await groupConversationsAPI.getGroup(id, true);
-          if (!("id" in group) && username) {
-            setGroupData(group);
-            let newFormData = {
-              content: "",
-              to: group.host,
-              from: username,
-            };
-            originalData.current = newFormData;
-            setFormData(newFormData);
-          }
-        }
-      } catch (err: any) {
-        handleMountRequestError(err.message);
-      } finally {
-        dispatch(setFormLoading(false));
-      }
-    };
+  // reusable hook that displays loading message when fetching group data
+  useLoading({ isFetching: isLoading });
 
-    getGroup();
-  }, []);
+  // on initial mount, if an error occurs, this hook callback should redirect the user
+  // to the error page
+  useEffect(() => {
+    if (isLoadingError && error) handleMountRequestError(error);
+  }, [isLoadingError, error]);
 
   // updates form data state and checks input value validity when any input value changes
   const handleChange = useCallback(
@@ -115,7 +107,8 @@ const useGroupRequest = () => {
 
   return {
     formData,
-    groupData,
+    title,
+    host,
     validInputs,
     showDirections,
     currentErrorFlash,

@@ -17,7 +17,7 @@ import type {
 import type { GroupMessageUserUpdate } from "../types/userTypes";
 
 type ReturnGroup = {
-  group: GroupPage | BaseGroupSearch;
+  group: GroupPage;
   isInGroup?: boolean;
   requestPending?: boolean;
   invitationPending?: boolean;
@@ -41,13 +41,15 @@ class groupConversationsAPI extends API {
     return res;
   }
 
-  // gets all groups that the user is a part of, returns either a simpler or more complex version of
-  // the list based on inputted params
+  // gets two separate lists of all groups (id, title, creation date) that the user
+  // is a part of: groups are separated by groups hosted by the user and those that are
+  // not
   public static async getAllGroups(username: string): Promise<AllGroups> {
     const res = await this.getRequest(username, {});
     return res.groups;
   }
 
+  // gets a list of all groups (their ids and titles ) that the user is a part of
   public static async getAllGroupsSimple(
     username: string,
   ): Promise<SimpleGroup[]> {
@@ -63,14 +65,18 @@ class groupConversationsAPI extends API {
     return res.groups;
   }
 
-  // returns information for a single group, gets either a simpler or more complex list of data based
-  // on getSimple input
-  public static async getGroup(
-    id: string,
-    getSimple: boolean = false,
-  ): Promise<ReturnGroup> {
-    const res = await this.getRequest(`id/${id}`, { getSimple });
+  // returns information for a single group, including what the current user's
+  // relationship with the group is (if they are a member of the group or have
+  // a pending request/invitation)
+  public static async getGroup(id: string): Promise<ReturnGroup> {
+    const res = await this.getRequest(`id/${id}`, { getSimple: false });
     return res;
+  }
+
+  // returns the title and host of a single group
+  public static async getGroupSimple(id: string): Promise<BaseGroupSearch> {
+    const res = await this.getRequest(`id/${id}`, { getSimple: true });
+    return res.group;
   }
 
   // returns a list of groups based on inputted search params
