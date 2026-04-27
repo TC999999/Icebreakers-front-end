@@ -6,16 +6,20 @@ import useNavbar from "./hooks/useNavbar";
 import "../styles/Navbar.scss";
 import { MdPerson } from "react-icons/md";
 import NavButton from "./NavButton";
+import { useLocation } from "react-router-dom";
 
 // React component for navbar component; includes navigation buttons for when the user is logged out
 // (Log In and Sign Up), and when the user is logged in (conversations, groups, search users, search
 // groups, request inbox, user profile, and log out)
-const NavBar = (): JSX.Element => {
+const NavBar = (): JSX.Element | null => {
   const { user } = useAppSelector((store) => store.user, shallowEqual);
 
   const { selectedNav, logOutAndNavigate, move, resetNav } = useNavbar();
 
-  return (
+  const location = useLocation();
+
+  return location.pathname === "/login" ||
+    location.pathname === "/register" ? null : (
     <nav id="nav-bar">
       <div id="logo">
         <h1>
@@ -25,8 +29,8 @@ const NavBar = (): JSX.Element => {
         </h1>
       </div>
 
-      <div id="navigation-buttons">
-        {user ? (
+      {user && (
+        <div id="navigation-buttons">
           <div className="tabs">
             <div id="scrollable-tabs">
               <NavButton
@@ -97,25 +101,8 @@ const NavBar = (): JSX.Element => {
               </button>
             </div>
           </div>
-        ) : (
-          <div className="tabs" id="logged-out-tabs">
-            <NavButton
-              selectedNav={selectedNav}
-              name="login"
-              value="/login"
-              title="Log In"
-              onClick={move}
-            />
-            <NavButton
-              selectedNav={selectedNav}
-              name="register"
-              value="/register"
-              title="Register"
-              onClick={move}
-            />
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </nav>
   );
 };
