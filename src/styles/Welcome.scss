@@ -36,4 +36,21 @@
       text-align: center;
     }
   }
+
+  #login-button {
+    display: flex;
+    justify-self: center;
+    text-align: center;
+    background: none;
+    border: none;
+    font-weight: bold;
+    text-decoration: underline;
+    color: c.$linkPrimary;
+    padding: 5px;
+    cursor: pointer;
+
+    &:hover {
+      color: c.$linkHover;
+    }
+  }
 }

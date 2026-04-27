@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { useAppSelector } from "../features/hooks";
 import type { ReduxAuthState } from "../types/authTypes";
 import { shallowEqual } from "react-redux";
@@ -6,6 +7,7 @@ import "../styles/Welcome.scss";
 
 // React component for welcome message when the user first arrives on the app
 const Welcome = (): JSX.Element => {
+  const navigate: NavigateFunction = useNavigate();
   const { user }: ReduxAuthState = useAppSelector(
     (store) => store.user,
     shallowEqual,
@@ -28,6 +30,11 @@ const Welcome = (): JSX.Element => {
           people and request conversations from them as well.
         </section>
       </div>
+      {!user && (
+        <button id="login-button" onClick={() => navigate("/login")}>
+          Log In/Register Here
+        </button>
+      )}
     </main>
   );
 };
