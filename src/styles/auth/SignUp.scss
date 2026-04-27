@@ -5,12 +5,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
-  #signup-form {
-    width: 100%;
+  flex-direction: column;
+  width: 100%;
 
+  @include s.tablet {
+    height: 100%;
+  }
+
+  @include s.desktop {
+    margin: 10px 0px;
+  }
+
+  #signup-form {
+    height: auto;
     form {
-      width: 100%;
+      width: 450px;
+      margin: 10px;
+      transition: width 0.5s ease;
+      @include s.tablet {
+        width: 925px;
+      }
 
       #form-inputs {
         width: 100%;
@@ -34,6 +48,28 @@
           flex-direction: column;
           vertical-align: middle;
         }
+      }
+    }
+  }
+  span#auth-navigate {
+    color: c.$secondary;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button#link-button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      text-decoration: underline;
+      color: c.$linkPrimary;
+      padding: 5px;
+      cursor: pointer;
+
+      &:hover {
+        color: c.$linkHover;
       }
     }
   }

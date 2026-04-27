@@ -1,403 +1,408 @@
 @use "colors" as c;
 @use "settings" as s;
 
-.toast-content {
-  background-color: red;
-}
-
-.modal-transparent {
-  position: fixed;
-  z-index: 3;
-  left: 0;
-  top: 0;
+div#App {
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(55, 55, 55, 0.5);
-  display: flex;
 
-  &.modal-background {
+  .toast-content {
+    background-color: red;
+  }
+
+  .modal-transparent {
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(55, 55, 55, 0.5);
+    display: flex;
+
+    &.modal-background {
+      justify-content: center;
+      align-items: center;
+
+      .modal-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+    }
+
+    &#tab-list-tablet {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      z-index: 4;
+
+      .conversation-tabs,
+      .request-tabs {
+        z-index: 4;
+        animation: slideFromLeft 0.5s;
+        width: 210px;
+        height: 700px;
+        border: s.$borderSettings c.$primary;
+      }
+    }
+  }
+
+  .ellipsis {
+    opacity: 0;
+    animation: ellipses 1.5s infinite;
+
+    &:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 1s;
+    }
+  }
+
+  .form-block {
+    background-color: c.$primary;
+    border: s.$borderSettings c.$secondary;
+    border-radius: s.$borderRadius;
+    display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
+    margin: 0 10rem;
 
-    .modal-content {
+    h1,
+    small {
+      font-family: Georgia, "Times New Roman", Times, serif;
+    }
+
+    h1,
+    h3,
+    small {
+      color: c.$secondary;
+    }
+  }
+
+  .form-div {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    position: relative;
+
+    label {
+      color: c.$secondary;
+      display: block;
+      font-size: large;
+      font-weight: bold;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 2rem;
+      font-size: large;
+      text-align: center;
+      border-radius: s.$borderRadius;
+
+      @include s.tablet {
+        font-size: medium;
+      }
+
+      background-color: c.$inputBackground;
+      border: s.$borderSettings c.$secondary;
+      outline: none;
+      color: c.$secondary;
+
+      &:hover {
+        border: s.$borderSettings c.$primary;
+        background-color: c.$inputHover;
+      }
+
+      &:focus {
+        border: s.$borderSettings c.$secondary;
+        background-color: c.$inputFocus;
+      }
+    }
+
+    .form-textarea {
+      font-size: large;
+      text-align: center;
+      width: 100%;
+      border-radius: s.$borderRadius;
+      margin: auto;
+      background-color: c.$inputBackground;
+      border: s.$borderSettings rgb(79, 0, 37);
+      outline: none;
+      color: c.$secondary;
+
+      &:hover {
+        border: s.$borderSettings c.$primary;
+        background-color: c.$inputHover;
+      }
+
+      &:focus {
+        border: s.$borderSettings c.$secondary;
+        background-color: c.$inputFocus;
+      }
+    }
+
+    #interests-div {
+      background-color: c.$inputBackground;
+      border: s.$borderSettings c.$secondary;
+      border-radius: s.$borderRadius;
+      height: 200px;
+      width: auto;
+      overflow: scroll;
+
+      label {
+        display: block;
+        font-family:
+          "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+          Arial, sans-serif;
+        margin-bottom: 5px;
+
+        &:hover {
+          color: c.$secondary;
+        }
+
+        &:active {
+          color: c.$primary;
+        }
+      }
+    }
+
+    .form-input,
+    .form-textarea,
+    #interests-div,
+    #group-radio-div {
+      &.error-flash {
+        animation: errorFlash 0.15s infinite;
+      }
+    }
+  }
+
+  form {
+    input[type="search"] {
+      width: 310px;
+      height: 50px;
+      font-size: 20px;
+      border: s.$borderSettings;
+      background-color: c.$inputBackground;
+      border-color: c.$secondary;
+
+      &:hover {
+        background-color: c.$inputHover;
+      }
+
+      &:focus {
+        background-color: c.$inputFocus;
+      }
+    }
+
+    legend {
+      color: c.$secondary;
+      font-size: large;
+      font-weight: bold;
+    }
+
+    legend,
+    label {
+      .required {
+        color: rgb(150, 20, 20);
+      }
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      accent-color: c.$secondary;
+      cursor: pointer;
+    }
+
+    .input-bottom-with-results {
+      border-radius: s.$borderRadius s.$borderRadius 0px 0px;
+    }
+
+    .input-bottom-without-results {
+      border-radius: s.$borderRadius;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .search-bar-results {
+      position: absolute;
+      width: 310px;
+      z-index: 1;
+      max-height: 100px;
+      height: auto;
+      overflow: scroll;
+    }
+
+    .search-result {
+      background-color: rgb(240, 173, 240);
+      padding: 10px;
+      font-family: Arial, Helvetica, sans-serif;
+      border: solid 1px;
+
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
-    }
-  }
 
-  &#tab-list-tablet {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    z-index: 4;
+      &:hover,
+      &.selected {
+        background-color: rgb(240, 135, 240);
+        color: c.$secondary;
+        cursor: pointer;
+      }
 
-    .conversation-tabs,
-    .request-tabs {
-      z-index: 4;
-      animation: slideFromLeft 0.5s;
-      width: 210px;
-      height: 700px;
-      border: s.$borderSettings c.$primary;
-    }
-  }
-}
-
-.ellipsis {
-  opacity: 0;
-  animation: ellipses 1.5s infinite;
-
-  &:nth-child(1) {
-    animation-delay: 0s;
-  }
-
-  &:nth-child(2) {
-    animation-delay: 0.5s;
-  }
-
-  &:nth-child(3) {
-    animation-delay: 1s;
-  }
-}
-
-.form-block {
-  background-color: c.$primary;
-  border: s.$borderSettings c.$secondary;
-  border-radius: s.$borderRadius;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin: 0 10rem;
-
-  h1,
-  small {
-    font-family: Georgia, "Times New Roman", Times, serif;
-  }
-
-  h1,
-  h3,
-  small {
-    color: c.$secondary;
-  }
-}
-
-.form-div {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  position: relative;
-
-  label {
-    color: c.$secondary;
-    display: block;
-    font-size: large;
-    font-weight: bold;
-  }
-
-  .form-input {
-    width: 100%;
-    height: 2rem;
-    font-size: large;
-    text-align: center;
-    border-radius: s.$borderRadius;
-
-    @include s.tablet {
-      font-size: medium;
+      #loading-spinner {
+        animation: spinner 0.5s infinite;
+      }
     }
 
-    background-color: c.$inputBackground;
-    border: s.$borderSettings c.$secondary;
-    outline: none;
-    color: c.$secondary;
-
-    &:hover {
-      border: s.$borderSettings c.$primary;
-      background-color: c.$inputHover;
+    .list-bottom {
+      border-radius: 0px 0px s.$borderRadius s.$borderRadius;
     }
 
-    &:focus {
-      border: s.$borderSettings c.$secondary;
-      background-color: c.$inputFocus;
-    }
-  }
-
-  .form-textarea {
-    font-size: large;
-    text-align: center;
-    width: 100%;
-    border-radius: s.$borderRadius;
-    margin: auto;
-    background-color: c.$inputBackground;
-    border: s.$borderSettings rgb(79, 0, 37);
-    outline: none;
-    color: c.$secondary;
-
-    &:hover {
-      border: s.$borderSettings c.$primary;
-      background-color: c.$inputHover;
-    }
-
-    &:focus {
-      border: s.$borderSettings c.$secondary;
-      background-color: c.$inputFocus;
-    }
-  }
-
-  #interests-div {
-    background-color: c.$inputBackground;
-    border: s.$borderSettings c.$secondary;
-    border-radius: s.$borderRadius;
-    height: 200px;
-    width: auto;
-    overflow: scroll;
-
-    label {
-      display: block;
-      font-family:
-        "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
-        Arial, sans-serif;
-      margin-bottom: 5px;
+    .send-button {
+      background-color: c.$secondary;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: large;
+      color: c.$primary;
+      cursor: pointer;
 
       &:hover {
+        background-color: c.$thirdly;
         color: c.$secondary;
       }
 
       &:active {
-        color: c.$primary;
+        background-color: c.$fourthly;
+      }
+    }
+
+    #button-div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .input-directions {
+      background-color: white;
+      position: absolute;
+      z-index: 2;
+      width: 70%;
+      bottom: 100%;
+      animation: notificationPopUp 0.2s;
+      padding: 5px;
+      border: s.$borderSettings c.$secondary;
+
+      @include s.tablet {
+        left: 105%;
+        bottom: 0;
+
+        &.onBottom {
+          bottom: 100%;
+          left: 15%;
+
+          &::before {
+            content: " ";
+            position: absolute;
+            top: 100%;
+            left: 45%;
+            width: 0;
+            height: 0;
+            border-right: 20px solid transparent;
+            border-left: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-top: 20px solid c.$secondary;
+          }
+        }
+      }
+
+      ul {
+        padding: 0;
+        li {
+          font-size: small;
+          list-style-type: none;
+
+          .directions-check {
+            color: c.$success;
+          }
+
+          .directions-x {
+            color: c.$error;
+          }
+        }
+      }
+
+      &::before {
+        content: " ";
+        position: absolute;
+        border-right: 20px solid transparent;
+        border-left: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-top: 20px solid c.$secondary;
+
+        @include s.desktop {
+          top: 100%;
+        }
+
+        @include s.tablet {
+          right: 100%;
+          bottom: 10%;
+          height: 0;
+          width: 0;
+          border-right: 10px solid c.$secondary;
+          border-bottom: 10px solid transparent;
+          border-top: 10px solid c.$secondary;
+          border-left: 10px solid transparent;
+        }
       }
     }
   }
 
-  .form-input,
-  .form-textarea,
-  #interests-div,
-  #group-radio-div {
-    &.error-flash {
-      animation: errorFlash 0.15s infinite;
-    }
-  }
-}
-
-form {
-  input[type="search"] {
-    width: 310px;
-    height: 50px;
-    font-size: 20px;
-    border: s.$borderSettings;
-    background-color: c.$inputBackground;
-    border-color: c.$secondary;
-
-    &:hover {
-      background-color: c.$inputHover;
-    }
-
-    &:focus {
-      background-color: c.$inputFocus;
-    }
-  }
-
-  legend {
-    color: c.$secondary;
-    font-size: large;
-    font-weight: bold;
-  }
-
-  legend,
-  label {
-    .required {
-      color: rgb(150, 20, 20);
-    }
-  }
-
-  input[type="checkbox"],
-  input[type="radio"] {
-    accent-color: c.$secondary;
-    cursor: pointer;
-  }
-
-  .input-bottom-with-results {
-    border-radius: s.$borderRadius s.$borderRadius 0px 0px;
-  }
-
-  .input-bottom-without-results {
-    border-radius: s.$borderRadius;
-  }
-
-  textarea {
-    resize: none;
-  }
-
-  .search-bar-results {
-    position: absolute;
-    width: 310px;
-    z-index: 1;
-    max-height: 100px;
-    height: auto;
-    overflow: scroll;
-  }
-
-  .search-result {
-    background-color: rgb(240, 173, 240);
-    padding: 10px;
-    font-family: Arial, Helvetica, sans-serif;
-    border: solid 1px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    &:hover,
-    &.selected {
-      background-color: rgb(240, 135, 240);
-      color: c.$secondary;
-      cursor: pointer;
-    }
-
-    #loading-spinner {
-      animation: spinner 0.5s infinite;
-    }
-  }
-
-  .list-bottom {
-    border-radius: 0px 0px s.$borderRadius s.$borderRadius;
-  }
-
-  .send-button {
+  .submit-button,
+  .cancel-button,
+  .tab-button,
+  .edit-button,
+  .delete-button {
     background-color: c.$secondary;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: large;
-    color: c.$primary;
+    color: white;
+    padding: 10px;
+    border: s.$borderSettings c.$primary;
+    border-radius: s.$borderRadius;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 
     &:hover {
       background-color: c.$thirdly;
-      color: c.$secondary;
+      color: black;
     }
 
     &:active {
-      background-color: c.$fourthly;
+      background-color: antiquewhite;
     }
   }
 
-  #button-div {
+  #search-results {
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
   }
 
-  .input-directions {
-    background-color: white;
-    position: absolute;
-    z-index: 2;
-    width: 70%;
-    bottom: 100%;
-    animation: notificationPopUp 0.2s;
-    padding: 5px;
-    border: s.$borderSettings c.$secondary;
-
-    @include s.tablet {
-      left: 105%;
-      bottom: 0;
-
-      &.onBottom {
-        bottom: 100%;
-        left: 15%;
-
-        &::before {
-          content: " ";
-          position: absolute;
-          top: 100%;
-          left: 45%;
-          width: 0;
-          height: 0;
-          border-right: 20px solid transparent;
-          border-left: 20px solid transparent;
-          border-bottom: 20px solid transparent;
-          border-top: 20px solid c.$secondary;
-        }
-      }
+  #error-message {
+    h2 {
+      color: c.$error;
     }
-
-    ul {
-      padding: 0;
-      li {
-        font-size: small;
-        list-style-type: none;
-
-        .directions-check {
-          color: c.$success;
-        }
-
-        .directions-x {
-          color: c.$error;
-        }
-      }
-    }
-
-    &::before {
-      content: " ";
-      position: absolute;
-      border-right: 20px solid transparent;
-      border-left: 20px solid transparent;
-      border-bottom: 20px solid transparent;
-      border-top: 20px solid c.$secondary;
-
-      @include s.desktop {
-        top: 100%;
-      }
-
-      @include s.tablet {
-        right: 100%;
-        bottom: 10%;
-        height: 0;
-        width: 0;
-        border-right: 10px solid c.$secondary;
-        border-bottom: 10px solid transparent;
-        border-top: 10px solid c.$secondary;
-        border-left: 10px solid transparent;
-      }
-    }
-  }
-}
-
-.submit-button,
-.cancel-button,
-.tab-button,
-.edit-button,
-.delete-button {
-  background-color: c.$secondary;
-  color: white;
-  padding: 10px;
-  border: s.$borderSettings c.$primary;
-  border-radius: s.$borderRadius;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    background-color: c.$thirdly;
-    color: black;
-  }
-
-  &:active {
-    background-color: antiquewhite;
-  }
-}
-
-#search-results {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-#error-message {
-  h2 {
-    color: c.$error;
   }
 }

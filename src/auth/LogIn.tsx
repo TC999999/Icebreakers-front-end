@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import useLogIn from "./hooks/useLogin";
 import "../styles/auth/LogIn.scss";
+import AuthNavigate from "./AuthNavigate";
 
 // login form page component
 const LogIn = (): JSX.Element => {
@@ -56,6 +57,7 @@ const LogIn = (): JSX.Element => {
           </div>
         </form>
       </div>
+      <AuthNavigate type="register" />
     </div>
   );
 };

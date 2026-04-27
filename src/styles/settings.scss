@@ -11,6 +11,13 @@ $boxShadowHover: 5px 5px 5px rgba(235, 11, 201, 0.3);
 // mixins
 // media queries
 // only allow at larger widths
+
+@mixin navForTablet {
+  @media (min-width: 800px) {
+    @content;
+  }
+}
+
 @mixin tablet {
   @media (min-width: 1000px) {
     @content;

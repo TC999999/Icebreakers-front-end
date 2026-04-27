@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import useSignUp from "./hooks/useSignUp";
 import "../styles/auth/SignUp.scss";
 import InputDirections from "../InputDirections";
+import AuthNavigate from "./AuthNavigate";
 
 // Sign up page form component
 const SignUp = (): JSX.Element => {
@@ -232,6 +233,7 @@ const SignUp = (): JSX.Element => {
           </div>
         </form>
       </div>
+      <AuthNavigate type="login" />
     </div>
   );
 };
