@@ -1,3 +1,4 @@
+// map to easily retrieve different message strings for authentication navigation component
 const authNavigateMap = {
   register: {
     message: "Don't Have an Account Yet?",

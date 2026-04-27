@@ -4,6 +4,7 @@ import "../styles/auth/AuthNavigate.scss";
 
 type Props = { type: "register" | "login" };
 
+// reusable component for login and registration pages to the other page
 const AuthNavigate = ({ type }: Props) => {
   const navigate: NavigateFunction = useNavigate();
   return (
